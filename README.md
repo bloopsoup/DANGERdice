@@ -31,7 +31,7 @@ Remember that you must deliberately end your turn in order to apply DMG, PSN, HE
 
 When you attack with poison damage (PSN), your enemy will be poisoned for that amount of poison damage. This is indicated by the purple number displayed above their character (poison counter). 
 - Players that are poisoned will take damage equal to the poison they have at _the end of their turn_.
-- Their poison counter is halved (rounding down) every time the player takes poison damage until it reaches zero.
+- Their poison counter is decreased by 1 every time they take poison damage until it reaches zero.
 - If you kill the enemy while you're poisoned, you are guaranteed to not die from poison damage after it's applied.
 
 ## On Divider

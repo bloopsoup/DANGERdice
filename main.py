@@ -57,6 +57,7 @@ class Control:
                           "wandre": Spritesheet(load_c("wandre100x160x3x5.png"), 100, 160, 3, 5),
                           "cena": Spritesheet(load_c("cena190x100x3x5.png"), 190, 100, 3, 5),
                           "sosh": Spritesheet(load_c("sosh70x140x3x5.png"), 70, 140, 3, 5),
+                          "arca": Spritesheet(load_c("arca160x110x3x5.png"), 160, 110, 3, 5),
                           "portrait1": Spritesheet(load_c("chat100x2x6.png"), 100, 100, 2, 6),
                           "button": Spritesheet(load_b("1button70x3x6.png"), 70, 70, 3, 6),
                           "button2": Spritesheet(load_b("2button75x500x6x3.png"), 75, 500, 6, 3),
@@ -132,15 +133,15 @@ class Control:
            Levels are grouped into stages where a stage dictates the tier of the generated enemy.
            Each stage ends with a boss fight. Sometimes after a level, you can get extra die loot."""
 
-        enemies = ["aaron", "bursa", "cena", "dorita", "duck", "square", "wandre", "sosh"]
+        enemies = ["aaron", "bursa", "cena", "dorita", "duck", "square", "wandre", "sosh", "arca"]
         bosses = ["wally", "ria"]
 
-        number_of_levels = [4, 4, 4]
+        number_of_levels = [4, 4, 4, 4]
         previous = None
 
         state_data = []
 
-        for i in range(3):
+        for i in range(4):
             tmp = enemies[:]
             tmp2 = bosses[:]
             for j in range(number_of_levels[i]):
@@ -308,7 +309,8 @@ class State:
                      "wandre": 'Wandre(Control.sheets["wandre"].load_all_images(), -300, -300)',
                      "cena": 'Cena(Control.sheets["cena"].load_all_images(), -300, -300)',
                      "bursa": 'Bursa(Control.sheets["bursa"].load_all_images(), -300, -300)',
-                     "sosh": 'Sosh(Control.sheets["sosh"].load_all_images(), -300, -300)'}
+                     "sosh": 'Sosh(Control.sheets["sosh"].load_all_images(), -300, -300)',
+                     "arca": 'Arca(Control.sheets["arca"].load_all_images(), -300, -300)'}
 
     # Note that player is a 100px x 100px png
     player = None
@@ -335,7 +337,7 @@ class State:
         State.player.dice_set = [State.gen_dice("basic1"), State.gen_dice("basic1")]
 
         # TODO
-        # State.player.inventory = [State.gen_dice(i) for i in random.choices(list(State.dice_catalog.keys()), k=50)]
+        State.player.inventory = [State.gen_dice(i) for i in random.choices(list(State.dice_catalog.keys()), k=50)]
 
     @staticmethod
     def center(text_surface):
@@ -1199,9 +1201,10 @@ class Inventory(State):
 class Shop(State):
     """Where the player can purchase dice. Dice are added directly to the inventory."""
     tier = [
-        [["basic2", "poison1", "poison1"], False],
         [["basic2", "poison1", "heal1"], False],
-        [["basic3", "poison2", "basic2"], False]
+        [["basic2", "poison1", "heal2"], False],
+        [["basic3", "poison2", "basic2"], False],
+        [["basic3", "divider2", "multiplier1"], False]
     ]
     storage = {
         "p0-0": tier[0],
@@ -1229,7 +1232,16 @@ class Shop(State):
         "p2-2": tier[2],
         "l2-2": tier[2],
         "p2-3": tier[2],
-        "l2-3": tier[2]
+        "l2-3": tier[2],
+
+        "p3-0": tier[3],
+        "l3-0": tier[3],
+        "p3-1": tier[3],
+        "l3-1": tier[3],
+        "p3-2": tier[3],
+        "l3-2": tier[3],
+        "p3-3": tier[3],
+        "l3-3": tier[3]
     }
 
     inventory = []
@@ -1552,7 +1564,9 @@ class Loot(State):
     tier = [
         ["basic1", "basic1", "basic1", "basic1", "basic1", "basic2", "poison1", "poison1"],
         ["basic1", "basic1", "basic1", "basic1", "basic2", "poison1", "poison1", "poison2", "heal1"],
-        ["basic1", "basic1", "basic1", "basic1", "basic2", "basic2", "basic3", "poison1", "poison1", "poison2"]
+        ["basic1", "basic1", "basic1", "basic1", "basic2", "basic2", "basic3", "poison1", "poison1", "poison2"],
+        ["basic1", "basic1", "basic2", "basic2", "basic2", "basic3", "basic3", "poison1", "poison1",  "poison2",
+         "multiplier1", "divider1"]
     ]
     storage = {
         "p0-0": tier[0],
@@ -1580,7 +1594,16 @@ class Loot(State):
         "p2-2": tier[2],
         "l2-2": tier[2],
         "p2-3": tier[2],
-        "l2-3": tier[2]
+        "l2-3": tier[2],
+
+        "p3-0": tier[3],
+        "l3-0": tier[3],
+        "p3-1": tier[3],
+        "l3-1": tier[3],
+        "p3-2": tier[3],
+        "l3-2": tier[3],
+        "p3-3": tier[3],
+        "l3-3": tier[3]
     }
 
     def __init__(self):
@@ -1714,8 +1737,9 @@ class Battle(State):
         # Fonts
         self.font = fonts[0]
         self.big_font = fonts[3]
-        self.text_damage = self.font.render("DMG: {0} PSN: {1} HEAL: {2}".format(
-            self.damage // self.turn_player.divided, self.poison_damage, self.heal_value), True, (0, 0, 0))
+        self.text_damage = self.font.render("DMG: {0} PSN: {1} HEAL: {2} WKN: {3}X".format(
+            self.damage // self.turn_player.divided, self.poison_damage, self.heal_value,
+            self.weaken_attack), True, (0, 0, 0))
         self.text_reward = ""
 
     def cleanup(self):
@@ -1801,6 +1825,8 @@ class Battle(State):
         self.enemy.health_display(True)
         self.enemy.reset_dice()
 
+        self.turn_player.blessed = random.randint(1, 4)
+
     def handle_event(self, event):
         """Handles events in this state. In this case, handles battling which comes with
            a lot more events."""
@@ -1875,8 +1901,9 @@ class Battle(State):
         self.status_timer.update(dt)
 
         # Show current damage
-        self.text_damage = self.font.render("DMG: {0} PSN: {1} HEAL: {2}".format(
-            self.damage // self.turn_player.divided, self.poison_damage, self.heal_value), True, (0, 0, 0))
+        self.text_damage = self.font.render("DMG: {0} PSN: {1} HEAL: {2} WKN: {3}X".format(
+            self.damage // self.turn_player.divided, self.poison_damage, self.heal_value,
+            self.weaken_attack), True, (0, 0, 0))
         if self.turn_player == self.player:
             surface.blit(self.text_damage, (370, 435))
         else:
@@ -1900,7 +1927,8 @@ class Battle(State):
         if not self.active_dice:
             return
 
-        current = self.enemy.basic_ai()
+        current = self.enemy.basic_ai(self.player.current, self.damage, self.poison_damage, self.heal_value,
+                                      self.weaken_attack)
         if current == -1:
             self.end_turn()
         else:
@@ -1963,6 +1991,9 @@ class Battle(State):
         self.damage //= self.turn_player.divided
         self.turn_player.divided = 1
 
+        # Get rid of blessed status
+        self.turn_player.blessed = 0
+
         # Deduct health from the other side
         if self.turn_player == self.player:
             self.enemy.current -= self.damage
@@ -2006,6 +2037,9 @@ class Battle(State):
                                  Control.sheets["button4"].load_some_images(0, 0, 3),
                                  True, self.end_turn, 1, Button, (580, 370))
             self.timer.deactivate()
+
+            # A little rigging
+            self.turn_player.blessed = random.randint(1, 4)
         else:
             self.canvas.delete_element(1)
             self.canvas.add_static_element(load_s("ehub0.png"), 2, 0, 0)
@@ -2086,7 +2120,7 @@ class Battle(State):
         handle_sound("poison.mp3")
 
         self.turn_player.current -= self.turn_player.poison
-        self.turn_player.poison //= 2
+        self.turn_player.poison -= 1
 
         self.flash_timer.activate(0.5)
         self.flash = -1
