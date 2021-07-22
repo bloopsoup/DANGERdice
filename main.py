@@ -58,6 +58,7 @@ class Control:
                           "cena": Spritesheet(load_c("cena190x100x3x5.png"), 190, 100, 3, 5),
                           "sosh": Spritesheet(load_c("sosh70x140x3x5.png"), 70, 140, 3, 5),
                           "arca": Spritesheet(load_c("arca160x110x3x5.png"), 160, 110, 3, 5),
+                          "ellie": Spritesheet(load_c("ellie100x3x5.png"), 100, 100, 3, 5),
                           "portrait1": Spritesheet(load_c("chat100x2x6.png"), 100, 100, 2, 6),
                           "button": Spritesheet(load_b("1button70x3x6.png"), 70, 70, 3, 6),
                           "button2": Spritesheet(load_b("2button75x500x6x3.png"), 75, 500, 6, 3),
@@ -133,15 +134,15 @@ class Control:
            Levels are grouped into stages where a stage dictates the tier of the generated enemy.
            Each stage ends with a boss fight. Sometimes after a level, you can get extra die loot."""
 
-        enemies = ["aaron", "bursa", "cena", "dorita", "duck", "square", "wandre", "sosh", "arca"]
+        enemies = ["aaron", "bursa", "cena", "dorita", "duck", "square", "wandre", "sosh", "arca", "ellie"]
         bosses = ["wally", "ria"]
 
-        number_of_levels = [4, 4, 4, 4]
+        number_of_levels = [4, 4, 4, 4, 4]
         previous = None
 
         state_data = []
 
-        for i in range(4):
+        for i in range(5):
             tmp = enemies[:]
             tmp2 = bosses[:]
             for j in range(number_of_levels[i]):
@@ -310,7 +311,8 @@ class State:
                      "cena": 'Cena(Control.sheets["cena"].load_all_images(), -300, -300)',
                      "bursa": 'Bursa(Control.sheets["bursa"].load_all_images(), -300, -300)',
                      "sosh": 'Sosh(Control.sheets["sosh"].load_all_images(), -300, -300)',
-                     "arca": 'Arca(Control.sheets["arca"].load_all_images(), -300, -300)'}
+                     "arca": 'Arca(Control.sheets["arca"].load_all_images(), -300, -300)',
+                     "ellie": 'Ellie(Control.sheets["ellie"].load_all_images(), -300, -300)'}
 
     # Note that player is a 100px x 100px png
     player = None
@@ -1204,45 +1206,15 @@ class Shop(State):
         [["basic2", "poison1", "heal1"], False],
         [["basic2", "poison1", "heal2"], False],
         [["basic3", "poison2", "basic2"], False],
-        [["basic3", "divider2", "multiplier1"], False]
+        [["basic3", "divider2", "multiplier1"], False],
+        [["basic4", "basic5", "multiplier2"], False]
     ]
-    storage = {
-        "p0-0": tier[0],
-        "l0-0": tier[0],
-        "p0-1": tier[0],
-        "l0-1": tier[0],
-        "p0-2": tier[0],
-        "l0-2": tier[0],
-        "p0-3": tier[0],
-        "l0-3": tier[0],
 
-        "p1-0": tier[1],
-        "l1-0": tier[1],
-        "p1-1": tier[1],
-        "l1-1": tier[1],
-        "p1-2": tier[1],
-        "l1-2": tier[1],
-        "p1-3": tier[1],
-        "l1-3": tier[1],
-
-        "p2-0": tier[2],
-        "l2-0": tier[2],
-        "p2-1": tier[2],
-        "l2-1": tier[2],
-        "p2-2": tier[2],
-        "l2-2": tier[2],
-        "p2-3": tier[2],
-        "l2-3": tier[2],
-
-        "p3-0": tier[3],
-        "l3-0": tier[3],
-        "p3-1": tier[3],
-        "l3-1": tier[3],
-        "p3-2": tier[3],
-        "l3-2": tier[3],
-        "p3-3": tier[3],
-        "l3-3": tier[3]
-    }
+    storage = {}
+    for i in range(5):
+        for j in range(4):
+            storage["p{0}-{1}".format(i, j)] = tier[i]
+            storage["l{0}-{1}".format(i, j)] = tier[i]
 
     inventory = []
 
@@ -1566,45 +1538,16 @@ class Loot(State):
         ["basic1", "basic1", "basic1", "basic1", "basic2", "poison1", "poison1", "poison2", "heal1"],
         ["basic1", "basic1", "basic1", "basic1", "basic2", "basic2", "basic3", "poison1", "poison1", "poison2"],
         ["basic1", "basic1", "basic2", "basic2", "basic2", "basic3", "basic3", "poison1", "poison1",  "poison2",
-         "multiplier1", "divider1"]
+         "multiplier1", "divider1"],
+        ["basic2", "basic2", "basic3", "basic3", "basic3", "basic4", "basic4", "basic5", "poison1", "poison1",
+         "poison2", "poison3", "multiplier2", "divider3"]
     ]
-    storage = {
-        "p0-0": tier[0],
-        "l0-0": tier[0],
-        "p0-1": tier[0],
-        "l0-1": tier[0],
-        "p0-2": tier[0],
-        "l0-2": tier[0],
-        "p0-3": tier[0],
-        "l0-3": tier[0],
 
-        "p1-0": tier[1],
-        "l1-0": tier[1],
-        "p1-1": tier[1],
-        "l1-1": tier[1],
-        "p1-2": tier[1],
-        "l1-2": tier[1],
-        "p1-3": tier[1],
-        "l1-3": tier[1],
-
-        "p2-0": tier[2],
-        "l2-0": tier[2],
-        "p2-1": tier[2],
-        "l2-1": tier[2],
-        "p2-2": tier[2],
-        "l2-2": tier[2],
-        "p2-3": tier[2],
-        "l2-3": tier[2],
-
-        "p3-0": tier[3],
-        "l3-0": tier[3],
-        "p3-1": tier[3],
-        "l3-1": tier[3],
-        "p3-2": tier[3],
-        "l3-2": tier[3],
-        "p3-3": tier[3],
-        "l3-3": tier[3]
-    }
+    storage = {}
+    for i in range(5):
+        for j in range(4):
+            storage["p{0}-{1}".format(i, j)] = tier[i]
+            storage["l{0}-{1}".format(i, j)] = tier[i]
 
     def __init__(self):
         super().__init__()
@@ -1777,7 +1720,7 @@ class Battle(State):
 
     def startup(self):
         handle_music(random.choice(["huh.mp3", "ones.mp3", "stomp.mp3", "stomp2.mp3", "trittle.mp3", "doma.mp3",
-                                    "calm.mp3", "Something.mp3"]))
+                                    "calm.mp3", "Something.mp3", "hurt.mp3", "somedrums.mp3"]))
 
         # Setup Menu
         self.menu = SimpleMenu(20, 250, 265)

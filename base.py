@@ -498,7 +498,11 @@ class Aaron(Enemy):
                      [random.randint(10, 13), 10, 70, ["basic4", "basic3", "basic3"],
                       [["It sure is hot over here.",
                         "Then go home.",
-                        "No."], "101", (0, 1)]]
+                        "No."], "101", (0, 1)]],
+                     [random.randint(13, 16), 11, 75, ["basic4", "basic5"],
+                      [["Chips at the store are 50% off.",
+                        "Then let's go.",
+                        "I've been starving."], "100", (0, 1)]]
                      ]
 
         self.change_name("Aaron")
@@ -534,7 +538,10 @@ class Dorita(Enemy):
                       [["Why are you here?",
                         "Sightseeing.",
                         "I heard you can see idiots here.",
-                        "Rude."], "0110", (0, 4)]]
+                        "Rude."], "0110", (0, 4)]],
+                     [random.randint(12, 15), 12, 90, ["basic5", "divider3"],
+                      [["A tale of two cities...",
+                        "There is one city doofus."], "10", (0, 4)]]
                      ]
 
         self.change_name("Dorita")
@@ -564,7 +571,12 @@ class Wally(Enemy):
                         "No need to be an ass about it."], "10", (1, 5)]],
                      [random.randint(11, 13), 11, 120, ["basic3", "basic3"],
                       [["I am way out of my element.",
-                        "And yet you are still picking fights."], "10", (1, 5)]]
+                        "And yet you are still picking fights."], "10", (1, 5)]],
+                     [random.randint(13, 16), 12, 140, ["basic5", "basic5"],
+                      [["After I get my money,",
+                        "we shall get wasted at the bar.",
+                        "Can I come?",
+                        "Sure."], "1101", (1, 5)]]
                      ]
 
         self.change_name("Wally")
@@ -601,7 +613,10 @@ class BadDuck(Enemy):
                         "That's a birthmark dingus."], "1010", (0, 5)]],
                      [random.randint(11, 13), 10, 50, ["poison3", "poison3", "divider3"],
                       [["Accept my friend request.",
-                        "I will later."], "10", (0, 5)]]
+                        "I will later."], "10", (0, 5)]],
+                     [random.randint(13, 15), 12, 70, ["poison3", "poison3", "poison3", "divider3"],
+                      [["I wonder if the game shop is open.",
+                        "Just order online like everyone else."], "10", (0, 5)]]
                      ]
 
         self.change_name("Baduck")
@@ -624,7 +639,9 @@ class Michael(Enemy):
         self.tier = [[random.randint(5, 7), 6, 55, ["basic1", "multiplier1"], None],
                      [random.randint(6, 8), 7, 70, ["basic2", "multiplier2"], None],
                      [random.randint(8, 11), 8, 80, ["basic2", "basic2", "multiplier2"], None],
-                     [random.randint(11, 13), 10, 90, ["basic3", "multiplier3"], None]]
+                     [random.randint(11, 13), 10, 90, ["basic3", "multiplier3"], None],
+                     [random.randint(13, 15), 12, 110, ["basic4", "basic4", "multiplier3"], None]
+                     ]
 
         self.change_name("migahexx.xml")
 
@@ -644,7 +661,9 @@ class Shopkeeper(Enemy):
         self.tier = [[random.randint(8, 10), 30, 300, ["basic2", "basic2", "multiplier1", "multiplier1"], None],
                      [random.randint(10, 20), 40, 500, ["basic3", "multiplier1", "poison2", "poison2"], None],
                      [random.randint(15, 25), 45, 800, ["basic3", "multiplier2", "heal2", "poison2"], None],
-                     [random.randint(25, 30), 50, 1000, ["basic4", "multiplier3", "heal3", "poison3"], None]]
+                     [random.randint(25, 30), 50, 1000, ["basic4", "multiplier3", "heal3", "poison3"], None],
+                     [random.randint(30, 31), 55, 1200, ["basic5", "multiplier3", "multiplier3", "heal3"], None]
+                     ]
 
         self.change_name("Shopkeeper")
 
@@ -665,7 +684,9 @@ class GSquare(Enemy):
         self.tier = [[random.randint(3, 4), 7, 10, ["basic1", "poison1", "heal1"], None],
                      [random.randint(6, 7), 9, 30, ["basic2", "poison2", "heal2", "divider2"], None],
                      [random.randint(7, 9), 9, 40, ["basic2", "poison2", "heal2", "basic3"], None],
-                     [random.randint(10, 12), 9, 60, ["basic3", "poison3", "divider3", "basic3"], None]]
+                     [random.randint(10, 12), 9, 60, ["basic3", "poison3", "divider3", "basic3"], None],
+                     [random.randint(12, 15), 10, 80, ["basic4", "basic5", "divider3", "heal3"], None]
+                     ]
 
         self.change_name("Gamble Square")
 
@@ -697,7 +718,11 @@ class Ria(Enemy):
                      [random.randint(11, 13), 11, 90, ["basic3", "basic3", "heal2"],
                       [["I'll steal your heart",
                         "literally.",
-                        "Oh no."], "110", (1, 1)]]
+                        "Oh no."], "110", (1, 1)]],
+                     [random.randint(13, 15), 13, 110, ["basic4", "basic4", "heal3"],
+                      [["Maybe trying to kill you isn't a good   idea.",
+                        "You need a hobby.",
+                        "I'll kill you."], "101", (1, 1)]]
                      ]
 
         self.change_name("Ria")
@@ -729,7 +754,12 @@ class Wandre(Enemy):
                         "So you do wanna die."], "101", (1, 4)]],
                      [random.randint(10, 12), 10, 80, ["basic4", "basic3", "divider3"],
                       [["You built like a box.",
-                        "What?"], "10", (1, 4)]]
+                        "What?"], "10", (1, 4)]],
+                     [random.randint(13, 15), 12, 100, ["basic5", "basic4", "divider3", "heal2"],
+                      [["Wanna get food? `````My treat.",
+                        "...",
+                        "Sure.",
+                        "After this fight."], "1000", (1, 4)]]
                      ]
 
         self.change_name("Wandre")
@@ -762,7 +792,11 @@ class Cena(Enemy):
                      [random.randint(11, 13), 9, 60, ["poison3", "poison3", "heal2"],
                       [["Have you seen my cactus friend?",
                         "He owes me lunch.",
-                        "Lunch?"], "110", (0, 3)]]
+                        "Lunch?"], "110", (0, 3)]],
+                     [random.randint(13, 15), 10, 75, ["poison3", "poison3", "poison3", "heal3"],
+                      [["Can't wait to return home.",
+                        "I hate seeing people I know.",
+                        "I hate seeing people I don't know."], "110", (0, 3)]]
                      ]
 
         self.change_name("Cena")
@@ -791,11 +825,15 @@ class Bursa(Enemy):
                      [random.randint(7, 10), 9, 45, ["basic3", "basic2", "heal2"],
                       [["Money talks",
                         "and it looks like you have nothing to say.",
-                        "No need to rub it in."], "110", (0, 2)]],
+                        "Wow."], "110", (0, 2)]],
                      [random.randint(11, 13), 10, 65, ["basic3", "basic3", "heal3"],
                       [["I feel like I'm being cooked.",
                         "And yet you still smell rancid.",
-                        "What about your breath?"], "101", (0, 2)]]
+                        "What about your breath?"], "101", (0, 2)]],
+                     [random.randint(13, 15), 12, 75, ["basic4", "basic4", "heal3"],
+                      [["I don't want to be a lawyer.",
+                        "Why are you saying this?",
+                        "Making smalltalk."], "101", (0, 2)]]
                      ]
 
         self.change_name("Bursa")
@@ -828,7 +866,10 @@ class Sosh(Enemy):
                      [random.randint(10, 12), 10, 60, ["basic3", "multiplier3"],
                       [["I shall strike you down",
                         "and you will know peace.",
-                        "Great."], "110", (1, 3)]]
+                        "Great."], "110", (1, 3)]],
+                     [random.randint(12, 15), 12, 80, ["basic4", "basic4", "multiplier3"],
+                      [["Hello!",
+                        "Good afternoon."], "10", (1, 3)]]
                      ]
 
         self.change_name("Sosh")
@@ -855,6 +896,8 @@ class Arca(Enemy):
                      [random.randint(7, 9), 12, 30, ["basic1", "basic1"],
                       None],
                      [random.randint(10, 12), 12, 50, ["basic1", "basic1"],
+                      None],
+                     [random.randint(12, 15), 14, 70, ["basic1", "basic1"],
                       None]
                      ]
 
@@ -864,6 +907,33 @@ class Arca(Enemy):
                           [0, 0, 0, 4, 4, 0, 0, 4, 4, 0, 0, 0],
                           [0, 0, 0, 5, 6, 7, 7, 7, 6, 5, 0, 0, 8, 9, 10, 10, 10, 9, 8, 0, 0, 0],
                           [0, 0, 0, 11, 0, 0, 11, 0, 0, 0, 0, 0, 0]]
+        self.idle_run = random.choice(self.idle_anim)
+
+
+class Ellie(Enemy):
+    """You have a sister. Apparently."""
+
+    def __init__(self, files, x, y):
+        super().__init__(files, x, y)
+
+        self.tier = [[random.randint(2, 3), 9, 16, ["basic1"],
+                      None],
+                     [random.randint(4, 5), 9, 25, ["basic1", "basic2"],
+                      None],
+                     [random.randint(6, 8), 10, 40, ["basic1", "basic2", "basic2", "heal1"],
+                      None],
+                     [random.randint(9, 11), 12, 55, ["basic1", "basic3", "poison2", "heal2"],
+                      None],
+                     [random.randint(11, 15), 14, 65, ["basic1", "basic4", "basic4", "heal3"],
+                      None]
+                     ]
+
+        self.change_name("Ellie")
+
+        self.idle_anim = [[1, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 3, 3, 3, 3, 3, 3, 2, 1, 0, 0, 0, 0],
+                          [5, 6, 7, 8, 8, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 6, 5, 0, 0, 0, 0],
+                          [9, 10, 10, 10, 10, 10, 10, 11, 11, 11, 10, 10, 10, 10, 10, 9, 0, 0, 0],
+                          [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
         self.idle_run = random.choice(self.idle_anim)
 
 
