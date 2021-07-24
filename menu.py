@@ -127,6 +127,11 @@ class InputText(WidgetImage):
         self.font = pygame.font.Font(rp("assets/VT323-Regular.ttf"), self.font_size)
         self.text_surface = self.font.render(self.text, True, (0, 0, 0))
 
+    def submit_text(self):
+        """Function for other widgets to call in order to submit the stored text."""
+        self.onEvent(self.text)
+        self.text = ''
+
     def handle_event(self, event):
         """Handles input events. Allows you type in text."""
         # Check for clicks
@@ -359,19 +364,25 @@ class SimpleMenu:
         """Checks if an element exists with that ID."""
         return any([element.ID == ID for element in self.widgets])
 
+    def do_text_input_id(self, ID):
+        """Will call the submit function of the input text widget with that ID."""
+        for widget in self.widgets:
+            if widget.ID == ID:
+                widget.submit_text()
+
     def do_dialogue_id(self, ID, *args):
         """Will perform a command on a DialogueBox that has that ID. For args: 0 is toggle, 1 is add_scripts,
         2 is next_script, 3 is add portraits."""
-        for i in range(len(self.widgets)):
-            if self.widgets[i].ID == ID:
+        for widget in self.widgets:
+            if widget.ID == ID:
                 if args[0] == 0:
-                    return self.widgets[i].toggle_visible()
+                    return widget.toggle_visible()
                 elif args[0] == 1:
-                    return self.widgets[i].add_scripts(args[1])
+                    return widget.add_scripts(args[1])
                 elif args[0] == 2:
-                    return self.widgets[i].next_script()
+                    return widget.next_script()
                 else:
-                    return self.widgets[i].add_portraits(args[1], args[2])
+                    return widget.add_portraits(args[1], args[2])
 
     def delete_widget(self, ID):
         """Deletes a widget from the menu with specified ID. Only one object in the menu must have

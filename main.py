@@ -573,6 +573,9 @@ class Intro(State):
 
         self.destination = "story"
 
+        self.font = fonts[2]
+        self.text = self.font.render("", True, (0, 0, 0))
+
     def cleanup(self):
         self.menu = None
         self.canvas = None
@@ -580,14 +583,16 @@ class Intro(State):
     def startup(self):
         # Setup Menu
         self.menu = SimpleMenu(15, 130, 400)
-        self.menu.add_widget(600, 75, [load_b("0600x75.png"), load_b("1600x75.png")], True, self.enter_name, 1,
-                             InputText)
         self.menu.add_widget(70, 70, Control.sheets["button"].load_some_images(1, 0, 3), True, handle_music, 0,
                              Button, (730, 530))
-        self.menu.add_widget(70, 70, Control.sheets["button"].load_some_images(0, 0, 3), True, self.back, 3, Button,
-                             (0, 0))
+        self.menu.add_widget(600, 75, [load_b("0600x75.png"), load_b("1600x75.png")], True, self.enter_name, 1,
+                             InputText)
         self.menu.add_widget(200, 50, Control.sheets["button4"].load_some_images(1, 0, 3),
                              True, self.skip_tutorial, 2, Button)
+        self.menu.add_widget(70, 70, Control.sheets["button"].load_some_images(0, 0, 3), True, self.back, 3, Button,
+                             (0, 0))
+        self.menu.add_button_special(70, 70, Control.sheets["button"].load_some_images(2, 0, 3), True,
+                                     self.menu.do_text_input_id, 4, 1, (700, 130))
 
         # Setup Canvas
         self.canvas = Canvas()
@@ -614,19 +619,24 @@ class Intro(State):
         self.menu.update(surface, dt)
         self.timer.update(dt)
 
+        surface.blit(self.text, (self.center(self.text), 220))
+
     def back(self):
         """Goes back to the previous state. Restores player settings to enable story."""
         self.player.current_level = "p0-0"
         self.destination = "story"
+        self.text = self.font.render("", True, (0, 0, 0))
         self.to(self.previous)
 
     # Functions.
+
     def enter_name(self, text):
         """Once you entered a name, gives the player that name and moves him off screen. We then
            wait 2 seconds (to finish animation) and move onto the story state."""
         self.menu.delete_widget(1)
         self.menu.delete_widget(2)
         self.menu.delete_widget(3)
+        self.menu.delete_widget(4)
         self.player.change_name(text)
         self.player.command_move(5, 0, 1000, 472)
         self.timer.activate(2)
@@ -637,6 +647,7 @@ class Intro(State):
         self.destination = "player_menu"
         self.player.exp = 1
         self.menu.delete_widget(2)
+        self.text = self.font.render("Tutorial will be skipped.", True, (0, 0, 0))
 
 
 class Story(State):
@@ -1537,7 +1548,7 @@ class Loot(State):
         ["basic1", "basic1", "basic1", "basic1", "basic1", "basic2", "poison1", "poison1"],
         ["basic1", "basic1", "basic1", "basic1", "basic2", "poison1", "poison1", "poison2", "heal1"],
         ["basic1", "basic1", "basic1", "basic1", "basic2", "basic2", "basic3", "poison1", "poison1", "poison2"],
-        ["basic1", "basic1", "basic2", "basic2", "basic2", "basic3", "basic3", "poison1", "poison1",  "poison2",
+        ["basic1", "basic1", "basic2", "basic2", "basic2", "basic3", "basic3", "poison1", "poison1", "poison2",
          "multiplier1", "divider1"],
         ["basic2", "basic2", "basic3", "basic3", "basic3", "basic4", "basic4", "basic5", "poison1", "poison1",
          "poison2", "poison3", "multiplier2", "divider3"]
@@ -1720,7 +1731,7 @@ class Battle(State):
 
     def startup(self):
         handle_music(random.choice(["huh.mp3", "ones.mp3", "stomp.mp3", "stomp2.mp3", "trittle.mp3", "doma.mp3",
-                                    "calm.mp3", "Something.mp3", "hurt.mp3", "somedrums.mp3"]))
+                                    "calm.mp3", "Something.mp3", "hurt.mp3", "somedrums.mp3", "zins.mp3"]))
 
         # Setup Menu
         self.menu = SimpleMenu(20, 250, 265)
