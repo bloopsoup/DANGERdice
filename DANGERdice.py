@@ -59,7 +59,10 @@ class Control:
                           "sosh": Spritesheet(load_c("sosh70x140x3x5.png"), 70, 140, 3, 5),
                           "arca": Spritesheet(load_c("arca160x110x3x5.png"), 160, 110, 3, 5),
                           "ellie": Spritesheet(load_c("ellie100x3x5.png"), 100, 100, 3, 5),
-                          "portrait1": Spritesheet(load_c("chat100x2x6.png"), 100, 100, 2, 6),
+                          "kiran": Spritesheet(load_c("kiran150x3x5.png"), 150, 150, 3, 5),
+                          "connor": Spritesheet(load_c("connor85x100x3x5.png"), 85, 100, 3, 5),
+                          "baggins": Spritesheet(load_c("baggins110x3x5.png"), 110, 110, 3, 5),
+                          "portrait1": Spritesheet(load_c("chat100x3x6.png"), 100, 100, 2, 6),
                           "button": Spritesheet(load_b("1button70x3x6.png"), 70, 70, 3, 6),
                           "button2": Spritesheet(load_b("2button75x500x6x3.png"), 75, 500, 6, 3),
                           "button3": Spritesheet(load_b("3button70x3x6.png"), 70, 70, 3, 6),
@@ -79,6 +82,7 @@ class Control:
                           "inventory": Inventory(),
                           "shop": Shop(),
                           "game_over": GameOver(),
+                          "ending": Ending()
                           }
 
         self.state_name = start
@@ -134,15 +138,15 @@ class Control:
            Levels are grouped into stages where a stage dictates the tier of the generated enemy.
            Each stage ends with a boss fight. Sometimes after a level, you can get extra die loot."""
 
-        enemies = ["aaron", "bursa", "cena", "dorita", "duck", "square", "wandre", "sosh", "arca", "ellie"]
-        bosses = ["wally", "ria"]
+        enemies = ["aaron", "bursa", "cena", "dorita", "duck", "square", "wandre", "baggins", "arca", "ellie"]
+        bosses = ["wally", "ria", "connor", "sosh"]
 
-        number_of_levels = [4, 4, 4, 4, 4]
+        number_of_levels = [4, 4, 4, 4, 4, 1]
         previous = None
 
         state_data = []
 
-        for i in range(5):
+        for i in range(6):
             tmp = enemies[:]
             tmp2 = bosses[:]
             for j in range(number_of_levels[i]):
@@ -153,10 +157,14 @@ class Control:
                     has_preamble = True
                     has_loot = "player_menu"
                 elif j == number_of_levels[i] - 1:
-                    chosen = random.choice(tmp2)
-                    tmp2.remove(chosen)
-                    enemy = State.gen_enemy(chosen, i)
                     has_preamble = True
+                    if i == 5:
+                        chosen = "kiran"
+                    else:
+                        chosen = random.choice(tmp2)
+                        tmp2.remove(chosen)
+
+                    enemy = State.gen_enemy(chosen, i)
                     has_loot = "loot"
                 else:
                     chosen = random.choice(tmp)
@@ -312,7 +320,10 @@ class State:
                      "bursa": 'Bursa(Control.sheets["bursa"].load_all_images(), -300, -300)',
                      "sosh": 'Sosh(Control.sheets["sosh"].load_all_images(), -300, -300)',
                      "arca": 'Arca(Control.sheets["arca"].load_all_images(), -300, -300)',
-                     "ellie": 'Ellie(Control.sheets["ellie"].load_all_images(), -300, -300)'}
+                     "ellie": 'Ellie(Control.sheets["ellie"].load_all_images(), -300, -300)',
+                     "kiran": 'Kiran(Control.sheets["kiran"].load_all_images(), -300, -300)',
+                     "connor": 'Connor(Control.sheets["connor"].load_all_images(), -300, -300)',
+                     "baggins": 'Baggins(Control.sheets["baggins"].load_all_images(), -300, -300)'}
 
     # Note that player is a 100px x 100px png
     player = None
@@ -339,7 +350,7 @@ class State:
         State.player.dice_set = [State.gen_dice("basic1"), State.gen_dice("basic1")]
 
         # TODO
-        State.player.inventory = [State.gen_dice(i) for i in random.choices(list(State.dice_catalog.keys()), k=50)]
+        # State.player.inventory = [State.gen_dice(i) for i in random.choices(list(State.dice_catalog.keys()), k=50)]
 
     @staticmethod
     def center(text_surface):
@@ -405,6 +416,86 @@ class Attributions(State):
         self.timer.update(dt)
 
         surface.blit(self.text, (self.center(self.text), 220))
+
+
+class Ending(State):
+    """The ending sequence."""
+
+    def __init__(self):
+        super().__init__()
+
+        self.timer = DTimer(pygame.USEREVENT + 1)
+        self.step = 0
+
+        self.font = fonts[3]
+        self.text = self.font.render("AND AFTER THAT FIGHT", True, (255, 255, 255))
+
+    def cleanup(self):
+        self.canvas = None
+        self.player.stop_move()
+
+    def startup(self):
+        pygame.mixer.music.stop()
+
+        # Setup Canvas
+        self.canvas = Canvas()
+        self.canvas.add_static_element(load_s("black.png"), 0, 0, 0)
+
+        # Setup Player
+        self.player.change_name("")
+        self.player.direct_move(-100, 472)
+        self.player.display_mode("")
+        self.player.command_move(5, 0, 1000, 472)
+
+        handle_sound("one.mp3")
+        self.timer.activate(2)
+
+    def handle_event(self, event):
+        if event.type == self.timer.event:
+            if self.step == 0:
+                self.text = self.font.render("YOU FOUND A LOT OF MONEY", True, (255, 255, 255))
+
+                handle_sound("one.mp3")
+
+                self.timer.activate(1.5)
+                self.step += 1
+            elif self.step == 1:
+                self.text = self.font.render("IN THE MOUNTAINS", True, (255, 255, 255))
+
+                handle_sound("one.mp3")
+
+                self.timer.activate(2)
+                self.step += 1
+            elif self.step == 2:
+                self.text = self.font.render("DEBTS HAVE BEEN REPAID", True, (255, 255, 255))
+
+                handle_sound("one.mp3")
+
+                self.timer.activate(1.5)
+                self.step += 1
+            elif self.step == 3:
+                self.text = self.font.render("HAPPY END", True, (255, 255, 255))
+
+                handle_sound("one.mp3")
+
+                self.timer.activate(1.5)
+                self.step += 1
+            else:
+                self.return_menu()
+
+    def update(self, surface, dt):
+        self.canvas.update(surface, dt)
+        State.player.update(surface, dt)
+        self.timer.update(dt)
+
+        surface.blit(self.text, (self.center(self.text), 220))
+
+    def return_menu(self):
+        """Goes back to the main menu. Resets the player since they beat the game!"""
+        self.player.reset_player()
+        self.player.dice_set = [State.gen_dice("basic1"), State.gen_dice("basic1")]
+        Shop.refill()
+        self.to("main_menu")
 
 
 class Load(State):
@@ -579,6 +670,7 @@ class Intro(State):
     def cleanup(self):
         self.menu = None
         self.canvas = None
+        self.text = self.font.render("", True, (0, 0, 0))
 
     def startup(self):
         # Setup Menu
@@ -625,7 +717,6 @@ class Intro(State):
         """Goes back to the previous state. Restores player settings to enable story."""
         self.player.current_level = "p0-0"
         self.destination = "story"
-        self.text = self.font.render("", True, (0, 0, 0))
         self.to(self.previous)
 
     # Functions.
@@ -1218,11 +1309,12 @@ class Shop(State):
         [["basic2", "poison1", "heal2"], False],
         [["basic3", "poison2", "basic2"], False],
         [["basic3", "divider2", "multiplier1"], False],
-        [["basic4", "basic5", "multiplier2"], False]
+        [["basic4", "basic5", "multiplier2"], False],
+        [["basic5", "heal3", "multiplier3"], False]
     ]
 
     storage = {}
-    for i in range(5):
+    for i in range(6):
         for j in range(4):
             storage["p{0}-{1}".format(i, j)] = tier[i]
             storage["l{0}-{1}".format(i, j)] = tier[i]
@@ -1551,11 +1643,12 @@ class Loot(State):
         ["basic1", "basic1", "basic2", "basic2", "basic2", "basic3", "basic3", "poison1", "poison1", "poison2",
          "multiplier1", "divider1"],
         ["basic2", "basic2", "basic3", "basic3", "basic3", "basic4", "basic4", "basic5", "poison1", "poison1",
-         "poison2", "poison3", "multiplier2", "divider3"]
+         "poison2", "poison3", "multiplier2", "divider3"],
+        ["basic5"]
     ]
 
     storage = {}
-    for i in range(5):
+    for i in range(6):
         for j in range(4):
             storage["p{0}-{1}".format(i, j)] = tier[i]
             storage["l{0}-{1}".format(i, j)] = tier[i]
@@ -1637,7 +1730,9 @@ class Battle(State):
 
         # When you defeat an enemy
         self.destination = destination
-        self.next_level = "main_menu"
+
+        # This attribute only gets set in generate_states thus the last level will lead to the ending state
+        self.next_level = "ending"
 
         # A delay made for the AI's turn
         self.timer = DTimer(pygame.USEREVENT + 1)
@@ -1731,7 +1826,7 @@ class Battle(State):
 
     def startup(self):
         handle_music(random.choice(["huh.mp3", "ones.mp3", "stomp.mp3", "stomp2.mp3", "trittle.mp3", "doma.mp3",
-                                    "calm.mp3", "Something.mp3", "hurt.mp3", "somedrums.mp3", "zins.mp3"]))
+                                    "calm.mp3", "Something.mp3", "hurt.mp3", "somedrums.mp3", "zins.mp3", "jong.mp3"]))
 
         # Setup Menu
         self.menu = SimpleMenu(20, 250, 265)
