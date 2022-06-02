@@ -6,7 +6,7 @@ from utils import *
 class Base(pygame.sprite.Sprite):
     """Defines a base movable sprite for gameplay use. Can move with animation or move to a location
        directly via commands. If not moving, has an idling animation and other preset animations.
-       files -- List of file names -- Pictures for the element.
+       files -- List of file names -- Pictures for the elements.
        (x, y) -- Integers -- Starting location.
 
        See Enemy implementation for file details."""
@@ -27,13 +27,13 @@ class Base(pygame.sprite.Sprite):
         # MOVING
         self.x_speed = 0
         self.y_speed = 0
-        # Original location of the element
+        # Original location of the elements
         self.og_x = x
         self.og_y = y
-        # Destination of the element (provided with move_command)
+        # Destination of the elements (provided with move_command)
         self.to_x = None
         self.to_y = None
-        # Intermediate coordinates to animate the element
+        # Intermediate coordinates to animate the elements
         self.x = self.og_x
         self.y = self.og_y
         # Frames
@@ -51,7 +51,7 @@ class Base(pygame.sprite.Sprite):
 
     # MOVEMENT
     def command_move(self, x_speed, y_speed, x, y):
-        """Tells the element to actually move with a specified speed for both axis and a destination (x, y)."""
+        """Tells the elements to actually move with a specified speed for both axis and a destination (x, y)."""
         self.stop_move()
 
         self.x_speed = x_speed
@@ -78,7 +78,7 @@ class Base(pygame.sprite.Sprite):
         self.status(True)
 
     def direct_move(self, x, y):
-        """Directly moves the element to the location."""
+        """Directly moves the elements to the location."""
         self.x = x
         self.og_x = x
 
@@ -86,7 +86,7 @@ class Base(pygame.sprite.Sprite):
         self.og_y = y
 
     def move(self, dt):
-        """Moves the element to the destination and then disables movement."""
+        """Moves the elements to the destination and then disables movement."""
         # Do NOTHING if provided no command
         if self.x_speed == 0 and self.y_speed == 0:
             return
@@ -169,15 +169,15 @@ class Base(pygame.sprite.Sprite):
 
     # TOGGLING
     def status(self, on):
-        """Indicates whether the element is idle or not."""
+        """Indicates whether the elements is idle or not."""
         if on:
             self.idle = True
         else:
             self.idle = False
 
     def update(self, surface, dt):
-        """Drawing the element."""
-        # First draw the element
+        """Drawing the elements."""
+        # First draw the elements
         self.move(dt)
         self.idle_animate(dt)
         surface.blit(self.image, (self.x, self.y))
@@ -257,7 +257,7 @@ class Enemy(Base):
            enemy -- When it's the enemy's turn."""
 
         # Manually set the dimensions if we change it later
-        # This is the size of the hub dice element
+        # This is the size of the hub dice elements
         x_size = 100
         y_size = 100
         # Stroke (if applicable)
@@ -392,8 +392,8 @@ class Enemy(Base):
         return int((self.image.get_width() - text_surface.get_width()) / 2)
 
     def update(self, surface, dt):
-        """Drawing the element."""
-        # Draw the element
+        """Drawing the elements."""
+        # Draw the elements
         self.move(dt)
         self.idle_animate(dt)
         surface.blit(self.image, (self.x, self.y))
@@ -578,7 +578,7 @@ class Wally(Enemy):
                       [["You have to fight me. ```````Unfortunate.",
                         "No need to be an ass about it."], "10", (1, 5)]],
                      [random.randint(11, 13), 11, 120, ["basic3", "basic3"],
-                      [["I am way out of my element.",
+                      [["I am way out of my elements.",
                         "And yet you are still picking fights."], "10", (1, 5)]],
                      [random.randint(13, 16), 12, 140, ["basic5", "basic5"],
                       [["After I get my money,",

@@ -1,5 +1,6 @@
 __pycache__
 dist
 build
+.idea
 *.spec
 assets/psd

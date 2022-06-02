@@ -1,0 +1,65 @@
+import pygame
+
+from gui.canvas.elements.Interactive import Interactive
+
+
+class InputText(Interactive):
+    """A place to input text."""
+
+    def __init__(self, images: list[pygame.Surface], pos: tuple[float, float], theme: dict, on_event):
+        # Uses two images: [active, inactive]
+        super().__init__(images, pos, theme, on_event)
+
+        self.active = False
+        self.text = ""
+        self.text_surface = self.theme["font"].render(self.text, True, (0, 0, 0))
+
+    def current_picture_index(self):
+        """Determines image index to use to reflect the state of the widget."""
+        return 0 if self.active else 1
+
+    def find_center_offset(self) -> pygame.Vector2:
+        """Determines the offset to center the text relative to the reference."""
+        return pygame.Vector2((int((self.reference.width - self.text_surface.get_width()) / 2),
+                               int((self.reference.height - self.text_surface.get_height()) / 2)))
+
+    def will_overflow(self, char: str) -> bool:
+        """Determines whether adding char will make the text go past its boundaries."""
+        char_s = self.theme["font"].render(char, True, (0, 0, 0))
+        return self.text_surface.get_width() + char_s.get_width() + self.theme["padding"] >= self.reference.width
+
+    def submit_text(self):
+        """Calls on_event with self.text as an argument then clears itself."""
+        self.on_event(self.text)
+        self.text = ""
+
+    def handle_event(self, event):
+        """Clicking toggles the box which allows inputting text. ENTER to submit the text."""
+        # Clicking on the input box
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if self.reference.collidepoint(pygame.mouse.get_pos()):
+                self.active = not self.active
+            else:
+                self.active = False
+
+        # Typing into the input box / submitting with ENTER
+        if event.type == pygame.KEYDOWN and self.active:
+            if event.key == pygame.K_RETURN:
+                self.theme["play_sfx"]()
+                self.submit_text()
+            elif event.key == pygame.K_BACKSPACE:
+                self.text = self.text[:-1]
+            elif not self.will_overflow(event.unicode):
+                self.text += event.unicode
+
+    def update(self, surface: pygame.Surface, dt: float):
+        """Displays itself onto surface."""
+        # Draw the input box
+        selected_image = self.current_picture_index()
+        surface.blit(self.images[selected_image], (self.pos.x, self.pos.y))
+        self.draw_border(surface)
+
+        # Draw the text
+        self.text_surface = self.theme["font"].render(self.text, True, (0, 0, 0))
+        offset = self.find_center_offset()
+        surface.blit(self.text_surface, (self.reference.x + offset.x, self.reference.y + offset.y))

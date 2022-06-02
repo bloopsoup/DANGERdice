@@ -6,7 +6,7 @@ class BaseEffect:
     """Defines a base effect for visual use. It handles animation similar to Base but it is intended to be
        much simpler as these effects feature only one animation and is meant to be managed by an
        effect manager.
-       files -- List of file names -- Pictures for the element.
+       files -- List of file names -- Pictures for the elements.
        (x, y) -- Integers -- Starting location.
        ID -- Integer -- For identifying an effect when used with effect manager."""
 
@@ -44,8 +44,8 @@ class BaseEffect:
             self.image = self.images[self.index]
 
     def update(self, surface, dt):
-        """Drawing the element."""
-        # Draw the element if it's active
+        """Drawing the elements."""
+        # Draw the elements if it's active
         if self.active:
             self.run(dt)
             surface.blit(self.image, (self.x, self.y))
@@ -59,7 +59,7 @@ class EffectManager:
         self.effect_queue = []
 
     def add_effect(self, file, ID, x, y):
-        """Add a static background element."""
+        """Add a static background elements."""
         self.effect_queue.append(BaseEffect(file, ID, x, y))
 
     def activate_effect(self, ID):

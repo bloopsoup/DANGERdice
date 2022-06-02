@@ -361,7 +361,7 @@ class SimpleMenu:
             self.current += height + self.spacing
 
     def check_id(self, ID):
-        """Checks if an element exists with that ID."""
+        """Checks if an elements exists with that ID."""
         return any([element.ID == ID for element in self.widgets])
 
     def do_text_input_id(self, ID):

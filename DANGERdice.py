@@ -1,5 +1,14 @@
 from base import *
-from canvas import *
+
+from gui.canvas.Themes import *
+from gui.canvas.Canvas import Canvas
+from gui.canvas.elements.StaticBG import StaticBG
+from gui.canvas.elements.MovingBG import MovingBackgroundElement
+from gui.canvas.elements.Button import Button as Butt
+from gui.canvas.elements.InputText import InputText as InputT
+from gui.canvas.elements.DialogueBox import DialogueData as DData
+from gui.canvas.elements.DialogueBox import DialogueBox as DBox
+
 from effects import *
 from menu import *
 from utils import *
@@ -77,10 +86,8 @@ class Control:
                           "loot": Loot(),
                           "save": Save(),
                           "intro": Intro(),
-                          "story": Story(),
                           "player_menu": PlayerMenu(),
                           "inventory": Inventory(),
-                          "shop": Shop(),
                           "game_over": GameOver(),
                           "ending": Ending()
                           }
@@ -185,7 +192,7 @@ class Control:
                 if has_preamble:
                     Control.states["p{0}-{1}".format(i, j)] = Preamble(enemy, i, "l{0}-{1}".format(i, j))
                 if j == 0 and i == 0:
-                    previous = Tutorial(enemy, i, has_loot)
+                    pass
                 else:
                     previous = Battle(enemy, i, has_loot)
                 Control.states["l{0}-{1}".format(i, j)] = previous
@@ -212,7 +219,7 @@ class Control:
                 Control.states["p{0}-{1}".format(level[3], level[4])] = Preamble(enemy, level[3],
                                                                                  "l{0}-{1}".format(level[3], level[4]))
             if level[3] == 0 and level[4] == 0:
-                previous = Tutorial(enemy, level[3], has_loot)
+                pass
             else:
                 previous = Battle(enemy, level[3], has_loot)
             Control.states["l{0}-{1}".format(level[3], level[4])] = previous
@@ -241,8 +248,8 @@ class State:
         self.effects = None
 
     def cleanup(self):
-        """Stuff to do before leaving a state. Example would be to unload songs."""
-        raise NotImplementedError
+        """Cleaning up components before leaving the state. This is not always necessary."""
+        pass
 
     def startup(self):
         """Stuff to do when entering a state, such as loading songs or images."""
@@ -250,6 +257,8 @@ class State:
 
     def handle_event(self, event):
         """Handles events in this state."""
+        self.canvas.handle_event(event)
+
         self.menu.handle_event(event)
 
     def update(self, surface, dt):
@@ -347,10 +356,8 @@ class State:
     def init_player():
         """Initialize the player. A guy with only two basic dice."""
         State.player = State.gen_enemy("player", 0)
-        State.player.dice_set = [State.gen_dice("basic1"), State.gen_dice("basic1")]
-
-        # TODO
-        # State.player.inventory = [State.gen_dice(i) for i in random.choices(list(State.dice_catalog.keys()), k=50)]
+        State.player.dice_set = [State.gen_dice("basic5"), State.gen_dice("basic1")]
+        State.player.inventory = [State.gen_dice("basic1") for _ in range(40)]
 
     @staticmethod
     def center(text_surface):
@@ -380,14 +387,11 @@ class Attributions(State):
         self.font = fonts[3]
         self.text = self.font.render("A BMB GAME", True, (255, 255, 255))
 
-    def cleanup(self):
-        self.canvas = None
-
     def startup(self):
         # Setup Canvas
         self.canvas = Canvas()
-        self.canvas.add_static_element(load_s("black.png"), 0, 0, 0)
-        self.canvas.add_static_element(load_c("badmc100x100.png"), 1, 350, 280)
+        self.canvas.add_element(StaticBG([load_img(load_s("black.png"))], (0, 0)), 0)
+        self.canvas.add_element(StaticBG([load_img(load_c("badmc100x100.png"))], (350, 280)), 1)
 
         # Setup Player
         self.player.change_name("")
@@ -401,7 +405,7 @@ class Attributions(State):
         if event.type == self.timer.event:
             if self.step == 0:
                 self.text = self.font.render("Inspired by TinyDiceDungeons", True, (255, 255, 255))
-                self.canvas.delete_element(1)
+                self.canvas.delete_group(1)
 
                 handle_sound("one.mp3")
 
@@ -431,7 +435,6 @@ class Ending(State):
         self.text = self.font.render("AND AFTER THAT FIGHT", True, (255, 255, 255))
 
     def cleanup(self):
-        self.canvas = None
         self.player.stop_move()
 
     def startup(self):
@@ -439,7 +442,7 @@ class Ending(State):
 
         # Setup Canvas
         self.canvas = Canvas()
-        self.canvas.add_static_element(load_s("black.png"), 0, 0, 0)
+        self.canvas.add_element(StaticBG([load_img(load_s("black.png"))], (0, 0)), 0)
 
         # Setup Player
         self.player.change_name("")
@@ -494,7 +497,6 @@ class Ending(State):
         """Goes back to the main menu. Resets the player since they beat the game!"""
         self.player.reset_player()
         self.player.dice_set = [State.gen_dice("basic1"), State.gen_dice("basic1")]
-        Shop.refill()
         self.to("main_menu")
 
 
@@ -508,23 +510,19 @@ class Load(State):
         self.font = fonts[3]
         self.text = self.font.render("Load saved data?", True, (0, 0, 0))
 
-    def cleanup(self):
-        self.canvas = None
-        self.menu = None
-
     def startup(self):
         # Setup menu itself
         self.menu = SimpleMenu(15, 275, 400)
-        self.menu.add_widget(70, 70, Control.sheets["button"].load_some_images(2, 3, 3), True, self.load_data, 0,
-                             Button, (320, 280))
-        self.menu.add_widget(70, 70, Control.sheets["button"].load_some_images(1, 3, 3), True, self.back, 0,
-                             Button, (410, 280))
-        self.menu.add_widget(70, 70, Control.sheets["button"].load_some_images(1, 0, 3), True, handle_music, 0,
-                             Button, (730, 530))
 
         # Setup Canvas
         self.canvas = Canvas()
-        self.canvas.add_static_element(load_s("placeholderbg.png"), 0, 0, 0)
+        self.canvas.add_element(StaticBG([load_img(load_s("placeholderbg.png"))], (0, 0)), 0)
+        self.canvas.add_element(Butt(Control.sheets["button"].load_some_images(2, 3, 3), (320, 280), BUTTON_DEFAULT,
+                                     self.load_data), 0)
+        self.canvas.add_element(Butt(Control.sheets["button"].load_some_images(1, 3, 3), (410, 280), BUTTON_DEFAULT,
+                                     self.back), 0)
+        self.canvas.add_element(Butt(Control.sheets["button"].load_some_images(1, 0, 3), (730, 530), BUTTON_DEFAULT,
+                                     handle_music), 0)
 
         # Setup Player
         self.player.direct_move(-100, -100)
@@ -558,8 +556,8 @@ class Load(State):
             s_data = data[1]
             Control.load_generated_states(s_data)
 
-            shop_data = data[2]
-            Shop.load_data(shop_data)
+            # shop_data = data[2]
+            # Shop.load_data(shop_data)
 
             self.to("player_menu")
 
@@ -573,23 +571,19 @@ class Save(State):
         self.font = fonts[3]
         self.text = self.font.render("Save current data?", True, (0, 0, 0))
 
-    def cleanup(self):
-        self.canvas = None
-        self.menu = None
-
     def startup(self):
         # Setup menu itself
         self.menu = SimpleMenu(15, 275, 400)
-        self.menu.add_widget(70, 70, Control.sheets["button"].load_some_images(2, 3, 3), True, self.save_data, 0,
-                             Button, (320, 280))
-        self.menu.add_widget(70, 70, Control.sheets["button"].load_some_images(1, 3, 3), True, self.back, 0,
-                             Button, (410, 280))
-        self.menu.add_widget(70, 70, Control.sheets["button"].load_some_images(1, 0, 3), True, handle_music, 0,
-                             Button, (730, 530))
 
         # Setup Canvas
         self.canvas = Canvas()
-        self.canvas.add_static_element(load_s("placeholderbg.png"), 0, 0, 0)
+        self.canvas.add_element(StaticBG([load_img(load_s("placeholderbg.png"))], (0, 0)), 0)
+        self.canvas.add_element(Butt(Control.sheets["button"].load_some_images(2, 3, 3), (320, 280), BUTTON_DEFAULT,
+                                     self.save_data), 0)
+        self.canvas.add_element(Butt(Control.sheets["button"].load_some_images(1, 3, 3), (410, 280), BUTTON_DEFAULT,
+                                     self.back), 0)
+        self.canvas.add_element(Butt(Control.sheets["button"].load_some_images(1, 0, 3), (730, 530), BUTTON_DEFAULT,
+                                     handle_music()), 0)
 
         # Setup Player
         self.player.direct_move(-100, -100)
@@ -605,7 +599,7 @@ class Save(State):
     # Function
     def save_data(self):
         """Saves current player data."""
-        save_data([self.player.package_data(), Control.state_data, Shop.package_data()], "player_data")
+        save_data([self.player.package_data(), Control.state_data, None], "player_data")
         self.back()
 
 
@@ -615,27 +609,25 @@ class MainMenu(State):
     def __init__(self):
         super().__init__()
 
-    def cleanup(self):
-        self.menu = None
-        self.canvas = None
-
     def startup(self):
         handle_music("trooper.mp3")
 
         # Setup menu itself
         self.menu = SimpleMenu(15, 275, 400)
-        self.menu.add_widget(500, 75, Control.sheets["button2"].load_some_images(0, 0, 3), True, self.campaign, 0,
-                             Button)
-        self.menu.add_widget(500, 75, Control.sheets["button2"].load_some_images(2, 0, 3), True, self.load, 0, Button)
-        self.menu.add_widget(500, 75, Control.sheets["button2"].load_some_images(4, 0, 3), True, self.quit_game, 0,
-                             Button)
-        self.menu.add_widget(70, 70, Control.sheets["button"].load_some_images(1, 0, 3), True, handle_music, 0,
-                             Button, (730, 530))
 
         # Setup Canvas
         self.canvas = Canvas()
-        self.canvas.add_moving_bg(load_s("back1.png"), 0, 2, True, True, 800, 600)
-        self.canvas.add_static_element(load_s("logo.png"), 0, 0, 0)
+        self.canvas.add_element(MovingBackgroundElement([load_img(load_s("back1.png"))], (0, 2), (800, 600)), 0)
+        self.canvas.add_element(StaticBG([load_img(load_s("logo.png"))], (0, 0)), 0)
+
+        self.canvas.add_element(Butt(Control.sheets["button2"].load_some_images(0, 0, 3), (0, 270), BUTTON_DEFAULT,
+                                     self.campaign), 0)
+        self.canvas.add_element(Butt(Control.sheets["button2"].load_some_images(2, 0, 3), (0, 340), BUTTON_DEFAULT,
+                                     self.load), 0)
+        self.canvas.add_element(Butt(Control.sheets["button2"].load_some_images(4, 0, 3), (0, 410), BUTTON_DEFAULT,
+                                     self.quit_game), 0)
+        self.canvas.add_element(Butt(Control.sheets["button"].load_some_images(1, 0, 3), (730, 530), BUTTON_DEFAULT,
+                                     handle_music), 0)
 
         # Setup Player
         self.player.change_name("")
@@ -662,34 +654,35 @@ class Intro(State):
         super().__init__()
         self.timer = DTimer(pygame.USEREVENT + 1)
 
-        self.destination = "story"
+        self.destination = "player_menu"
+        self.player.current_level = "l0-1"
 
         self.font = fonts[2]
         self.text = self.font.render("", True, (0, 0, 0))
 
     def cleanup(self):
-        self.menu = None
-        self.canvas = None
         self.text = self.font.render("", True, (0, 0, 0))
 
     def startup(self):
         # Setup Menu
         self.menu = SimpleMenu(15, 130, 400)
-        self.menu.add_widget(70, 70, Control.sheets["button"].load_some_images(1, 0, 3), True, handle_music, 0,
-                             Button, (730, 530))
-        self.menu.add_widget(600, 75, [load_b("0600x75.png"), load_b("1600x75.png")], True, self.enter_name, 1,
-                             InputText)
-        self.menu.add_widget(200, 50, Control.sheets["button4"].load_some_images(1, 0, 3),
-                             True, self.skip_tutorial, 2, Button)
-        self.menu.add_widget(70, 70, Control.sheets["button"].load_some_images(0, 0, 3), True, self.back, 3, Button,
-                             (0, 0))
-        self.menu.add_button_special(70, 70, Control.sheets["button"].load_some_images(2, 0, 3), True,
-                                     self.menu.do_text_input_id, 4, 1, (700, 130))
 
         # Setup Canvas
         self.canvas = Canvas()
-        self.canvas.add_static_element(load_s("land1.png"), 0, 0, 0)
-        self.canvas.add_moving_bg(load_s("cloud0.png"), 0, 1, False, False, 800, 600)
+        self.canvas.add_element(StaticBG([load_img(load_s("land1.png"))], (0, 0)), 0)
+        self.canvas.add_element(MovingBackgroundElement([load_img(load_s("cloud0.png"))], (-1, 0), (800, 600)), 0)
+
+        self.canvas.add_element(Butt(Control.sheets["button"].load_some_images(1, 0, 3), (730, 530), BUTTON_DEFAULT,
+                                     handle_music), 0)
+        input_textbox = InputT([load_img(load_b("1600x75.png")), load_img(load_b("0600x75.png"))],
+                               (0, 200), INPUT_DEFAULT, self.enter_name)
+        self.canvas.add_element(input_textbox, 1)
+        self.canvas.add_element(Butt(Control.sheets["button4"].load_some_images(1, 0, 3), (0, 300), BUTTON_DEFAULT,
+                                     self.skip_tutorial), 2)
+        self.canvas.add_element(Butt(Control.sheets["button"].load_some_images(0, 0, 3), (0, 0), BUTTON_DEFAULT,
+                                     self.back), 3)
+        self.canvas.add_element(Butt(Control.sheets["button"].load_some_images(2, 0, 3), (700, 130), BUTTON_DEFAULT,
+                                     input_textbox.submit_text), 4)
 
         # Setup Player (should be hardcoded as Player dimensions are constant)
         self.player.name_display(True)
@@ -699,7 +692,7 @@ class Intro(State):
 
     def handle_event(self, event):
         """Needed a timer this time to finish the animation."""
-        self.menu.handle_event(event)
+        self.canvas.handle_event(event)
 
         if event.type == self.timer.event:
             self.to(self.destination)
@@ -708,26 +701,25 @@ class Intro(State):
         """Needed for updating timer."""
         self.canvas.update(surface, dt)
         State.player.update(surface, dt)
-        self.menu.update(surface, dt)
         self.timer.update(dt)
 
         surface.blit(self.text, (self.center(self.text), 220))
 
     def back(self):
         """Goes back to the previous state. Restores player settings to enable story."""
-        self.player.current_level = "p0-0"
-        self.destination = "story"
+        self.player.current_level = "l0-1"
+        self.destination = "player_menu"
         self.to(self.previous)
 
-    # Functions.
+    # Functions
 
     def enter_name(self, text):
         """Once you entered a name, gives the player that name and moves him off screen. We then
            wait 2 seconds (to finish animation) and move onto the story state."""
-        self.menu.delete_widget(1)
-        self.menu.delete_widget(2)
-        self.menu.delete_widget(3)
-        self.menu.delete_widget(4)
+        self.canvas.delete_group(1)
+        self.canvas.delete_group(2)
+        self.canvas.delete_group(3)
+        self.canvas.delete_group(4)
         self.player.change_name(text)
         self.player.command_move(5, 0, 1000, 472)
         self.timer.activate(2)
@@ -737,200 +729,8 @@ class Intro(State):
         self.player.current_level = "l0-1"
         self.destination = "player_menu"
         self.player.exp = 1
-        self.menu.delete_widget(2)
+        self.canvas.delete_group(2)
         self.text = self.font.render("Tutorial will be skipped.", True, (0, 0, 0))
-
-
-class Story(State):
-    """Today is not your lucky day."""
-
-    def __init__(self):
-        super().__init__()
-
-        self.enemy = State.gen_enemy("dorita", 0)
-        self.enemy_extra = State.gen_enemy("aaron", 0)
-
-        self.text_info = [["Ah Monday.",
-                           "Another day running my shady casino.",
-                           "Good morning.",
-                           "Wow, you're already here.",
-                           "Don't you think it's a bit early for    gambling everything away?",
-                           "It's never too early.",
-                           "And besides, ````````I'm feeling lucky.",
-                           "And so do other people.",
-                           "There goes the last of my money.",
-                           "Why do people keep getting jackpots?",
-                           "Told you so.",
-                           "Got my jackpot as well, ````so where's my   money?",
-                           "Well... ``````",
-                           "Do you take I.O.U's?",
-                           "No.",
-                           "Then I have another solution.",
-                           "What is it?",
-                           "What the...",
-                           "MY MONEY!"], "0010011100110010111", [0, 4]]
-        self.portraits = [Control.sheets["portrait1"].load_image(0, 0),
-                          Control.sheets["portrait1"].load_image(self.text_info[2][0], self.text_info[2][1])]
-
-        self.timer = DTimer(pygame.USEREVENT + 1)
-        self.step = 0
-
-        self.player_y = 257
-        self.enemy_y = self.player_y - self.enemy.image.get_height() + 100
-        self.enemy_extra_y = self.player_y - self.enemy_extra.image.get_height() + 100
-
-        self.font = fonts[3]
-        self.text = self.font.render("", True, (255, 255, 255))
-
-    def cleanup(self):
-        self.menu = None
-        self.canvas = None
-
-        self.step = 0
-
-    def startup(self):
-        pygame.mixer.music.stop()
-
-        # Setup Menu
-        self.menu = SimpleMenu(15, 330, 400)
-        self.menu.add_widget(70, 70, Control.sheets["button"].load_some_images(1, 0, 3), True, handle_music, 0,
-                             Button, (730, 530))
-        self.menu.add_widget(600, 200, [load_b("text600x200.png")], True, None, 1, DialogueBox)
-        self.menu.do_dialogue_id(1, 1, self.text_info[0])
-        self.menu.do_dialogue_id(1, 3, self.portraits, self.text_info[1])
-        self.timer.activate(2.5)
-
-        # Setup Canvas
-        self.canvas = Canvas()
-        self.canvas.add_static_element(load_s("land0.png"), 0, 0, 0)
-        self.canvas.add_moving_bg(load_s("cloud1.png"), 0, 1, False, False, 800, 600)
-        self.canvas.add_static_element(load_s("ground0.png"), 0, 0, 0)
-
-        # Setup Player (should be hardcoded as Player dimensions are constant)
-        self.player.direct_move(-100, 257)
-        self.player.command_move(2, 0, 100, 257)
-        self.player.name_display(True)
-        self.player.health_display(False)
-        self.player.display_mode("")
-
-        # Setup enemies
-        self.enemy.direct_move(900, self.enemy_y)
-        self.enemy.name_display(True)
-        self.enemy.health_display(False)
-        self.enemy.display_mode("")
-
-        self.enemy_extra.direct_move(900, self.enemy_y)
-        self.enemy_extra.name_display(True)
-        self.enemy_extra.health_display(False)
-        self.enemy_extra.display_mode("")
-
-    def handle_event(self, event):
-        """Needed a timer this time to finish the movement."""
-        self.menu.handle_event(event)
-
-        # Story sequence works with timer so this is used
-        if event.type == self.timer.event:
-            if self.step == 0:
-                self.menu.do_dialogue_id(1, 0)
-                self.menu.add_widget(70, 70, Control.sheets["button"].load_some_images(2, 0, 3), True,
-                                     self.next_dialogue, 2, Button, (700, 330))
-            elif self.step == 2:
-                self.menu.do_dialogue_id(1, 0)
-                self.menu.add_widget(70, 70, Control.sheets["button"].load_some_images(2, 0, 3), True,
-                                     self.next_dialogue, 2, Button, (700, 330))
-            elif self.step == 8:
-                self.canvas.delete_element(1)
-
-                self.text = self.font.render("", True, (255, 255, 255))
-                self.enemy_extra.direct_move(300, self.enemy_extra_y)
-                self.enemy_extra.command_move(5, 0, 1000, self.enemy_extra_y)
-
-                self.advance()
-                self.timer.activate(2)
-            elif self.step == 9:
-                self.player.command_move(5, 0, 100, 257)
-
-                self.advance()
-                self.timer.activate(1.2)
-            elif self.step == 10:
-                self.menu.do_dialogue_id(1, 0)
-                self.menu.add_widget(70, 70, Control.sheets["button"].load_some_images(2, 0, 3), True,
-                                     self.next_dialogue, 2, Button, (700, 330))
-            elif self.step == 12:
-                self.menu.do_dialogue_id(1, 0)
-                self.menu.add_widget(70, 70, Control.sheets["button"].load_some_images(2, 0, 3), True,
-                                     self.next_dialogue, 2, Button, (700, 330))
-            elif self.step == 19:
-                self.menu.do_dialogue_id(1, 0)
-                self.menu.add_widget(70, 70, Control.sheets["button"].load_some_images(2, 0, 3), True,
-                                     self.next_dialogue, 2, Button, (700, 330))
-            elif self.step == 21:
-                self.to(self.player.current_level)
-
-    def update(self, surface, dt):
-        """Needed for updating timer."""
-        self.canvas.update(surface, dt)
-        State.player.update(surface, dt)
-        self.enemy.update(surface, dt)
-        self.enemy_extra.update(surface, dt)
-        self.menu.update(surface, dt)
-        self.timer.update(dt)
-
-        surface.blit(self.text, (self.center(self.text), 220))
-
-    # Functions
-    def next_dialogue(self):
-        """Button function. Signals to dialogue widget to move to the next script.
-           Also advances the sequence."""
-        self.advance()
-        self.menu.do_dialogue_id(1, 2)
-
-    def advance(self):
-        """Runs the step and then advances the step in the sequence."""
-        self.story_sequence()
-        self.step += 1
-
-    def story_sequence(self):
-        """Controls how the cutscene executes."""
-        if self.step == 1:
-            self.menu.delete_widget(2)
-            self.menu.do_dialogue_id(1, 0)
-
-            self.enemy.command_move(3, 0, 580, self.enemy_y)
-
-            self.timer.activate(2)
-        elif self.step == 7:
-            self.menu.delete_widget(2)
-            self.menu.do_dialogue_id(1, 0)
-
-            self.canvas.add_static_element(load_s("black.png"), 1, 0, 0)
-            self.text = self.font.render("2 HOURS LATER", True, (255, 255, 255))
-            handle_sound("one.mp3")
-
-            self.player.direct_move(-100, 257)
-            self.enemy.direct_move(900, self.enemy_y)
-
-            self.timer.activate(1.5)
-        elif self.step == 11:
-            self.menu.delete_widget(2)
-            self.menu.do_dialogue_id(1, 0)
-
-            self.enemy.command_move(4, 0, 580, self.enemy_y)
-
-            self.timer.activate(1.5)
-        elif self.step == 18:
-            self.menu.delete_widget(2)
-            self.menu.do_dialogue_id(1, 0)
-
-            self.player.command_move(10, 0, 1000, 257)
-
-            self.timer.activate(1.2)
-        elif self.step == 20:
-            self.menu.delete_widget(2)
-
-            self.enemy.command_move(10, 0, 1000, self.enemy_y)
-
-            self.timer.activate(1.2)
 
 
 class PlayerMenu(State):
@@ -942,30 +742,29 @@ class PlayerMenu(State):
         self.font = fonts[2]
         self.text = self.font.render("Next Level: {0}".format(self.player.current_level), True, (0, 0, 0))
 
-    def cleanup(self):
-        self.menu = None
-        self.canvas = None
-
     def startup(self):
         handle_music("note.mp3")
 
         # Setup Menu
         self.menu = SimpleMenu(20, 250, 400)
-        self.menu.add_widget(500, 75, Control.sheets["button2"].load_some_images(3, 0, 3), True, self.play, 0, Button)
-        self.menu.add_widget(500, 75, Control.sheets["button2"].load_some_images(1, 0, 3), True, self.inventory, 0,
-                             Button)
-        self.menu.add_widget(500, 75, Control.sheets["button2"].load_some_images(5, 0, 3), True, self.shop, 0, Button)
-        self.menu.add_widget(70, 70, Control.sheets["button"].load_some_images(1, 0, 3), True, handle_music, 0,
-                             Button, (730, 530))
-        self.menu.add_widget(70, 70, Control.sheets["button3"].load_some_images(1, 0, 3), True, self.save, 0,
-                             Button, (0, 530))
-        self.menu.add_widget(70, 70, Control.sheets["button3"].load_some_images(1, 3, 3), True, self.load, 0,
-                             Button, (70, 530))
 
         # Setup Canvas
         self.canvas = Canvas()
-        self.canvas.add_moving_bg(load_s("back2.png"), 0, 1, True, False, 800, 600)
-        self.canvas.add_static_element(load_s("mhub1.png"), 0, 0, 0)
+        self.canvas.add_element(MovingBackgroundElement([load_img(load_s("back2.png"))], (0, -1), (800, 600)), 0)
+        self.canvas.add_element(StaticBG([load_img(load_s("mhub1.png"))], (0, 0)), 0)
+
+        self.canvas.add_element(Butt(Control.sheets["button2"].load_some_images(3, 0, 3), (0, 250), BUTTON_DEFAULT,
+                                     self.play), 0)
+        self.canvas.add_element(Butt(Control.sheets["button2"].load_some_images(1, 0, 3), (0, 320), BUTTON_DEFAULT,
+                                     self.inventory), 0)
+        self.canvas.add_element(Butt(Control.sheets["button2"].load_some_images(5, 0, 3), (0, 390), BUTTON_DEFAULT,
+                                     self.shop), 0)
+        self.canvas.add_element(Butt(Control.sheets["button"].load_some_images(1, 0, 3), (730, 530), BUTTON_DEFAULT,
+                                     handle_music), 0)
+        self.canvas.add_element(Butt(Control.sheets["button3"].load_some_images(1, 0, 3), (0, 530), BUTTON_DEFAULT,
+                                     self.save), 0)
+        self.canvas.add_element(Butt(Control.sheets["button3"].load_some_images(1, 3, 3), (70, 530), BUTTON_DEFAULT,
+                                     self.load), 0)
 
         # Setup Player (should be hardcoded as Player dimensions are constant)
         self.player.stop_move()
@@ -978,7 +777,6 @@ class PlayerMenu(State):
         """Draws stuff pertaining to this state. Generally, menu options should be on top."""
         self.canvas.update(surface, dt)
         State.player.update(surface, dt)
-        self.menu.update(surface, dt)
 
         self.text = self.font.render("Next Level: {0}".format(self.player.current_level), True, (0, 0, 0))
         surface.blit(self.text, (self.center(self.text), 210))
@@ -990,7 +788,8 @@ class PlayerMenu(State):
 
     def shop(self):
         """Let's go shopping!"""
-        self.to("shop")
+        # self.to("shop")
+        pass
 
     def inventory(self):
         """Let's see your inventory."""
@@ -1006,8 +805,8 @@ class PlayerMenu(State):
 
 
 class Inventory(State):
-    """Where the player can change up their dice set and view their inventory of dice. Features pagination
-       for better inventory management."""
+    """Where the player can change up their dice set and view their inventory of dice.
+       Features pagination for better inventory management."""
 
     def __init__(self):
         super().__init__()
@@ -1020,8 +819,8 @@ class Inventory(State):
         self.reference_index = 0
 
         # Fonts
-        self.font = fonts[2]
         self.font_small = fonts[1]
+        self.font = fonts[2]
 
         self.info = ""
 
@@ -1031,53 +830,46 @@ class Inventory(State):
         self.text_money = self.font_small.render("{0} G".format(self.player.money), True, (0, 0, 0))
 
     def cleanup(self):
-        self.menu = None
-        self.canvas = None
-
         self.selected = -1
         self.inv_selected = -1
-
         self.reference_index = 0
 
     def startup(self):
         # Setup Menu
         self.menu = SimpleMenu(20, 250, 265)
-        self.menu.add_widget(70, 70, Control.sheets["button"].load_some_images(0, 0, 3), True, self.back, -1, Button,
-                             (0, 0))
-        self.menu.add_widget(70, 70, Control.sheets["button"].load_some_images(1, 0, 3), True, handle_music, -1,
-                             Button, (730, 530))
-
-        # For your dice set
-        placeholder = [load_b("hold_die.png") for _ in range(3)]
-        self.menu.add_button_special(85, 85, placeholder, False, self.select_own, -1, 0, (205, 75))
-        self.menu.add_button_special(85, 85, placeholder, False, self.select_own, -1, 1, (308, 75))
-        self.menu.add_button_special(85, 85, placeholder, False, self.select_own, -1, 2, (408, 75))
-        self.menu.add_button_special(85, 85, placeholder, False, self.select_own, -1, 3, (509, 75))
-
-        # Make a button for each inventory die
-        self.reset_buttons()
-
-        # Pagination buttons
-        self.menu.add_widget(70, 70, Control.sheets["button"].load_some_images(2, 0, 3), True, self.scroll_right, -1,
-                             Button, (625, 530))
-        self.menu.add_widget(70, 70, Control.sheets["button"].load_some_images(0, 3, 3), True, self.scroll_left, -1,
-                             Button, (105, 530))
 
         # Setup Canvas
         self.canvas = Canvas()
-        self.canvas.add_moving_bg(load_s("back3.png"), 0, 1, True, False, 800, 600)
-        self.canvas.add_static_element(load_s("inventory.png"), 0, 0, 0)
+        self.canvas.add_element(MovingBackgroundElement([load_img(load_s("back3.png"))], (0, -1), (800, 600)), -1)
+        self.canvas.add_element(StaticBG([load_img(load_s("inventory.png"))], (0, 0)), -1)
+
+        self.canvas.add_element(Butt(Control.sheets["button"].load_some_images(0, 0, 3), (0, 0), BUTTON_DEFAULT,
+                                     self.back), -1)
+        self.canvas.add_element(Butt(Control.sheets["button"].load_some_images(1, 0, 3), (730, 530), BUTTON_DEFAULT,
+                                     handle_music), -1)
+
+        placeholder = [load_img(load_b("hold_die.png")) for _ in range(3)]
+        self.canvas.add_element(Butt(placeholder, (205, 75), BUTTON_GHOST, lambda: self.select_own(0)), -1)
+        self.canvas.add_element(Butt(placeholder, (308, 75), BUTTON_GHOST, lambda: self.select_own(1)), -1)
+        self.canvas.add_element(Butt(placeholder, (408, 75), BUTTON_GHOST, lambda: self.select_own(2)), -1)
+        self.canvas.add_element(Butt(placeholder, (509, 75), BUTTON_GHOST, lambda: self.select_own(3)), -1)
+
+        self.reset_buttons()
+
+        self.canvas.add_element(Butt(Control.sheets["button"].load_some_images(2, 0, 3), (625, 530), BUTTON_DEFAULT,
+                                     self.scroll_right), -1)
+        self.canvas.add_element(Butt(Control.sheets["button"].load_some_images(0, 3, 3), (105, 530), BUTTON_DEFAULT,
+                                     self.scroll_left), -1)
 
         # Setup Players
         self.player.direct_move(-100, -100)
         self.player.name_display(False)
         self.player.health_display(False)
         self.player.display_mode("")
-        self.player.inventory.sort(key=lambda x: x.ID)
 
     def handle_event(self, event):
         """We added a BACKSPACE event to cancel the player's selection."""
-        self.menu.handle_event(event)
+        self.canvas.handle_event(event)
 
         # Deselecting dice
         if event.type == pygame.KEYDOWN and (self.selected != -1 or self.inv_selected != -1):
@@ -1087,7 +879,6 @@ class Inventory(State):
     def update(self, surface, dt):
         self.canvas.update(surface, dt)
         State.player.update(surface, dt)
-        self.menu.update(surface, dt)
 
         # Draw the player's current dice
         self.draw_own_dice(surface, dt)
@@ -1129,7 +920,6 @@ class Inventory(State):
         self.inv_selected = i
         self.info = "{0} (Sells for {1} gold)".format(self.player.inventory[i].name,
                                                       self.player.inventory[i].price // 3)
-
         self.current_button_remove()
         self.inventory_buttons_popup()
 
@@ -1145,11 +935,10 @@ class Inventory(State):
         """Creates the buttons so we can interact with the inventory."""
         reference_x = [205, 305, 405, 505]
         reference_y = [270, 370, 470]
-        placeholder = [load_b("hold_die.png") for _ in range(3)]
+        placeholder = [load_img(load_b("hold_die.png")) for _ in range(3)]
 
         # Uses a (row, col) system for a 4 x 3 grid
-        row = 0
-        col = 0
+        row, col = 0, 0
         for i in range(self.reference_index, len(self.player.inventory)):
             if col == 4:
                 col = 0
@@ -1157,50 +946,51 @@ class Inventory(State):
             if row == 3:
                 break
 
-            self.menu.add_button_special(85, 85, placeholder, True, self.select_inventory, i, i,
-                                         (reference_x[col], reference_y[row]))
+            def select_maker(x: int):
+                def select():
+                    return self.select_inventory(x)
+                return select
+
+            button = Butt(placeholder, (reference_x[col], reference_y[row]), BUTTON_GHOST,
+                          select_maker(i))
+            self.canvas.add_element(button, i)
             self.added_buttons.append(i)
             col += 1
 
     def delete_buttons(self):
         """Deletes the inventory buttons."""
         for i in self.added_buttons:
-            self.menu.delete_widget(i)
+            self.canvas.delete_group(i)
         self.added_buttons.clear()
 
     def reset_buttons(self):
-        """Just resets the die buttons. Also resorts the player's inventory."""
+        """Just resets the die buttons."""
         self.delete_buttons()
         self.make_inventory_buttons()
-        self.player.inventory.sort(key=lambda x: x.ID)
 
     # Inventory Interactions
     def inventory_buttons_popup(self):
         """Make the inventory die buttons appear."""
-        self.menu.add_widget(70, 70, Control.sheets["button3"].load_some_images(0, 3, 3), True, self.delete_die, -2,
-                             Button, (105, 200))
-        self.menu.add_widget(70, 70, Control.sheets["button3"].load_some_images(0, 0, 3), True, self.equip_die, -3,
-                             Button, (105, 280))
-        self.menu.add_widget(70, 70, Control.sheets["button"].load_some_images(1, 3, 3), True, self.deselect, -5,
-                             Button, (105, 360))
+        self.canvas.add_element(Butt(Control.sheets["button3"].load_some_images(0, 3, 3), (105, 200), BUTTON_DEFAULT,
+                                self.delete_die), -2)
+        self.canvas.add_element(Butt(Control.sheets["button3"].load_some_images(0, 0, 3), (105, 280), BUTTON_DEFAULT,
+                                     self.equip_die), -3)
+        self.canvas.add_element(Butt(Control.sheets["button"].load_some_images(1, 3, 3), (105, 360), BUTTON_DEFAULT,
+                                     self.deselect), -5)
 
     def set_button_popup(self):
         """Make the unequip button appear."""
-        self.menu.add_widget(70, 70, Control.sheets["button3"].load_some_images(2, 0, 3), True, self.unequip_die, -4,
-                             Button, (105, 200))
-        self.menu.add_widget(70, 70, Control.sheets["button"].load_some_images(1, 3, 3), True, self.deselect, -5,
-                             Button, (105, 280))
+        self.canvas.add_element(Butt(Control.sheets["button3"].load_some_images(2, 0, 3), (105, 200), BUTTON_DEFAULT,
+                                     self.unequip_die), -4)
+        self.canvas.add_element(Butt(Control.sheets["button"].load_some_images(1, 3, 3), (105, 280), BUTTON_DEFAULT,
+                                     self.deselect), -5)
 
     def current_button_remove(self):
         """Removes the current button(s)."""
-        if self.menu.check_id(-2):
-            self.menu.delete_widget(-2)
-        if self.menu.check_id(-3):
-            self.menu.delete_widget(-3)
-        if self.menu.check_id(-4):
-            self.menu.delete_widget(-4)
-        if self.menu.check_id(-5):
-            self.menu.delete_widget(-5)
+        self.canvas.delete_group(-2)
+        self.canvas.delete_group(-3)
+        self.canvas.delete_group(-4)
+        self.canvas.delete_group(-5)
 
     def delete_die(self):
         """Deletes the selected die where the player is compensated with 1/3 the price of the die.
@@ -1302,258 +1092,12 @@ class Inventory(State):
             col += 1
 
 
-class Shop(State):
-    """Where the player can purchase dice. Dice are added directly to the inventory."""
-    tier = [
-        [["basic2", "poison1", "heal1"], False],
-        [["basic2", "poison1", "heal2"], False],
-        [["basic3", "poison2", "basic2"], False],
-        [["basic3", "divider2", "multiplier1"], False],
-        [["basic4", "basic5", "multiplier2"], False],
-        [["basic5", "heal3", "multiplier3"], False]
-    ]
-
-    storage = {}
-    for i in range(6):
-        for j in range(4):
-            storage["p{0}-{1}".format(i, j)] = tier[i]
-            storage["l{0}-{1}".format(i, j)] = tier[i]
-
-    inventory = []
-
-    def __init__(self):
-        super().__init__()
-
-        # For flashing notices on screen such as BOUGHT
-        self.flash_timer = DTimer(pygame.USEREVENT + 2)
-        self.flash = 0
-
-        # For selecting an option
-        self.selected = -1
-
-        # Shopkeeper for looks
-        self.keeper = State.gen_enemy("shopkeeper", 0)
-
-        # Fonts
-        self.font = fonts[2]
-        self.font_small = fonts[1]
-
-        self.info = ""
-        self.help = "Click on a Die you wish to purchase."
-
-        self.text_info = self.font.render(self.info, True, (0, 0, 0))
-        self.text_money = self.font.render("Gold: {0}".format(self.player.money), True, (0, 0, 0))
-        self.text_help = self.font_small.render(self.help, True, (0, 0, 0))
-
-    def cleanup(self):
-        self.menu = None
-        self.canvas = None
-
-        self.selected = -1
-        self.info = ""
-
-    def startup(self):
-        # Setup Menu
-        self.menu = SimpleMenu(20, 250, 265)
-        self.menu.add_widget(70, 70, Control.sheets["button"].load_some_images(0, 0, 3), True, self.back, 0, Button,
-                             (0, 0))
-        self.menu.add_widget(70, 70, Control.sheets["button"].load_some_images(1, 0, 3), True, handle_music, 0,
-                             Button, (730, 530))
-
-        placeholder = [load_b("hold_die.png") for _ in range(3)]
-        self.menu.add_button_special(85, 85, placeholder, False, self.select, 0, 0, (104, 290))
-        self.menu.add_button_special(85, 85, placeholder, False, self.select, 0, 1, (356, 290))
-        self.menu.add_button_special(85, 85, placeholder, False, self.select, 0, 2, (611, 290))
-
-        # Setup Canvas
-        self.canvas = Canvas()
-        self.canvas.add_moving_bg(load_s("back3.png"), 0, 1, True, False, 800, 600)
-        self.canvas.add_static_element(load_s("shop.png"), 0, 0, 0)
-
-        # Setup Players
-        self.player.direct_move(-100, -100)
-        self.player.name_display(False)
-        self.player.health_display(False)
-        self.player.display_mode("")
-
-        self.keeper.direct_move(650, 420)
-        self.keeper.name_display(False)
-        self.keeper.health_display(False)
-        self.keeper.display_mode("")
-
-        self.restock()
-
-    def handle_event(self, event):
-        """In addition to menu events, added button events for buying and deselecting dice."""
-        self.menu.handle_event(event)
-
-        # Buying and dice
-        if event.type == pygame.KEYDOWN and self.selected != -1:
-            # For purchasing
-            if event.key == pygame.K_RETURN:
-                self.buy()
-            # For backing out
-            if event.key == pygame.K_BACKSPACE:
-                self.deselect()
-
-        # Flash timers
-        if event.type == self.flash_timer.event:
-            self.canvas.delete_element(self.flash)
-            self.flash = 0
-
-    def update(self, surface, dt):
-        self.canvas.update(surface, dt)
-        State.player.update(surface, dt)
-        self.keeper.update(surface, dt)
-        self.menu.update(surface, dt)
-        self.flash_timer.update(dt)
-
-        # Draw the dice
-        self.draw_shop_dice(surface, dt)
-
-        # Display info when selected
-
-        # Displaying the Die Name
-        self.text_info = self.font.render(self.info, True, (0, 0, 0))
-        surface.blit(self.text_info, (self.center(self.text_info), 476))
-
-        # Instructing player on what to do after selecting die
-        if self.flash == 0:
-            if self.selected == -1:
-                surface.blit(self.text_help, (10, 544))
-
-        # Displaying the player's money
-        self.text_money = self.font.render("Gold: {0}".format(self.player.money), True, (0, 0, 0))
-        surface.blit(self.text_money, (100, 170))
-
-    # Shop-Related Functions
-
-    @staticmethod
-    def refill():
-        """Refreshes the shop's storage. To be used when the player dies and wants to come back again."""
-        for t in Shop.tier:
-            t[1] = False
-
-    def restock(self):
-        """Refreshes the shop's inventory. To be called upon setup when certain conditions are met such as
-           re-entering a shop."""
-        if self.player.current_level in self.storage:
-            if not self.storage[self.player.current_level][1]:
-                self.storage[self.player.current_level][1] = True
-                Shop.inventory = [State.gen_dice(i) for i in self.storage[self.player.current_level][0]]
-        else:
-            Shop.inventory = [None, None, None]
-
-    def select(self, i):
-        """Select a die."""
-        if Shop.inventory[i] is not None:
-            self.selected = i
-            self.info = "{0} costing {1} gold.".format(Shop.inventory[i].name, Shop.inventory[i].price)
-
-            self.current_button_remove()
-            self.shop_buttons_popup()
-
-    def buy(self):
-        """Purchases the selected die."""
-        # If you have enough money or not
-        if Shop.inventory[self.selected].price <= self.player.money:
-            self.player.money -= Shop.inventory[self.selected].price
-            self.player.inventory.append(Shop.inventory[self.selected])
-            Shop.inventory[self.selected] = None
-
-            self.popup_bought()
-            handle_sound("roll.mp3")
-        else:
-            self.popup_broke()
-            handle_sound("one.mp3")
-
-        self.selected = -1
-        self.info = ""
-        self.current_button_remove()
-
-    def deselect(self):
-        """Deselects the current die."""
-        self.selected = -1
-        self.info = ""
-        self.current_button_remove()
-
-    # Buttons
-    def shop_buttons_popup(self):
-        """Make the shop buttons appear."""
-        self.menu.add_widget(70, 70, Control.sheets["button"].load_some_images(2, 3, 3), True, self.buy, -2,
-                             Button, (320, 525))
-        self.menu.add_widget(70, 70, Control.sheets["button"].load_some_images(1, 3, 3), True, self.deselect, -3,
-                             Button, (410, 525))
-        self.remove_popups()
-
-    def current_button_remove(self):
-        """Removes the current button(s)."""
-        if self.menu.check_id(-2):
-            self.menu.delete_widget(-2)
-        if self.menu.check_id(-3):
-            self.menu.delete_widget(-3)
-
-    # Displays
-    def draw_shop_dice(self, surface, dt):
-        """Draws the shop dice."""
-        reference_x = [104, 356, 611]
-        reference_y = 290
-
-        for i in range(len(Shop.inventory)):
-            if Shop.inventory[i] is not None:
-                # Animate the die if selected
-                if self.selected == i:
-                    Shop.inventory[i].status(True)
-                else:
-                    Shop.inventory[i].status(False)
-
-                Shop.inventory[i].direct_move(reference_x[i], reference_y)
-                Shop.inventory[i].update(surface, dt)
-
-    def remove_popups(self):
-        """Remove the current popups."""
-        if self.canvas.check_id(1):
-            self.canvas.delete_element(1)
-        if self.canvas.check_id(2):
-            self.canvas.delete_element(2)
-
-    def popup_bought(self):
-        """Pop up the bought display."""
-        self.remove_popups()
-
-        self.canvas.add_static_element(load_s("bought.png"), 1, 0, 130)
-        self.flash_timer.activate(0.5)
-        self.flash = 1
-
-    def popup_broke(self):
-        """Pop up the broke display."""
-        self.remove_popups()
-
-        self.canvas.add_static_element(load_s("broke.png"), 2, 0, 0)
-        self.flash_timer.activate(0.5)
-        self.flash = 2
-
-    # Data
-    @staticmethod
-    def package_data():
-        """Returns shop data for saving purposes. Format is [inventory, restocked]."""
-        return [[die.ID if die else None for die in Shop.inventory], [i[1] for i in Shop.tier]]
-
-    @staticmethod
-    def load_data(data):
-        """Loads data for shops."""
-        Shop.inventory = [State.gen_dice(die) if die else None for die in data[0]]
-        for i in range(len(data[1])):
-            Shop.tier[i][1] = data[1][i]
-
-
 class Preamble(State):
     """Sometimes you have a chit-chat before battle."""
 
     def __init__(self, enemy, bg, destination):
         super().__init__()
 
-        # Arguments
         self.destination = destination
         self.enemy = enemy
         self.bg = bg
@@ -1561,39 +1105,33 @@ class Preamble(State):
         self.text_info = self.enemy.preamble
         self.portraits = [Control.sheets["portrait1"].load_image(0, 0),
                           Control.sheets["portrait1"].load_image(self.text_info[2][0], self.text_info[2][1])]
+        self.d_box = None
 
-        # A delay between the characters showing up and the dialogue box appearing.
-        self.timer = DTimer(pygame.USEREVENT + 1)
-
-        # Location values
         self.player_x = 60
         self.player_y = 257
         self.enemy_x = 800 - self.player_x - self.enemy.image.get_width()
         self.enemy_y = self.player_y - self.enemy.image.get_height() + 100
 
-    def cleanup(self):
-        self.menu = None
-        self.canvas = None
+        self.timer = DTimer(pygame.USEREVENT + 1)
 
     def startup(self):
         pygame.mixer.music.stop()
 
-        # Setup menu itself
         self.menu = SimpleMenu(15, 330, 400)
-        self.menu.add_widget(70, 70, Control.sheets["button"].load_some_images(1, 0, 3), True, handle_music, 0,
-                             Button, (730, 530))
-        self.menu.add_widget(600, 200, [load_b("text600x200.png")], True, None, 1, DialogueBox)
-        self.menu.do_dialogue_id(1, 1, self.text_info[0])
-        self.menu.do_dialogue_id(1, 3, self.portraits, self.text_info[1])
         self.timer.activate(1)
 
-        # Setup Canvas
         self.canvas = Canvas()
-        self.canvas.add_static_element(load_s("{0}.png".format(self.bg)), 0, 0, 0)
-        self.canvas.add_moving_bg(load_s("cloud{0}.png".format(self.bg)), 0, 1, False, False, 800, 600)
-        self.canvas.add_static_element(load_s("ground0.png"), 1, 0, 0)
+        self.canvas.add_element(StaticBG([load_img(load_s("{0}.png".format(self.bg)))], (0, 0)), 0)
+        self.canvas.add_element(MovingBackgroundElement([load_img(load_s("cloud{0}.png".format(self.bg)))],
+                                                        (-1, 0), (800, 600)), 0)
+        self.canvas.add_element(StaticBG([load_img(load_s("ground0.png"))], (0, 0)), 1)
 
-        # Setup Player and Enemy
+        self.canvas.add_element(Butt(Control.sheets["button"].load_some_images(1, 0, 3), (730, 530), BUTTON_DEFAULT,
+                                     handle_music), 0)
+        d_data = DData(self.text_info[0], self.portraits, self.text_info[1])
+        self.d_box = DBox([load_img(load_b("text600x200.png"))], (0, 100), DIALOGUE_DEFAULT, self.next_dialogue, d_data)
+        self.canvas.add_element(self.d_box, 1)
+
         self.player.direct_move(-300, self.player_y)
         self.player.command_move(10, 0, self.player_x, self.player_y)
         self.player.name_display(False)
@@ -1608,29 +1146,21 @@ class Preamble(State):
 
     def handle_event(self, event):
         """Handles events in this state."""
-        self.menu.handle_event(event)
-
-        # Time triggered dialogue box / button display
+        self.canvas.handle_event(event)
         if event.type == self.timer.event:
-            self.menu.do_dialogue_id(1, 0)
-            self.menu.add_widget(70, 70, Control.sheets["button"].load_some_images(2, 0, 3), True,
-                                 self.next_dialogue, 2, Button, (700, 330))
+            self.d_box.toggle_visibility()
 
     def update(self, surface, dt):
         """Draws stuff pertaining to this state. Generally, menu options should be on top."""
         self.canvas.update(surface, dt)
         State.player.update(surface, dt)
         self.enemy.update(surface, dt)
-        self.menu.update(surface, dt)
-
         self.timer.update(dt)
 
     # Functions
     def next_dialogue(self):
-        """Button function. Signals to dialogue widget to move to the next script.
-           Reaching end of script triggers something."""
-        if self.menu.do_dialogue_id(1, 2):
-            self.menu.delete_widget(2)
+        """Signals to dialogue widget to move to the next script. Reaching end of script triggers something."""
+        if not self.d_box.next_script():
             self.to(self.destination)
 
 
@@ -1668,7 +1198,6 @@ class Loot(State):
         self.player_y = 257
 
     def cleanup(self):
-        self.canvas = None
         self.step = 0
         self.text = self.font.render("", True, (0, 0, 0))
         self.dice_name = ""
@@ -1676,8 +1205,8 @@ class Loot(State):
     def startup(self):
         # Setup Canvas
         self.canvas = Canvas()
-        self.canvas.add_static_element(load_s("land2.png"), 0, 0, 0)
-        self.canvas.add_static_element(load_s("ground0.png"), 0, 0, 0)
+        self.canvas.add_element(StaticBG([load_img(load_s("land2.png"))], (0, 0)), 0)
+        self.canvas.add_element(StaticBG([load_img(load_s("ground0.png"))], (0, 0)), 0)
 
         # Setup Player
         self.player.direct_move(-300, self.player_y)
@@ -1710,7 +1239,6 @@ class Loot(State):
     # Function
     def give_loot(self):
         """Gives the player the loot. Randomly."""
-
         if self.player.current_level in self.storage:
             die = State.gen_dice(random.choice(self.storage[self.player.current_level]))
         else:
@@ -1721,7 +1249,7 @@ class Loot(State):
 
 
 class Battle(State):
-    """First construct it with an enemy, their dice_set and a bg element. Destination is the
+    """First construct it with an enemy, their dice_set and a bg elements. Destination is the
        state to move to after the battle is over.
        Animations will scale with the enemy dimensions."""
 
@@ -1797,10 +1325,6 @@ class Battle(State):
         # Disables enemy AI timer
         self.timer.deactivate()
 
-        self.menu = None
-        self.canvas = None
-        self.effects = None
-
         self.enemy.current = self.enemy.health
         self.enemy.dead = False
         self.enemy.display_mode("")
@@ -1830,22 +1354,24 @@ class Battle(State):
 
         # Setup Menu
         self.menu = SimpleMenu(20, 250, 265)
-        self.menu.add_widget(70, 70, Control.sheets["button"].load_some_images(1, 0, 3), True, handle_music, 0,
-                             Button, (730, 0))
-        self.menu.add_widget(200, 50, Control.sheets["button4"].load_some_images(0, 0, 3),
-                             True, self.end_turn, 1, Button, (580, 370))
-
-        placeholder = [load_b("hold_die.png") for _ in range(3)]
-        self.menu.add_button_special(100, 100, placeholder, False, self.roll_select, 0, 0, (369, 455))
-        self.menu.add_button_special(100, 100, placeholder, False, self.roll_select, 0, 1, (469, 455))
-        self.menu.add_button_special(100, 100, placeholder, False, self.roll_select, 0, 2, (569, 455))
-        self.menu.add_button_special(100, 100, placeholder, False, self.roll_select, 0, 3, (669, 455))
 
         # Setup Canvas
         self.canvas = Canvas()
-        self.canvas.add_static_element(load_s("{0}.png".format(self.bg)), 0, 0, 0)
-        self.canvas.add_moving_bg(load_s("cloud{0}.png".format(self.bg)), 0, 1, False, False, 800, 600)
-        self.canvas.add_static_element(load_s("phub0.png"), 1, 0, 0)
+        self.canvas.add_element(StaticBG([load_img(load_s("{0}.png".format(self.bg)))], (0, 0)), 0)
+        self.canvas.add_element(MovingBackgroundElement([load_img(load_s("cloud{0}.png".format(self.bg)))],
+                                                        (-1, 0), (800, 600)), 0)
+        self.canvas.add_element(StaticBG([load_img(load_s("phub0.png"))], (0, 0)), 1)
+
+        self.canvas.add_element(Butt(Control.sheets["button"].load_some_images(1, 0, 3), (730, 0), BUTTON_DEFAULT,
+                                handle_music), 0)
+        self.canvas.add_element(Butt(Control.sheets["button4"].load_some_images(0, 0, 3), (580, 370), BUTTON_DEFAULT,
+                                     self.end_turn), -1)
+
+        placeholder = [load_img(load_b("hold_die.png")) for _ in range(3)]
+        self.canvas.add_element(Butt(placeholder, (369, 455), BUTTON_GHOST, lambda: self.roll_select(0)), 0)
+        self.canvas.add_element(Butt(placeholder, (469, 455), BUTTON_GHOST, lambda: self.roll_select(1)), 0)
+        self.canvas.add_element(Butt(placeholder, (569, 455), BUTTON_GHOST, lambda: self.roll_select(2)), 0)
+        self.canvas.add_element(Butt(placeholder, (669, 455), BUTTON_GHOST, lambda: self.roll_select(3)), 0)
 
         # Setup Effects
         self.effects = EffectManager()
@@ -1879,7 +1405,7 @@ class Battle(State):
     def handle_event(self, event):
         """Handles events in this state. In this case, handles battling which comes with
            a lot more events."""
-        self.menu.handle_event(event)
+        self.canvas.handle_event(event)
 
         # INDICATORS
 
@@ -1898,7 +1424,7 @@ class Battle(State):
                 self.enemy.status(True)
                 self.player.status(True)
             if self.flash > 0:
-                self.canvas.delete_element(self.flash)
+                self.canvas.delete_group(self.flash)
             self.flash = 0
 
         # ANIMATIONS
@@ -1940,7 +1466,6 @@ class Battle(State):
         self.canvas.update(surface, dt)
         State.player.update(surface, dt)
         self.enemy.update(surface, dt)
-        self.menu.update(surface, dt)
         self.effects.update(surface, dt)
 
         # Timers
@@ -1995,7 +1520,7 @@ class Battle(State):
         if current == 0:
             # If there is another popup, remove it and flash the ONE
             if self.flash != 0:
-                self.canvas.delete_element(self.flash)
+                self.canvas.delete_group(self.flash)
             self.popup_one()
 
             self.damage = 0
@@ -2078,23 +1603,23 @@ class Battle(State):
     def switch(self):
         """Handles the hub and displays and also enables and disables the AI."""
         if self.turn_player == self.player:
-            self.canvas.delete_element(2)
-            self.canvas.add_static_element(load_s("phub0.png"), 1, 0, 0)
+            self.canvas.delete_group(2)
+            self.canvas.add_element(StaticBG([load_img(load_s("phub0.png"))], (0, 0)), 1)
             self.player.display_mode("player")
             self.enemy.display_mode("")
-            self.menu.add_widget(200, 50,
-                                 Control.sheets["button4"].load_some_images(0, 0, 3),
-                                 True, self.end_turn, 1, Button, (580, 370))
+            self.canvas.add_element(Butt(Control.sheets["button4"].load_some_images(0, 0, 3), (580, 370),
+                                         BUTTON_DEFAULT, self.end_turn), -1)
+
             self.timer.deactivate()
 
             # A little rigging
             self.turn_player.blessed = random.randint(1, 4)
         else:
-            self.canvas.delete_element(1)
-            self.canvas.add_static_element(load_s("ehub0.png"), 2, 0, 0)
+            self.canvas.delete_group(1)
+            self.canvas.add_element(StaticBG([load_img(load_s("ehub0.png"))], (0, 0)), 2)
             self.player.display_mode("")
             self.enemy.display_mode("enemy")
-            self.menu.delete_widget(1)
+            self.canvas.delete_group(-1)
 
             self.timer.activate(1, True)
 
@@ -2138,16 +1663,14 @@ class Battle(State):
     # DISPLAYS
     def remove_popups(self):
         """Remove the current popups."""
-        if self.canvas.check_id(3):
-            self.canvas.delete_element(3)
-        if self.canvas.check_id(4):
-            self.canvas.delete_element(4)
+        self.canvas.delete_group(3)
+        self.canvas.delete_group(4)
 
     def popup_one(self):
         """Pop up the one display."""
         handle_sound("one.mp3")
         self.remove_popups()
-        self.canvas.add_static_element(load_s("one.png"), 4, 0, 210)
+        self.canvas.add_element(StaticBG([load_img(load_s("one.png"))], (0, 210)), 4)
         self.flash_timer.activate(0.5)
         self.flash = 4
 
@@ -2158,7 +1681,7 @@ class Battle(State):
     def popup_refresh(self):
         """Pop up the refresh display."""
         self.remove_popups()
-        self.canvas.add_static_element(load_s("refresh.png"), 3, 0, 210)
+        self.canvas.add_element(StaticBG([load_img(load_s("refresh.png"))], (0, 210)), 3)
         self.flash_timer.activate(0.5)
         self.flash = 3
 
@@ -2282,7 +1805,8 @@ class Battle(State):
             self.enemy.image = self.enemy.images[14]
 
             # Spawn the chest
-            self.canvas.add_static_element(load_c("chest100x100.png"), 5, self.enemy_x, self.player_y)
+            self.canvas.add_element(StaticBG([load_img(load_c("chest100x100.png"))],
+                                             (self.enemy_x, self.player_y)), 5)
 
             # Give the player money
             self.player.money += self.enemy.money
@@ -2313,242 +1837,28 @@ class Battle(State):
         self.next_level = next_level
 
 
-class Tutorial(Battle):
-    """A more restricted version of Battle with the aim of teaching the player the basic mechanics."""
-
-    def __init__(self, enemy, bg, destination):
-        super().__init__(enemy, bg, destination)
-
-        # Players can't roll immediately
-        self.active_dice = False
-
-        # Lock some stuff for tutorial purposes
-        self.can_end_turn = False
-        self.can_refresh = False
-
-        # Scripted die rolling. Order determines what is outputted from each roll, whether coming from you or an enemy.
-        # Allowed determines which die slot you can actually use. Fixed is what the upcoming die will output.
-        self.order = [5, 3, 2, 1, 3, 3, 3, 0, 2, 3, 5]
-        self.fixed = -1
-        self.allowed = -1
-
-        self.text_info = ["Here's you.",
-                          "Here's the enemy.",
-                          "Right now it's your turn.",
-                          "Click on the first die to roll it.",
-                          "Rolling dice builds up damage.",
-                          "Roll the other die.",
-                          "Let's attack to unleash that damage!",
-                          "Now it's the enemy's turn.",
-                          "You can roll as much dice as you want",
-                          "in order to keep building damage.",
-                          "but rolling a ONE forfeits your turn.",
-                          "So don't get too greedy.",
-                          "Time to finish him. Keep rolling!",
-                          "Destroy him."]
-
-        # Used with tutorial_sequence() to determine what happens at a specific moment
-        self.step = 0
-
-        # A delay between the characters showing up and the dialogue box appearing.
-        self.dialogue_timer = DTimer(pygame.USEREVENT + 10)
-
-    def cleanup(self):
-        """Reset tutorial to the beginning."""
-        super().cleanup()
-
-        self.step = 0
-        self.active_dice = False
-        self.can_end_turn = False
-        self.can_refresh = False
-
-        self.order = [5, 3, 2, 1, 3, 3, 3, 0, 2, 3, 5]
-        self.fixed = -1
-        self.allowed = -1
-
-    def startup(self):
-        super().startup()
-
-        self.menu.add_widget(600, 200, [load_b("0600x75.png")], True, None, 2, DialogueBoxS, (30, 0))
-        self.menu.do_dialogue_id(2, 1, self.text_info)
-        self.dialogue_timer.activate(1)
-
-    def update(self, surface, dt):
-        super().update(surface, dt)
-        self.dialogue_timer.update(dt)
-
-    def handle_event(self, event):
-        # Time triggered dialogue box / button display
-        if event.type == self.dialogue_timer.event:
-            self.advance()
-            self.menu.do_dialogue_id(2, 0)
-            self.menu.add_widget(70, 70, Control.sheets["button"].load_some_images(2, 0, 3), True,
-                                 self.next_dialogue, 3, Button, (630, 0))
-
-        super().handle_event(event)
-
-    # Functions
-    def ai_roll(self):
-        """Scripted AI."""
-        # In case there is an animation playing
-        if not self.active_dice:
-            return
-
-        self.roll(self.allowed)
-
-    def roll(self, index):
-        """Much more restrictive version of roll. Connects with tutorial sequence."""
-        if not self.active_dice or (index != self.allowed and self.allowed is not None):
-            return
-
-        current = self.turn_player.roll_die_forced(index, self.fixed)
-        if current == 0:
-            # If there is another popup, remove it and flash the ONE
-            if self.flash != 0:
-                self.canvas.delete_element(self.flash)
-
-            self.popup_one()
-
-            self.damage = 0
-
-            self.rolled_one()
-        elif current is not None:
-            # Play the successful roll sound
-            handle_sound("roll.mp3")
-            self.damage += current
-
-            self.advance()
-
-    def end_turn(self):
-        """Added the advance."""
-        if not self.can_end_turn or not self.active_dice:
-            return
-        if self.damage:
-            self.trigger_anim("rush", 3)
-            self.advance()
-
-    def reset_turn(self):
-        """Added the advance."""
-        super().reset_turn()
-        self.active_dice = False
-        self.advance()
-
-    def next_dialogue(self):
-        """Button function. Signals to dialogue widget to move to the next script.
-           Also advances the sequence."""
-        self.advance()
-        self.menu.do_dialogue_id(2, 2)
-
-    def advance(self):
-        """Runs the step and then advances the step in the sequence."""
-        self.tutorial_sequence()
-        self.step += 1
-
-    def tutorial_sequence(self):
-        """The tutorial sequence which is linked with the textbox. Controls the Battle state."""
-        if self.step == 0:
-            self.canvas.add_static_element(load_s("arrowdown.png"), 10, self.player_x, self.player_y - 150)
-        elif self.step == 1:
-            self.canvas.delete_element(10)
-            self.canvas.add_static_element(load_s("arrowdown.png"), 10, self.enemy_x + 10, self.enemy_y - 150)
-        elif self.step == 2:
-            self.canvas.delete_element(10)
-        elif self.step == 3:
-            self.canvas.add_static_element(load_s("arrowdown.png"), 10, 370, 330)
-            self.menu.delete_widget(3)
-
-            self.active_dice = True
-            self.allowed = 0
-            self.fixed = self.order.pop(0)
-        elif self.step == 4:
-            self.canvas.delete_element(10)
-            self.menu.do_dialogue_id(2, 2)
-            self.menu.add_widget(70, 70, Control.sheets["button"].load_some_images(2, 0, 3), True,
-                                 self.next_dialogue, 3, Button, (630, 0))
-
-            self.active_dice = False
-        elif self.step == 5:
-            self.canvas.add_static_element(load_s("arrowdown.png"), 10, 470, 330)
-            self.menu.delete_widget(3)
-
-            self.active_dice = True
-            self.allowed = 1
-            self.fixed = self.order.pop(0)
-        elif self.step == 6:
-            self.canvas.delete_element(10)
-            self.menu.do_dialogue_id(2, 2)
-
-            self.allowed = -1
-            self.can_end_turn = True
-        elif self.step == 7:
-            self.menu.do_dialogue_id(2, 2)
-            self.can_end_turn = False
-        elif self.step == 8:
-            self.can_refresh = True
-            self.active_dice = True
-            self.allowed = 0
-            self.fixed = self.order.pop(0)
-        elif self.step == 9:
-            self.allowed = 1
-            self.fixed = self.order.pop(0)
-        elif self.step == 10:
-            self.menu.do_dialogue_id(2, 2)
-            self.allowed = 0
-            self.fixed = self.order.pop(0)
-        elif self.step == 11:
-            self.allowed = 1
-            self.fixed = self.order.pop(0)
-        elif self.step == 12:
-            self.menu.do_dialogue_id(2, 2)
-            self.allowed = 0
-            self.fixed = self.order.pop(0)
-        elif self.step == 13:
-            self.allowed = 1
-            self.fixed = self.order.pop(0)
-        elif self.step == 14:
-            self.menu.do_dialogue_id(2, 2)
-            self.menu.add_widget(70, 70, Control.sheets["button"].load_some_images(2, 0, 3), True,
-                                 self.next_dialogue, 3, Button, (630, 0))
-        elif self.step == 16:
-            self.menu.delete_widget(3)
-            self.active_dice = True
-            self.allowed = None
-            self.fixed = self.order.pop(0)
-        elif self.step == 17:
-            self.fixed = self.order.pop(0)
-        elif self.step == 18:
-            self.fixed = self.order.pop(0)
-        elif self.step == 19:
-            self.menu.do_dialogue_id(2, 2)
-            self.can_end_turn = True
-
-
 class GameOver(State):
     """You died. Quit or load past save."""
 
     def __init__(self):
         super().__init__()
 
-    def cleanup(self):
-        self.menu = None
-        self.canvas = None
-        self.effects = None
-
     def startup(self):
         handle_music("menu.mp3")
 
         # Setup menu itself
         self.menu = SimpleMenu(15, 170, 400)
-        self.menu.add_widget(500, 75, Control.sheets["button2"].load_some_images(4, 0, 3), True, self.return_menu, 0,
-                             Button)
-        self.menu.add_widget(70, 70, Control.sheets["button"].load_some_images(1, 0, 3), True, handle_music, 0,
-                             Button, (730, 530))
 
         # Setup Canvas
         self.canvas = Canvas()
-        self.canvas.add_moving_bg(load_s("back1.png"), 0, 2, True, True, 800, 600)
-        self.canvas.add_static_element(load_s("bricks.png"), 0, 0, 0)
-        self.canvas.add_static_element(load_s("gameover.png"), 0, 0, 0)
+        self.canvas.add_element(MovingBackgroundElement([load_img(load_s("back1.png"))], (0, 2), (800, 600)), 0)
+        self.canvas.add_element(StaticBG([load_img(load_s("bricks.png"))], (0, 0)), 0)
+        self.canvas.add_element(StaticBG([load_img(load_s("gameover.png"))], (0, 0)), 0)
+
+        self.canvas.add_element(Butt(Control.sheets["button2"].load_some_images(4, 0, 3), (0, 0), BUTTON_DEFAULT,
+                                     self.return_menu), 0)
+        self.canvas.add_element(Butt(Control.sheets["button"].load_some_images(1, 0, 3), (730, 530), BUTTON_DEFAULT,
+                                     handle_music), 0)
 
         # Setup Player (should be hardcoded as Player dimensions are constant)
         self.player.name_display(True)
@@ -2566,11 +1876,15 @@ class GameOver(State):
            the user still wants to be in the same session."""
         self.player.reset_player()
         self.player.dice_set = [State.gen_dice("basic1"), State.gen_dice("basic1")]
-        Shop.refill()
+        # Shop.refill()
         self.to("main_menu")
 
 
 # UTILS
+def load_img(path):
+    return pygame.Surface.convert_alpha(pygame.image.load(path))
+
+
 def quit_game():
     """Quits the game."""
     pygame.quit()
