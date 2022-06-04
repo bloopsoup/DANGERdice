@@ -4,8 +4,7 @@ import pygame
 # TIMERS
 class DTimer:
     """Timer that relies on dt. Constructed with an event to signal when its timer reaches
-       0. Must be activated manually and should be updated under a general update loop.
-       event -- event ID -- custom event ID to use."""
+       0. Must be activated manually and should be updated under a general update loop."""
 
     def __init__(self, event):
         self.event = event

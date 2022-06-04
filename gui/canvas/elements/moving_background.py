@@ -1,10 +1,10 @@
 import pygame
 
-from gui.canvas.elements.Displayable import Displayable
+from gui.canvas.elements.displayable import Displayable
 
 
 class MovingBackgroundElement(Displayable):
-    """A moving background that moves cardinally and automatically resets itself. TODO: add theme support later"""
+    """A moving background that moves cardinally and automatically resets itself."""
 
     def __init__(self, images: list[pygame.Surface], velocity: tuple[float, float], window_size: tuple[float, float]):
         super().__init__(images, (0, 0), {})

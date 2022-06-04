@@ -1,6 +1,6 @@
 import pygame
 
-from gui.canvas.elements.Interactive import Interactive
+from gui.canvas.elements.interactive import Interactive
 
 
 class DialogueData:

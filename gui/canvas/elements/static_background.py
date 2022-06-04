@@ -1,10 +1,10 @@
 import pygame
 
-from gui.canvas.elements.Displayable import Displayable
+from gui.canvas.elements.displayable import Displayable
 
 
 class StaticBG(Displayable):
-    """A static background. TODO: add theme support later"""
+    """A static background."""
 
     def __init__(self, images: list[pygame.Surface], pos: tuple[float, float]):
         super().__init__(images, pos, {})

@@ -1,7 +1,6 @@
 import pygame
 
 
-# SHEETS
 class Spritesheet:
     """Spritesheet providing methods of cutting out proper frames given the unit dimensions
        and total dimensions in terms of units. Rows and columns of a spritesheet are zero

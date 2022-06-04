@@ -1,6 +1,3 @@
-from DANGERdice import fonts
-
-
 # THEME HELPERS
 
 def blank():
@@ -27,7 +24,7 @@ INPUT_DEFAULT = {
     "play_sfx": blank,
     "border_size": 4,
     "padding": 35,
-    "font": fonts[2]
+    "font": "M"
 }
 
 # DIALOGUE BOX
@@ -36,7 +33,7 @@ DIALOGUE_DEFAULT = {
     "play_sfx": blank,
     "border_size": 4,
     "padding": 35,
-    "font": fonts[2],
+    "font": "M",
     "LPL": 40,
     "line_spacing": 35,
     "lines": 3
