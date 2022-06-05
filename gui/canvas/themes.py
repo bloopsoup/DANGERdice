@@ -5,7 +5,7 @@ def blank():
     pass
 
 
-# BUTTONS -- play_sfx, border_size
+# BUTTONS
 
 
 BUTTON_DEFAULT = {
@@ -18,13 +18,12 @@ BUTTON_GHOST = {
     "border_size": 0
 }
 
-# INPUT TEXT -- play_sfx, border_size, padding, font
+# INPUT TEXT
 
 INPUT_DEFAULT = {
     "play_sfx": blank,
     "border_size": 4,
     "padding": 35,
-    "font": "M"
 }
 
 # DIALOGUE BOX
@@ -33,7 +32,6 @@ DIALOGUE_DEFAULT = {
     "play_sfx": blank,
     "border_size": 4,
     "padding": 35,
-    "font": "M",
     "LPL": 40,
     "line_spacing": 35,
     "lines": 3

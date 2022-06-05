@@ -31,8 +31,9 @@ class DialogueBox(Interactive):
     """Displays text in a box like it's typed."""
 
     def __init__(self, images: list[pygame.Surface], pos: tuple[float, float], theme: dict, on_event,
-                 d_data: DialogueData):
+                 font, d_data: DialogueData):
         super().__init__(images, pos, theme, on_event)
+        self.font = font
         self.frames = 0.03
 
         self.d_data = d_data
@@ -41,7 +42,7 @@ class DialogueBox(Interactive):
         self.display = ""
         self.letter_idx = 0
 
-        self.text_surface = self.theme["font"].render("", True, (0, 0, 0))
+        self.text_surface = self.font.render("", True, (0, 0, 0))
 
     def toggle_visibility(self):
         """Toggles visibility of the dialogue box."""
@@ -91,7 +92,7 @@ class DialogueBox(Interactive):
 
         # Display the text
         for i in range(self.theme["lines"]):
-            self.text_surface = self.theme["font"].render(
+            self.text_surface = self.font.render(
                 self.display[i * self.theme["LPL"]:(i+1) * self.theme["LPL"]], True, (0, 0, 0))
             surface.blit(self.text_surface, (self.reference.x + self.theme["padding"],
                                              self.reference.y + (self.theme["line_spacing"] * (i+1))))

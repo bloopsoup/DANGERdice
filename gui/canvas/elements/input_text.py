@@ -6,13 +6,14 @@ from gui.canvas.elements.interactive import Interactive
 class InputText(Interactive):
     """A place to input text."""
 
-    def __init__(self, images: list[pygame.Surface], pos: tuple[float, float], theme: dict, on_event):
+    def __init__(self, images: list[pygame.Surface], pos: tuple[float, float], theme: dict, on_event, font):
         # Uses two images: [active, inactive]
         super().__init__(images, pos, theme, on_event)
+        self.font = font
 
         self.active = False
         self.text = ""
-        self.text_surface = self.theme["font"].render(self.text, True, (0, 0, 0))
+        self.text_surface = self.font.render(self.text, True, (0, 0, 0))
 
     def current_picture_index(self):
         """Determines image index to use to reflect the state of the widget."""
@@ -25,7 +26,7 @@ class InputText(Interactive):
 
     def will_overflow(self, char: str) -> bool:
         """Determines whether adding char will make the text go past its boundaries."""
-        char_s = self.theme["font"].render(char, True, (0, 0, 0))
+        char_s = self.font.render(char, True, (0, 0, 0))
         return self.text_surface.get_width() + char_s.get_width() + self.theme["padding"] >= self.reference.width
 
     def submit_text(self):
@@ -60,6 +61,6 @@ class InputText(Interactive):
         self.draw_border(surface)
 
         # Draw the text
-        self.text_surface = self.theme["font"].render(self.text, True, (0, 0, 0))
+        self.text_surface = self.font.render(self.text, True, (0, 0, 0))
         offset = self.find_center_offset()
         surface.blit(self.text_surface, (self.reference.x + offset.x, self.reference.y + offset.y))
