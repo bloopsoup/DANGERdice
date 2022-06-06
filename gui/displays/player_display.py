@@ -77,3 +77,34 @@ def show_info(self, surface):
     surface.blit(self.text_level, (reference_x, reference_y + self.text_name.get_height()))
     surface.blit(self.text_health, (reference_x, reference_y + (2 * self.text_name.get_height())))
     surface.blit(self.text_money, (reference_x, reference_y + (3 * self.text_name.get_height())))
+
+    def find_center(self, text_surface: pygame.Surface) -> int:
+        """Returns the width to use in order to center text with respect to the entity."""
+        return int((self.image.get_width() - text_surface.get_width()) / 2)
+
+    def change_name(self, name: str):
+        """Change the player's name."""
+        self.name = name
+
+    def display_name(self, show: bool):
+        """Whether to display the name."""
+        self.show_name = show
+
+    def display_health(self, show: bool):
+        """Whether to display the health."""
+        self.show_hp = show
+
+    def display_all_text(self, surface: pygame.Surface):
+        """Displays all entity-related text on the surface."""
+        if self.show_name:
+            ts = self.font.render(self.name, True, (0, 0, 0))
+            surface.blit(ts, (self.pos.x + self.find_center(ts), self.pos.y - ts.get_height() - 5))
+        if self.show_hp:
+            ts = self.font.render("{0} / {1}".format(self.health, self.max_health), True, (0, 0, 0))
+            surface.blit(ts, (self.pos.x + self.find_center(ts), self.pos.y - ts.get_height() - 25))
+        if self.poison > 0:
+            ts = self.font.render("PSN: {0}".format(self.poison), True, (84, 22, 180))
+            surface.blit(ts, (self.pos.x + self.find_center(ts), self.pos.y - ts.get_height() - 45))
+        if self.divided > 1:
+            ts = self.font.render("WEAKENED {0}X".format(self.divided), True, (0, 0, 0))
+            surface.blit(ts, (self.pos.x + self.find_center(ts), self.pos.y - ts.get_height() - 65))
