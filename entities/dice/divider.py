@@ -1,4 +1,3 @@
-import pygame
 from entities.dice.die import Die
 
 
@@ -7,9 +6,8 @@ class Divider(Die):
        The effect WILL happen even if your opponent forfeits their turn or does not have any damage.
        Level is used to affect the die's price and name without affecting the roll result."""
 
-    def __init__(self, images: list[pygame.Surface], pos: tuple[float, float], sides: list, multiple: int, ID: str,
-                 level: int):
-        super().__init__(images, pos, sides, multiple, ID)
+    def __init__(self, sides: list, multiple: int, level: int):
+        super().__init__(sides, multiple)
         self.price += (1000 * (level + 1))
         self.name = "Divider Die{0}".format("+" * level)
         self.damage_type = "divide"

@@ -1,6 +1,4 @@
-import pygame
 from random import randint
-from utils.index_cycler import IndexCycler
 from entities.enemies.enemy import Enemy
 
 
@@ -19,12 +17,6 @@ class Wally(Enemy):
 
     enemy_stats = wally_stats
 
-    def __init__(self, images: list[pygame.Surface], pos: tuple[float, float]):
-        super().__init__(images, pos)
-        self.idle_handler = IndexCycler([[0, 0, 0, 0, 1, 2, 3, 4, 5, 6, 5, 4, 3, 2, 1, 0, 0, 0, 0],
-                                         [0, 0, 0, 0, 1, 2, 3, 4, 5, 6, 5, 4, 7, 8, 7, 4, 3, 2, 1, 0, 0, 0],
-                                         [0, 0, 9, 9, 0, 0, 10, 11, 12, 12, 16, 16, 16, 12, 12, 12, 16, 12, 11, 10, 0, 0],
-                                         [0, 0, 9, 9, 15, 9, 15, 9, 0, 0],
-                                         [0, 0, 17, 18, 19, 20, 21, 22, 23, 24, 17, 18, 19, 20, 21, 22, 23, 24, 0, 0],
-                                         [0, 0, 0, 0, 0]], 0.07)
+    def __init__(self):
+        super().__init__()
         self.change_name("Wally")

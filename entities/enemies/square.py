@@ -1,6 +1,4 @@
-import pygame
 from random import randint
-from utils.index_cycler import IndexCycler
 from entities.enemies.enemy import Enemy
 
 
@@ -19,10 +17,6 @@ class Square(Enemy):
 
     enemy_stats = square_stats
 
-    def __init__(self, images: list[pygame.Surface], pos: tuple[float, float]):
-        super().__init__(images, pos)
-        self.idle_handler = IndexCycler([[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
-                                         [3, 4, 1, 2, 0, 5, 7, 1, 2, 3, 10, 11],
-                                         [5, 2, 1, 3, 4, 0, 7, 2, 6, 8, 8],
-                                         [1, 2, 5, 3, 0, 4, 1, 1, 2, 6, 2, 3]], 0.05)
+    def __init__(self):
+        super().__init__()
         self.change_name("Gamble Square")

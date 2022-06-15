@@ -1,11 +1,7 @@
-import pygame
-from utils.index_cycler import IndexCycler
 from entities.enemies.enemy import Enemy
 
 
-player_stats = [
-    {"level": 1, "health_factor": 100, "money_factor": 100, "preference": ["basic1", "basic1"]}
-]
+player_stats = [{"level": 1, "health_factor": 100, "money_factor": 100, "preference": ["basic1", "basic1"]}]
 
 
 class Player(Enemy):
@@ -14,13 +10,8 @@ class Player(Enemy):
     enemy_stats = player_stats
     required_exp = [0, 8, 10, 12, 14, 17, 19, 22, 25, 30, 500]
 
-    def __init__(self, images: list[pygame.Surface], pos: tuple[float, float]):
-        super().__init__(images, pos)
-        self.idle_handler = IndexCycler([[1, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 3, 3, 3, 3, 3, 3, 2, 1, 0, 0, 0, 0],
-                                        [5, 6, 7, 8, 8, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 6, 5, 0, 0, 0, 0],
-                                        [9, 10, 10, 10, 10, 10, 10, 11, 11, 11, 10, 10, 10, 10, 10, 9, 0, 0, 0],
-                                        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]], 0.05)
-
+    def __init__(self):
+        super().__init__()
         self.inventory = []
         self.current_stage = "p0-0"
         self.exp = 0

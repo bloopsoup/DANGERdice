@@ -1,6 +1,4 @@
-import pygame
 from random import randint
-from utils.index_cycler import IndexCycler
 from entities.enemies.enemy import Enemy
 
 
@@ -19,10 +17,6 @@ class Dorita(Enemy):
 
     enemy_stats = dorita_stats
 
-    def __init__(self, images: list[pygame.Surface], pos: tuple[float, float]):
-        super().__init__(images, pos)
-        self.idle_handler = IndexCycler([[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
-                                          15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25,
-                                          26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36,
-                                          37, 38, 39]], 0.015)
+    def __init__(self):
+        super().__init__()
         self.change_name("Dorita")

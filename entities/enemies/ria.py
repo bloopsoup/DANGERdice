@@ -1,6 +1,4 @@
-import pygame
 from random import randint
-from utils.index_cycler import IndexCycler
 from entities.enemies.enemy import Enemy
 
 
@@ -19,10 +17,6 @@ class Ria(Enemy):
 
     enemy_stats = ria_stats
 
-    def __init__(self, images: list[pygame.Surface], pos: tuple[float, float]):
-        super().__init__(images, pos)
-        self.idle_handler = IndexCycler([[0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0],
-                                         [0, 0, 2, 3, 4, 4, 4, 4, 3, 2, 0, 0, 0, 0, 1, 1, 0, 0],
-                                         [0, 0, 0, 5, 6, 6, 6, 5, 0, 0, 0, 0, 0, 7, 8, 9, 8, 7, 0, 0, 0],
-                                         [0, 0, 0, 10, 11, 10, 11, 10, 0, 0, 0]], 0.1)
+    def __init__(self):
+        super().__init__()
         self.change_name("Ria")

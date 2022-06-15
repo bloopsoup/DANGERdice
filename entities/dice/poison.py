@@ -1,4 +1,3 @@
-import pygame
 from entities.dice.die import Die
 
 
@@ -9,8 +8,8 @@ class Poison(Die):
        then floor divided by 2 every turn until it is 0. Rolling subsequent poison
        dice can add to the counter."""
 
-    def __init__(self, images: list[pygame.Surface], pos: tuple[float, float], sides: list, multiple: int, ID: str):
-        super().__init__(images, pos, sides, multiple, ID)
+    def __init__(self, sides: list, multiple: int):
+        super().__init__(sides, multiple)
         self.price += 400
         self.name = "Poison {0}X Die".format(self.multiple)
         self.damage_type = "poison"

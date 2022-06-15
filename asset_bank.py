@@ -1,5 +1,5 @@
-from spritesheet import *
-from base import *
+from utils.spritesheet import *
+from entities.dice.
 from utils.path import *
 
 

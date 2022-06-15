@@ -14,6 +14,6 @@ class Interactive(Displayable):
         """Handles user input."""
         raise NotImplementedError
 
-    def update(self, surface: pygame.Surface, dt: float):
+    def draw(self, surface: pygame.Surface):
         """Displays itself onto surface."""
         raise NotImplementedError

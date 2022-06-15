@@ -1,5 +1,4 @@
 import pygame
-
 from utils.index_cycler import IndexCycler
 
 
@@ -110,9 +109,12 @@ class BaseEntity:
         if result != -1:
             self.image = self.images[result]
 
-    def update(self, surface: pygame.Surface, dt: float):
-        """Drawing the entity."""
+    def update(self, dt: float):
+        """Updating the entity."""
         self.move(dt)
-        self.idle_animate(dt)
-        surface.blit(self.image, (self.pos.x, self.pos.y))
         self.reference.move_ip(self.pos)
+        self.idle_animate(dt)
+
+    def draw(self, surface: pygame.Surface):
+        """Drawing the entity."""
+        surface.blit(self.image, (self.pos.x, self.pos.y))

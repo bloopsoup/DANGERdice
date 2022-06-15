@@ -36,6 +36,10 @@ class Displayable:
             func()
             self.count = 0
 
-    def update(self, surface: pygame.Surface, dt: float):
-        """Displays itself onto surface."""
+    def update(self, dt: float):
+        """Updating itself."""
+        pass
+
+    def draw(self, surface: pygame.Surface):
+        """Drawing itself onto the surface."""
         raise NotImplementedError
