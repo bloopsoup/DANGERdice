@@ -1,6 +1,5 @@
 import pygame
-
-from gui.canvas.elements.displayable import Displayable
+from gui.elements.displayable import Displayable
 
 
 class MovingBackgroundElement(Displayable):
@@ -33,7 +32,10 @@ class MovingBackgroundElement(Displayable):
         if self.out_of_bounds():
             self.set_position(self.starting_pos)
 
-    def update(self, surface: pygame.Surface, dt: float):
-        """Displays itself onto surface."""
+    def update(self, dt: float):
+        """Updating itself."""
         self.dt_update(dt, self.move)
+
+    def draw(self, surface: pygame.Surface):
+        """Displays itself onto surface."""
         surface.blit(self.images[0], (self.pos.x, self.pos.y))

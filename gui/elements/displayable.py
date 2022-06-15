@@ -41,5 +41,5 @@ class Displayable:
         pass
 
     def draw(self, surface: pygame.Surface):
-        """Drawing itself onto the surface."""
+        """Displays itself onto surface."""
         raise NotImplementedError

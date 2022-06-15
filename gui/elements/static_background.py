@@ -1,6 +1,5 @@
 import pygame
-
-from gui.canvas.elements.displayable import Displayable
+from gui.elements.displayable import Displayable
 
 
 class StaticBG(Displayable):
@@ -9,6 +8,6 @@ class StaticBG(Displayable):
     def __init__(self, images: list[pygame.Surface], pos: tuple[float, float]):
         super().__init__(images, pos, {})
 
-    def update(self, surface: pygame.Surface, dt: float):
+    def draw(self, surface: pygame.Surface):
         """Displays itself onto surface."""
         surface.blit(self.images[0], (self.pos.x, self.pos.y))

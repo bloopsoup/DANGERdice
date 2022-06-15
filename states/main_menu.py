@@ -1,10 +1,10 @@
 from states.state import *
 from utils.path import load_screen
-from gui.canvas.themes import BUTTON_DEFAULT
-from gui.canvas.canvas import Canvas
-from gui.canvas.elements.moving_background import MovingBackgroundElement
-from gui.canvas.elements.static_background import StaticBG
-from gui.canvas.elements.button import Button as Butt
+from gui.elements.themes import BUTTON_DEFAULT
+from gui.canvas import Canvas
+from gui.elements.moving_background import MovingBackgroundElement
+from gui.elements.static_background import StaticBG
+from gui.elements.button import Button as Butt
 
 
 class MainMenu(State):

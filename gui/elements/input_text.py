@@ -1,6 +1,5 @@
 import pygame
-
-from gui.canvas.elements.interactive import Interactive
+from gui.elements.interactive import Interactive
 
 
 class InputText(Interactive):
@@ -53,7 +52,7 @@ class InputText(Interactive):
             elif not self.will_overflow(event.unicode):
                 self.text += event.unicode
 
-    def update(self, surface: pygame.Surface, dt: float):
+    def draw(self, surface: pygame.Surface):
         """Displays itself onto surface."""
         # Draw the input box
         selected_image = self.current_picture_index()

@@ -25,7 +25,12 @@ class Canvas:
         for data in self.element_queue:
             data[0].handle_event(event)
 
-    def update(self, surface: pygame.Surface, dt: float):
+    def update(self, dt: float):
+        """Updates each element."""
+        for data in self.element_queue:
+            data[0].update(dt)
+
+    def draw(self, surface: pygame.Surface):
         """Displays each element onto surface (first is farthest back)."""
         for data in self.element_queue:
-            data[0].update(surface, dt)
+            data[0].draw(surface)

@@ -1,6 +1,5 @@
 import pygame
-
-from gui.canvas.elements.displayable import Displayable
+from gui.elements.displayable import Displayable
 
 
 class Interactive(Displayable):

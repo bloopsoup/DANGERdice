@@ -1,6 +1,5 @@
 import pygame
-
-from gui.canvas.elements.interactive import Interactive
+from gui.elements.interactive import Interactive
 
 
 class DialogueData:
@@ -59,6 +58,15 @@ class DialogueBox(Interactive):
             return False
         return True
 
+    def add_letter(self):
+        """Adds another letter from the script to the display text."""
+        char = self.d_data.get_text()[self.letter_idx]
+        # (`) is a pause character
+        if char != "`":
+            self.theme["play_sfx"]()
+            self.display += char
+        self.letter_idx += 1
+
     def handle_event(self, event):
         """Trigger an event by clicking on the dialogue box. Defaults to moving to the next script."""
         if self.reference.collidepoint(pygame.mouse.get_pos()) and event.type == pygame.MOUSEBUTTONDOWN:
@@ -67,7 +75,16 @@ class DialogueBox(Interactive):
             else:
                 self.next_script()
 
-    def update(self, surface: pygame.Surface, dt: float):
+    def update(self, dt: float):
+        """Updating itself."""
+        if not self.active:
+            return
+
+        # Adding one letter at a time
+        if self.letter_idx < len(self.d_data.get_text()):
+            self.dt_update(dt, self.add_letter)
+
+    def draw(self, surface: pygame.Surface):
         """Displays itself onto surface."""
         if not self.active:
             return
@@ -76,19 +93,6 @@ class DialogueBox(Interactive):
         surface.blit(self.images[0], (self.pos.x, self.pos.y))
         self.draw_border(surface)
         surface.blit(self.d_data.get_portrait(), (self.pos.x, self.pos.y - 100))
-
-        # Adding one letter at a time
-        if self.letter_idx < len(self.d_data.get_text()):
-            self.count += dt
-            if self.count >= self.frames:
-                self.count = 0
-
-                char = self.d_data.get_text()[self.letter_idx]
-                # (`) is a pause character
-                if char != "`":
-                    self.theme["play_sfx"]()
-                    self.display += char
-                self.letter_idx += 1
 
         # Display the text
         for i in range(self.theme["lines"]):

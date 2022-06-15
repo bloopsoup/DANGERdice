@@ -1,6 +1,5 @@
 import pygame
-
-from gui.canvas.elements.interactive import Interactive
+from gui.elements.interactive import Interactive
 
 
 class Button(Interactive):
@@ -34,7 +33,7 @@ class Button(Interactive):
         else:
             self.hovered = False
 
-    def update(self, surface: pygame.Surface, dt: float):
+    def draw(self, surface: pygame.Surface):
         """Displays itself onto surface."""
         surface.blit(self.images[self.current_picture_index()], (self.pos.x, self.pos.y))
         self.draw_border(surface)
