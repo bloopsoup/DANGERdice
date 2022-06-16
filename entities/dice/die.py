@@ -37,8 +37,7 @@ class Die:
 
         if value == 0 and failsafe:
             return side, self.sides[4] * self.multiple
-        else:
-            return side, value * self.multiple
+        return side, value * self.multiple
 
     def unroll(self):
         """Unrolls the die."""
