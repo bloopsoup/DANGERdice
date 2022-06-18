@@ -34,7 +34,7 @@ class MovingBackgroundElement(Displayable):
 
     def update(self, dt: float):
         """Updating itself."""
-        self.dt_update(dt, self.move)
+        self.dt_runner.dt_update(dt, self.move)
 
     def draw(self, surface: pygame.Surface):
         """Displays itself onto surface."""

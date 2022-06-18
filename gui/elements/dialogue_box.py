@@ -9,9 +9,9 @@ class DialogueBox(Interactive):
     def __init__(self, images: list[pygame.Surface], pos: tuple[float, float], theme: dict, on_event,
                  font, d_data: DialogueData):
         super().__init__(images, pos, theme, on_event)
-        self.font = font
-        self.frames = 0.03
+        self.dt_runner.set_frames(0.03)
 
+        self.font = font
         self.d_data = d_data
 
         self.active = False
@@ -26,7 +26,6 @@ class DialogueBox(Interactive):
 
     def next_script(self) -> bool:
         """Moves to the next text and portrait. Returns FALSE if there's no more content."""
-        self.count = 0
         self.display = ""
         self.letter_idx = 0
 
@@ -59,7 +58,7 @@ class DialogueBox(Interactive):
 
         # Adding one letter at a time
         if self.letter_idx < len(self.d_data.get_text()):
-            self.dt_update(dt, self.add_letter)
+            self.dt_runner.dt_update(dt, self.add_letter)
 
     def draw(self, surface: pygame.Surface):
         """Displays itself onto surface."""

@@ -14,7 +14,7 @@ class InputText(Interactive):
         self.text = ""
         self.text_surface = self.font.render(self.text, True, (0, 0, 0))
 
-    def current_picture_index(self):
+    def current_picture_index(self) -> int:
         """Determines image index to use to reflect the state of the widget."""
         return 0 if self.active else 1
 

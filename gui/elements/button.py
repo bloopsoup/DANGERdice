@@ -11,7 +11,7 @@ class Button(Interactive):
         self.clicked = False
         self.hovered = False
 
-    def current_picture_index(self):
+    def current_picture_index(self) -> int:
         """Determines image index to use to reflect the state of the widget."""
         if self.clicked:
             return 2
