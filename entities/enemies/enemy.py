@@ -1,15 +1,13 @@
 class Enemy:
-    """Base class for enemy characters of the game. In this case, they have a name, level, health, and dice_set."""
+    """Base class for enemy characters of the game."""
 
-    enemy_stats = None
-
-    def __init__(self):
-        self.name = ""
-        self.level = 0
-        self.max_health = 0
-        self.health = 0
-        self.money = 0
-        self.preference = None
+    def __init__(self, name: str, level: int, max_health: int, money: int, preference: list):
+        self.name = name
+        self.level = level
+        self.max_health = max_health
+        self.health = self.max_health
+        self.money = money
+        self.preference = preference
 
         # STATUS
         self.poison = 0
@@ -24,6 +22,15 @@ class Enemy:
     def change_name(self, name: str):
         """Changes the enemy's name."""
         self.name = name
+
+    def get_preference(self, i: int):
+        """Gets the ith element of the enemy's preference."""
+        assert i < len(self.preference), "preference index out of bounds"
+        return self.preference[i]
+
+    def append_to_preference(self, element):
+        """Adds element to the enemy's preference."""
+        self.preference.append(element)
 
     def restore_health(self):
         """Restores an enemy's health."""
@@ -40,10 +47,15 @@ class Enemy:
         self.cleanse()
         self.dead = True
 
-    def set_stats(self, tier: int):
-        """To be called after the enemy is created. Tier determines what stats and dice the enemy will get."""
-        self.level = self.enemy_stats[tier]["level"]
-        self.max_health = self.level * self.enemy_stats[tier]["health_factor"]
-        self.health = self.max_health
-        self.money = self.level * self.enemy_stats[tier]["money_factor"]
-        self.preference = self.enemy_stats[tier]["preference"]
+    def revive(self):
+        """Revives the enemy."""
+        self.dead = False
+
+    def reset_to_base_stats(self):
+        """Resets the enemy to base stats."""
+        self.level = 0
+        self.max_health = 100
+        self.restore_health()
+        self.money = 0
+        self.preference = []
+        self.revive()

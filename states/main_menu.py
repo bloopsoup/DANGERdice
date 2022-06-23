@@ -1,6 +1,6 @@
 from states.state import *
 from utils.path import load_screen
-from gui.presets.themes import BUTTON_DEFAULT
+from gui.themes import BUTTON_DEFAULT
 from gui.canvas import Canvas
 from gui.elements.moving_background import MovingBackgroundElement
 from gui.elements.static_background import StaticBG

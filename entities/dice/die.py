@@ -5,21 +5,20 @@ class Die:
     """The DIE object is what players roll to deal damage to one another. Has sides and a
        multiplier if provided. Each die has a price and a name (generated upon construction)."""
 
-    def __init__(self, sides: list, multiple: int):
+    def __init__(self, sides: list, multiple: int, price: int, damage_type: str, safe: bool):
         self.sides = sides
         self.multiple = multiple
-        self.price = int(130 * 1.5 * (multiple + 0.5))
-        self.name = "Basic {0}X Die".format(self.multiple)
-
-        self.safe = False
+        self.price = price
+        self.damage_type = damage_type
+        self.safe = safe
+        self.name = "{0} {1}X Die".format(self.damage_type.title(), self.multiple)
         self.rolled = False
-        self.damage_type = "basic"
 
     def get_name(self) -> str:
         """Returns the die name."""
         return self.name
 
-    def damage_type(self) -> str:
+    def get_damage_type(self) -> str:
         """Returns the damage type of this die."""
         return self.damage_type
 

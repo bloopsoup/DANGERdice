@@ -1,20 +1,30 @@
 from entities.enemies.enemy import Enemy
 
 
-player_stats = [{"level": 1, "health_factor": 100, "money_factor": 100, "preference": ["basic1", "basic1"]}]
-
-
 class Player(Enemy):
-    """The main character of the game. Has an inventory."""
+    """The main character of the game."""
 
-    enemy_stats = player_stats
     required_exp = [0, 8, 10, 12, 14, 17, 19, 22, 25, 30, 500]
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, starting_stage: str):
+        super().__init__("", 1, 100, 0, [])
+        self.starting_stage = starting_stage
+        self.current_stage = self.starting_stage
+
         self.inventory = []
-        self.current_stage = "p0-0"
         self.exp = 0
+
+    def get_stage(self) -> str:
+        """Gets the player's current stage."""
+        return self.current_stage
+
+    def set_stage(self, stage: str):
+        """Sets the player's current stage."""
+        self.current_stage = stage
+
+    def gain_exp(self, exp: int):
+        """Gives the player experience."""
+        self.exp += exp
 
     def try_level_up(self) -> bool:
         """If the player's amount of experience meets the requirement, it levels up the player and returns True."""
@@ -29,11 +39,10 @@ class Player(Enemy):
 
     def reset_player(self):
         """Resets the player to basic stats."""
+        self.reset_to_base_stats()
+        self.current_stage = self.starting_stage
         self.inventory = []
-        self.current_stage = "p0-0"
         self.exp = 0
-        self.dead = False
-        self.set_stats(0)
 
     def package_data(self) -> dict:
         """Returns a dictionary aggregating player data."""
