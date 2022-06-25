@@ -1,7 +1,7 @@
 class Enemy:
     """Base class for enemy characters of the game."""
 
-    def __init__(self, name: str, level: int, max_health: int, money: int, preference: list):
+    def __init__(self, name: str, level: int, max_health: int, money: int, preference: list[str]):
         self.name = name
         self.level = level
         self.max_health = max_health
@@ -28,7 +28,7 @@ class Enemy:
         assert i < len(self.preference), "preference index out of bounds"
         return self.preference[i]
 
-    def append_to_preference(self, element):
+    def append_to_preference(self, element: str):
         """Adds element to the enemy's preference."""
         self.preference.append(element)
 

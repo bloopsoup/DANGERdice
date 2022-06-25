@@ -1,3 +1,32 @@
+from gui.commands.command import Command
+
+
+class CommandQueue:
+    """Manager for executing bundles of commands sequentially."""
+
+    def __init__(self):
+        self.queue = []
+
+    def append_commands(self, commands: list[Command]):
+        """Append a set of commands to the queue."""
+        assert len(commands), "commands cannot be empty"
+        self.queue.append(commands)
+
+    def finished_commands(self) -> bool:
+        """Checks if the current set of commands are done."""
+        return all([command.is_done() for command in self.queue[0]])
+
+    def update(self, dt: float):
+        """Processes the current set of commands and moves to the next set if all the commands are finished."""
+        if not len(self.queue):
+            return
+        for command in self.queue[0]:
+            if not command.is_done():
+                command.update(dt)
+        if self.finished_commands():
+            self.queue.pop(0)
+
+
 def rush(self, sequence, img, x_speed, right=False, mode=None):
     """Animates the rush animation for a character.
        1. Character moves backwards.

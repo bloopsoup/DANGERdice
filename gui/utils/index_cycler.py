@@ -4,7 +4,7 @@ import random
 class IndexCycler:
     """Cycles through random lists of indices every call to update."""
 
-    def __init__(self, indices: list, frames: float):
+    def __init__(self, indices: list[list[int]], frames: float):
         self.indices = indices
         self.run = random.choice(self.indices)
         self.frames = frames

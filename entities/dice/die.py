@@ -5,7 +5,7 @@ class Die:
     """The DIE object is what players roll to deal damage to one another. Has sides and a
        multiplier if provided. Each die has a price and a name (generated upon construction)."""
 
-    def __init__(self, sides: list, multiple: int, price: int, damage_type: str, safe: bool):
+    def __init__(self, sides: list[int], multiple: int, price: int, damage_type: str, safe: bool):
         self.sides = sides
         self.multiple = multiple
         self.price = price
@@ -26,7 +26,7 @@ class Die:
         """Returns whether this die was rolled."""
         return self.rolled
 
-    def roll(self, failsafe: bool, number: int = -1) -> tuple:
+    def roll(self, failsafe: bool, number: int = -1) -> tuple[int, int]:
         """Rolls this die. If it is 1, we return 0 since rolling a one immediately ends your turn.
            If NUMBER is provided, die will always output that side. If failsafe is TRUE, a rolled one
            gets changed to the value of the die's fifth side."""
