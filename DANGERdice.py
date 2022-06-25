@@ -32,7 +32,7 @@ STATES = {
 #     RUN     #
 ###############
 
-GAME = Control("main_menu", STATES, SURFACE, BANK)
+GAME = Control("main_menu", STATES, SURFACE)
 GAME.main_loop()
 pygame.quit()
 sys.exit()

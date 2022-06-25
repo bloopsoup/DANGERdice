@@ -27,6 +27,16 @@ def path_s(path: str) -> str:
     return rp("assets/screens/" + path)
 
 
+def path_song(path: str) -> str:
+    """Returns a SFX path."""
+    return rp("assets/song/" + path)
+
+
+def path_sfx(path: str) -> str:
+    """Returns a SFX path."""
+    return rp("assets/sfx/" + path)
+
+
 def load_img(path: str) -> pygame.Surface:
     """Load an image from PATH."""
     return pygame.Surface.convert_alpha(pygame.image.load(path))

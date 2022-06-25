@@ -1,17 +1,14 @@
 import pygame
 
-from asset_bank import AssetBank
-
 
 class Control:
     """Controls the game. Sets up settings and your starting state. Your controller will
        manage one state at a time where it will switch out states when prompted. This allows us to keep
        using one main game loop, greatly simplifying things. Courtesy of @metulburr's tutorial."""
 
-    def __init__(self, start: str, states: dict, surface: pygame.Surface, bank: AssetBank):
+    def __init__(self, start: str, states: dict, surface: pygame.Surface):
         self.states = states
         self.surface = surface
-        self.bank = bank
 
         self.DONE = False
 
@@ -41,7 +38,6 @@ class Control:
         elif self.state.done:
             self.to_state()
         self.state.update(self.surface, dt)
-        self.display_fps()
 
     def event_loop(self):
         """Processes events."""
@@ -59,8 +55,3 @@ class Control:
             self.event_loop()
             self.update(dt)
             pygame.display.update()
-
-    def display_fps(self):
-        """For debugging purposes. Just displays the FPS at the center bottom of the screen."""
-        self.surface.blit(self.bank.get_font("SS")
-                          .render("FPS: " + str(int(self.clock.get_fps())), True, (0, 0, 0)), (365, 580))
