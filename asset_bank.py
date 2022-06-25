@@ -1,4 +1,4 @@
-from utils.spritesheet import *
+from gui.utils.spritesheet import *
 from entities.dice.
 from utils.path import *
 

@@ -25,7 +25,7 @@ class Spritesheet:
         image.blit(self.sheet, (0, 0), reference)
         return image
 
-    def load_some_images(self, row: int, col: int, amount: int) -> list:
+    def load_some_images(self, row: int, col: int, amount: int) -> list[pygame.Surface]:
         """Starting from the given position, load next amount of images, including the current
            position. Assume that amount is within the grid."""
         images = []
@@ -37,6 +37,6 @@ class Spritesheet:
                 amount -= 1
         return images
 
-    def load_all_images(self) -> list:
+    def load_all_images(self) -> list[pygame.Surface]:
         """Loads all images, going row by row from left to right."""
         return [self.load_image(r, c) for r in range(self.rows) for c in range(self.cols)]

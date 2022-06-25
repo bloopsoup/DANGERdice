@@ -155,7 +155,7 @@ WANDRE_STATS = [
     {"level": randint(15, 17), "health_factor": 15, "money_factor": 110, "preference": ["basic5", "basic5", "divider3", "heal3"]}
 ]
 
-presets = {
+enemy_presets = {
     "aaron": AARON_STATS,
     "arca": ARCA_STATS,
     "baduck": BADUCK_STATS,
