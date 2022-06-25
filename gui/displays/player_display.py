@@ -46,19 +46,3 @@ def show_dice_set(self, surface, dt):
 
     for die in self.dice_set:
         die.update(surface, dt)
-
-
-def display_all_text(self, surface: pygame.Surface):
-    """Displays all entity-related text on the surface."""
-    if self.show_name:
-        ts = self.font.render(self.name, True, (0, 0, 0))
-        surface.blit(ts, (self.pos.x + self.find_center(ts), self.pos.y - ts.get_height() - 5))
-    if self.show_hp:
-        ts = self.font.render("{0} / {1}".format(self.health, self.max_health), True, (0, 0, 0))
-        surface.blit(ts, (self.pos.x + self.find_center(ts), self.pos.y - ts.get_height() - 25))
-    if self.poison > 0:
-        ts = self.font.render("PSN: {0}".format(self.poison), True, (84, 22, 180))
-        surface.blit(ts, (self.pos.x + self.find_center(ts), self.pos.y - ts.get_height() - 45))
-    if self.divided > 1:
-        ts = self.font.render("WEAKENED {0}X".format(self.divided), True, (0, 0, 0))
-        surface.blit(ts, (self.pos.x + self.find_center(ts), self.pos.y - ts.get_height() - 65))

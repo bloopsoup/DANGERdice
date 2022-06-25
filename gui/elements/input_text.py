@@ -19,11 +19,6 @@ class InputText(Interactive):
         """Determines image index to use to reflect the state of the widget."""
         return 0 if self.active else 1
 
-    def find_center_offset(self) -> pygame.Vector2:
-        """Determines the offset to center the text relative to the reference."""
-        return pygame.Vector2((int((self.reference.width - self.text_surface.get_width()) / 2),
-                               int((self.reference.height - self.text_surface.get_height()) / 2)))
-
     def will_overflow(self, char: str) -> bool:
         """Determines whether adding char will make the text go past its boundaries."""
         char_s = self.font.render(char, True, (0, 0, 0))
@@ -62,5 +57,5 @@ class InputText(Interactive):
 
         # Draw the text
         self.text_surface = self.font.render(self.text, True, (0, 0, 0))
-        offset = self.find_center_offset()
+        offset = self.find_center_offset(self.text_surface)
         surface.blit(self.text_surface, (self.reference.x + offset.x, self.reference.y + offset.y))

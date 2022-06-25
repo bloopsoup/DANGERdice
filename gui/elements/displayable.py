@@ -28,9 +28,17 @@ class Displayable:
         """Sets the position of the element."""
         self.pos = pos
 
-    def find_center(self, text_surface: pygame.Surface) -> int:
-        """Returns the width to use in order to center text with respect to the element."""
+    def horizontal_center_offset(self, text_surface: pygame.Surface) -> int:
+        """Returns the offset to horizontally center text with respect to the element."""
         return int((self.reference.width - text_surface.get_width()) / 2)
+
+    def vertical_center_offset(self, text_surface: pygame.Surface) -> int:
+        """Returns the offset to vertically center text with respect to the element."""
+        return int((self.reference.height - text_surface.get_height()) / 2)
+
+    def find_center_offset(self, text_surface: pygame.Surface) -> pygame.Vector2:
+        """Returns the offset to center the text relative to the reference."""
+        return pygame.Vector2(self.horizontal_center_offset(text_surface), self.vertical_center_offset(text_surface))
 
     def draw_border(self, surface: pygame.Surface):
         """Draws the border around the element."""
