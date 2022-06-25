@@ -28,6 +28,10 @@ class Displayable:
         """Sets the position of the element."""
         self.pos = pos
 
+    def find_center(self, text_surface: pygame.Surface) -> int:
+        """Returns the width to use in order to center text with respect to the element."""
+        return int((self.reference.width - text_surface.get_width()) / 2)
+
     def draw_border(self, surface: pygame.Surface):
         """Draws the border around the element."""
         if self.theme["border_size"] > 0:
