@@ -1,6 +1,6 @@
 import pygame
-from gui.elements.displayable import Displayable
-from gui.utils.index_cycler import IndexCycler
+from .displayable import Displayable
+from ..utils import IndexCycler
 
 
 class Effect(Displayable):

@@ -1,7 +1,7 @@
-from utils.path import *
+from path import *
 from asset_bank import AssetBank
 from states.main_menu import MainMenu
-from control import Control
+from controller.control import Control
 
 ###############
 #    SETUP    #

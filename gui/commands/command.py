@@ -1,4 +1,4 @@
-from gui.utils.delta_time_runner import DeltaTimeRunner
+from ..utils import DeltaTimeRunner
 
 
 class Command:

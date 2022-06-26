@@ -1,5 +1,5 @@
 import pygame
-from gui.elements.interactive import Interactive
+from .interactive import Interactive
 
 
 class InputText(Interactive):

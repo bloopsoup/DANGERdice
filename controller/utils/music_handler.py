@@ -32,3 +32,7 @@ class MusicHandler:
         else:
             pygame.mixer.music.pause()
         self.pause = not self.pause
+
+
+# Access this instance
+music_handler = MusicHandler()

@@ -1,5 +1,5 @@
 import pygame
-from gui.elements.positioned_texts import PositionedTexts
+from gui.elements import PositionedTexts
 
 # [self.name, "LVL: {0}", "HP: {0} / {1}", "Gold: {0}"]
 height = 0  # self.text_name.get_height()

@@ -1,5 +1,5 @@
 import pygame
-from gui.elements.displayable import Displayable
+from .displayable import Displayable
 
 
 class PositionedTexts(Displayable):

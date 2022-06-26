@@ -1,6 +1,6 @@
 import pygame
-from gui.commands.command import Command
-from gui.elements.idle import Idle
+from .command import Command
+from ..elements import Idle
 
 
 class MoveCommand(Command):

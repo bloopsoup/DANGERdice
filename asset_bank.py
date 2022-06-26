@@ -1,5 +1,5 @@
 from gui.utils.spritesheet import *
-from utils.path import *
+from path import *
 
 
 class AssetBank:

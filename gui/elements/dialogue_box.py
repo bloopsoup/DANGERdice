@@ -1,6 +1,6 @@
 import pygame
-from gui.elements.interactive import Interactive
-from gui.utils.dialogue_data import DialogueData
+from .interactive import Interactive
+from ..utils import DialogueData
 
 
 class DialogueBox(Interactive):
