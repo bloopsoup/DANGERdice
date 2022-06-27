@@ -1,5 +1,5 @@
 import pygame
-from states import State
+from .states import State
 
 
 class Control:

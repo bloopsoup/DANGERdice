@@ -1,18 +1,29 @@
 import pygame
-from controller.utils.path import rp
+from .utils import rp, path_c, path_b
+from .config import dice_config, enemy_config, fonts_config, spritesheet_config
+from entities.enemies import Enemy, Player
 from entities.dice import Die
-from entities.enemies import Enemy
-from entities.enemies import Player
-
-from .dice_config import dice_config
-from .enemy_config import enemy_config
-from .fonts_config import fonts_config
+from gui.utils import Spritesheet
 
 
 # UTILS
 def get_base_price(multiple: int) -> int:
     """Returns the base price for a standard die which is subject to balance changes."""
     return int(130 * 1.5 * (multiple + 0.5))
+
+
+def load_sheet(sheet: str, character: bool) -> Spritesheet:
+    """Loads in either a character or a button spritesheet."""
+    assert sheet in spritesheet_config, "not a valid spritesheet"
+    path, height, width, rows, cols = spritesheet_config[sheet]
+    path = path_c(path) if character else path_b(path)
+    return Spritesheet(path, height, width, rows, cols)
+
+
+def load_font(size: str) -> pygame.font.Font:
+    """Loads a font."""
+    assert size in fonts_config, "not a valid size"
+    return pygame.font.Font(rp("assets/VT323-Regular.ttf"), fonts_config[size])
 
 
 # FACTORY FUNCTIONS
@@ -36,13 +47,4 @@ def create_player() -> Player:
     return Player("p0-0")
 
 
-def load_font(size: str) -> pygame.font.Font:
-    assert size in fonts_config, "not a valid size"
 
-
-def load_fonts() -> dict:
-    """Loads and returns all the fonts used for the game."""
-    return {"SS": pygame.font.Font(rp("assets/VT323-Regular.ttf"), 25),
-            "S": pygame.font.Font(rp("assets/VT323-Regular.ttf"), 30),
-            "M": pygame.font.Font(rp("assets/VT323-Regular.ttf"), 40),
-            "L": pygame.font.Font(rp("assets/VT323-Regular.ttf"), 50)}
