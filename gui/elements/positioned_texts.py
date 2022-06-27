@@ -6,7 +6,7 @@ class PositionedTexts(Displayable):
     """An element displaying positioned text elements which change frequently over time. Note that
        images and pos represent an anchor point for relative text positioning (rather than absolute)."""
 
-    def __init__(self, images: list[pygame.Surface], pos: tuple[float, float], font: pygame.font,
+    def __init__(self, images: list[pygame.Surface], pos: tuple[float, float], font: pygame.font.Font,
                  num_fields: int, offsets: list[tuple[float, float]], h_centered: bool):
         assert num_fields == len(offsets), "number of fields and offsets should match"
         super().__init__(images, pos, {})

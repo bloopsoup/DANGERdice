@@ -155,11 +155,12 @@ WANDRE_STATS = [
     {"level": randint(15, 17), "health_factor": 15, "money_factor": 110, "preference": ["basic5", "basic5", "divider3", "heal3"]}
 ]
 
-enemy_presets = {
+enemy_config = {
     "aaron": AARON_STATS,
     "arca": ARCA_STATS,
     "baduck": BADUCK_STATS,
     "baggins": BAGGINS_STATS,
+    "bursa": BURSA_STATS,
     "cena": CENA_STATS,
     "connor": CONNOR_STATS,
     "dorita": DORITA_STATS,

@@ -1,4 +1,4 @@
-from entities.enemies.enemy import Enemy
+from .enemy import Enemy
 
 
 class Player(Enemy):

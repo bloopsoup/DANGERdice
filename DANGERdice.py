@@ -1,7 +1,22 @@
-from path import *
-from asset_bank import AssetBank
-from states.main_menu import MainMenu
-from controller.control import Control
+import os
+import pygame
+import sys
+from controller import Control
+from controller.states.main_menu import MainMenu
+
+
+###############
+#    HELPER   #
+###############
+
+def rp(path: str) -> str:
+    """To be used when referring to any file in the assets folder for PyInstaller."""
+    try:
+        base_path = sys._MEIPASS
+    except AttributeError:
+        base_path = os.path.abspath("")
+    return os.path.join(base_path, path)
+
 
 ###############
 #    SETUP    #
@@ -20,12 +35,9 @@ pygame.display.set_caption("DANGERdice")
 # Set keys
 pygame.key.set_repeat(500, 100)
 
-# Set up assets
-BANK = AssetBank()
-
 # Set up states
 STATES = {
-    "main_menu": MainMenu(BANK)
+    "main_menu": MainMenu()
 }
 
 ###############

@@ -1,5 +1,5 @@
 import random
-from entities.dice.die import Die
+from .die import Die
 
 
 class DiceSet:

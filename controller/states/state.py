@@ -1,38 +1,36 @@
 import pygame
-
-from asset_bank import AssetBank
+from gui import Canvas
 
 
 class State:
-    """A state abstract class. Persisting information goes here."""
+    """A state abstract class."""
 
-    player = None
-    quit = False
-
-    def __init__(self, bank: AssetBank):
-        self.bank = bank
+    def __init__(self):
         self.done = False
+        self.quit = False
         self.next = None
         self.previous = None
-        self.canvas = None
-        self.effects = None
+        self.canvas = Canvas()
 
     def startup(self):
         """Setup when entering a state, such as loading songs or images."""
         raise NotImplementedError
 
     def cleanup(self):
-        """Cleaning up components before leaving the state. This is not always necessary."""
+        """Cleaning up components before leaving the state."""
         pass
 
     def handle_event(self, event):
         """Handles events in this state."""
         self.canvas.handle_event(event)
 
-    def update(self, surface: pygame.Surface, dt: float):
+    def update(self, dt: float):
         """Draws objects pertaining to this state. Generally, menu options should be on top."""
-        self.canvas.update(surface, dt)
-        # State.player.update(surface, dt)
+        self.canvas.update(dt)
+
+    def draw(self, surface: pygame.Surface):
+        """Draws objects pertaining to this state."""
+        self.canvas.draw(surface)
 
     def to(self, to: str):
         """Goes to the target state."""
@@ -43,7 +41,6 @@ class State:
         """Goes back to the previous state."""
         self.to(self.previous)
 
-    @staticmethod
-    def quit_game():
+    def quit_game(self):
         """Quits the game."""
-        State.quit = True
+        self.quit = True

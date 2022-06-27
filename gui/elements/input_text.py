@@ -6,7 +6,7 @@ class InputText(Interactive):
     """A place to input text."""
 
     def __init__(self, images: list[pygame.Surface], pos: tuple[float, float], theme: dict, on_event,
-                 font: pygame.font):
+                 font: pygame.font.Font):
         # Uses two images: [active, inactive]
         super().__init__(images, pos, theme, on_event)
         self.font = font

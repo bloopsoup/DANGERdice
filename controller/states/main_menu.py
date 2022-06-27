@@ -1,5 +1,5 @@
-from states.state import *
-from path import load_screen
+from controller.states.state import *
+from controller.utils.path import load_screen
 from gui.themes import BUTTON_DEFAULT
 from gui.canvas import Canvas
 from gui.elements.moving_background import MovingBackgroundElement

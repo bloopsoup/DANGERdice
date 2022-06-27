@@ -114,3 +114,24 @@ BAGGINS_2 = [["Dice have been getting more expensive.", "I think I see a solutio
 BAGGINS_3 = [["You are on my rob list.", "Please reconsider."], "01", (2, 5)]
 BAGGINS_4 = [["More money", "more problems."], "11", (2, 5)]
 BAGGINS_5 = [["It's you, `````the broke guy.", "I should end your rampage."], "11", (2, 5)]
+
+dialogue_config = {
+    "aaron": [AARON_0, AARON_1, AARON_2, AARON_3, AARON_4, AARON_5],
+    "arca": [ARCA_0, ARCA_1, ARCA_2, ARCA_3, ARCA_4, ARCA_5],
+    "baduck": [BADUCK_0, BADUCK_1, BADUCK_2, BADUCK_3, BADUCK_4, BADUCK_5],
+    "baggins": [BAGGINS_0, BAGGINS_1, BAGGINS_2, BAGGINS_3, BAGGINS_4, BAGGINS_5],
+    "bursa": [BURSA_0, BURSA_1, BURSA_2, BURSA_3, BURSA_4, BURSA_5],
+    "cena": [CENA_0, CENA_1, CENA_2, CENA_3, CENA_4, CENA_5],
+    "connor": [CONNOR_0, CONNOR_1, CONNOR_2, CONNOR_3, CONNOR_4, CONNOR_5],
+    "dorita": [DORITA_0, DORITA_1, DORITA_2, DORITA_3, DORITA_4, DORITA_5],
+    "ellie": [ELLIE_0, ELLIE_1, ELLIE_2, ELLIE_3, ELLIE_4, ELLIE_5],
+    "kiran": [KIRAN_0, KIRAN_1, KIRAN_2, KIRAN_3, KIRAN_4, KIRAN_5],
+    "migahexx.xml": [],
+    "player": [],
+    "ria": [RIA_0, RIA_1, RIA_2, RIA_3, RIA_4, RIA_5],
+    "shopkeeper": [],
+    "sosh": [SOSH_0, SOSH_1, SOSH_2, SOSH_3, SOSH_4, SOSH_5],
+    "square": [SQUARE_0, SQUARE_1, SQUARE_2, SQUARE_3, SQUARE_4, SQUARE_5],
+    "wally": [WALLY_0, WALLY_1, WALLY_2, WALLY_3, WALLY_4, WALLY_5],
+    "wandre": [WANDRE_0, WANDRE_1, WANDRE_2, WANDRE_3, WANDRE_4, WANDRE_5]
+}

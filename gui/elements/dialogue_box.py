@@ -7,7 +7,7 @@ class DialogueBox(Interactive):
     """Displays text in a box like it's typed."""
 
     def __init__(self, images: list[pygame.Surface], pos: tuple[float, float], theme: dict, on_event,
-                 font: pygame.font, d_data: DialogueData):
+                 font: pygame.font.Font, d_data: DialogueData):
         super().__init__(images, pos, theme, on_event)
         self.dt_runner.set_frames(0.03)
 
