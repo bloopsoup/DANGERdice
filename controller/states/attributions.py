@@ -1,6 +1,6 @@
 from .state import State
 from ..utils import music_handler
-from ..loader import load_screen, load_font, load_sound
+from ..loader import load_static, load_font, load_sound
 from gui.elements import StaticBG, PositionedTexts
 from gui.commands import TimerCommand
 
@@ -10,11 +10,12 @@ class Attributions(State):
 
     def __init__(self):
         super().__init__()
-        self.text_display = PositionedTexts([load_screen("black")], (0, 220), load_font("L"), 1, [(0, 0)], True)
+        self.text_display = PositionedTexts([load_static("black")], (0, 220), load_font("L"), 1, [(0, 0)], True)
+        self.text_display.set_color((255, 255, 255))
 
     def setup_canvas(self):
-        self.canvas.add_element(StaticBG([load_screen("black")], (0, 0)), 0)
-        self.canvas.add_element(StaticBG([load_screen("badmc")], (350, 280)), 1)
+        self.canvas.add_element(StaticBG([load_static("black")], (0, 0)), 0)
+        self.canvas.add_element(StaticBG([load_static("badmc")], (350, 280)), 1)
         self.canvas.add_element(self.text_display, 0)
         self.text_display.set_text(0, "A BMB GAME")
 

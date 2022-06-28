@@ -122,7 +122,7 @@ class Battle(State):
 
         # Setup Effects
         self.effects = EffectManager()
-        spark = load_files("assets/screens/spark100x100/", 5)
+        spark = load_files("assets/static/spark100x100/", 5)
 
         # Adding effects
         for i in range(20):

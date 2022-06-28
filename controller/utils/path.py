@@ -11,23 +11,18 @@ def rp(path: str) -> str:
     return os.path.join(base_path, path)
 
 
-def path_c(path: str) -> str:
-    """Returns a character picture path."""
-    return rp("assets/characters/" + path)
+def path_sheet(path: str) -> str:
+    """Returns a spritesheet picture path."""
+    return rp("assets/sheets/" + path)
 
 
-def path_b(path: str) -> str:
-    """Returns a button picture path."""
-    return rp("assets/buttons/" + path)
-
-
-def path_s(path: str) -> str:
-    """Returns a screen picture path."""
-    return rp("assets/screens/" + path)
+def path_static(path: str) -> str:
+    """Returns a static picture path."""
+    return rp("assets/static/" + path)
 
 
 def path_song(path: str) -> str:
-    """Returns a SFX path."""
+    """Returns a song path."""
     return rp("assets/songs/" + path)
 
 

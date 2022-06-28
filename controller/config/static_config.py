@@ -1,4 +1,4 @@
-screen_config = {
+static_config = {
     "tall_squares": "back1.png",
     "tall_rectangles_light": "back2.png",
     "tall_rectangles": "back3.png",

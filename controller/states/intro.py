@@ -1,30 +1,33 @@
+from .state import State
+from ..utils import music_handler
+from ..loader import load_static, load_button_sprites, load_font, load_sound
+from ..themes import BUTTON_DEFAULT, INPUT_DEFAULT
+from gui.elements import StaticBG, MovingBackgroundElement, PositionedTexts, Button, InputText
+from gui.commands import TimerCommand
+
+
 class Intro(State):
     """Screen to give your character a name."""
 
     def __init__(self):
         super().__init__()
-        self.timer = DTimer(pygame.USEREVENT + 1)
 
         self.destination = "player_menu"
         self.player.current_level = "l0-1"
 
-        self.font = fonts[2]
+        self.text_display = PositionedTexts([load_static("black")], (0, 220), load_font("L"), 1, [(0, 0)], True)
         self.text = self.font.render("", True, (0, 0, 0))
 
-    def cleanup(self):
-        self.text = self.font.render("", True, (0, 0, 0))
+    def setup_canvas(self):
+        self.canvas.add_element(StaticBG([load_static("name")], (0, 0)), 0)
+        self.canvas.add_element(MovingBackgroundElement([load_static("thick_clouds")], (-1, 0), (800, 600)), 0)
+        self.canvas.add_element(Button(load_button_sprites("music"), (730, 530), BUTTON_DEFAULT,
+                                       music_handler.toggle_music), 0)
 
-    def startup(self):
-        # Setup Canvas
-        self.canvas = Canvas()
-        self.canvas.add_element(StaticBG([load_img(load_s("land1.png"))], (0, 0)), 0)
-        self.canvas.add_element(MovingBackgroundElement([load_img(load_s("cloud0.png"))], (-1, 0), (800, 600)), 0)
-
-        self.canvas.add_element(Butt(Control.sheets["button"].load_some_images(1, 0, 3), (730, 530), BUTTON_DEFAULT,
-                                     handle_music), 0)
-        input_textbox = InputT([load_img(load_b("1600x75.png")), load_img(load_b("0600x75.png"))],
-                               (0, 200), INPUT_DEFAULT, self.enter_name)
+        input_textbox = InputText([load_img(load_b("1600x75.png")), load_img(load_b("0600x75.png"))],
+                                  (0, 200), INPUT_DEFAULT, self.enter_name)
         self.canvas.add_element(input_textbox, 1)
+
         self.canvas.add_element(Butt(Control.sheets["button4"].load_some_images(1, 0, 3), (0, 300), BUTTON_DEFAULT,
                                      self.skip_tutorial), 2)
         self.canvas.add_element(Butt(Control.sheets["button"].load_some_images(0, 0, 3), (0, 0), BUTTON_DEFAULT,
@@ -32,11 +35,15 @@ class Intro(State):
         self.canvas.add_element(Butt(Control.sheets["button"].load_some_images(2, 0, 3), (700, 130), BUTTON_DEFAULT,
                                      input_textbox.submit_text), 4)
 
+    def startup(self):
         # Setup Player (should be hardcoded as Player dimensions are constant)
         self.player.name_display(True)
         self.player.health_display(False)
         self.player.display_mode("")
         self.player.direct_move(350, 472)
+
+    def cleanup(self):
+        self.text = self.font.render("", True, (0, 0, 0))
 
     def handle_event(self, event):
         """Needed a timer this time to finish the animation."""

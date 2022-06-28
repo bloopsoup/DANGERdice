@@ -11,9 +11,14 @@ class PositionedTexts(Displayable):
         assert num_fields == len(offsets), "number of fields and offsets should match"
         super().__init__(images, pos, {})
         self.font = font
+        self.color = (0, 0, 0)
         self.texts = ["" for _ in range(num_fields)]
         self.offsets = [pygame.Vector2(offset) for offset in offsets]
         self.h_centered = h_centered
+
+    def set_color(self, color: tuple[int, int, int]):
+        """Sets the color of the displayed text."""
+        self.color = color
 
     def set_text(self, i: int, text: str):
         """Sets the ith field to text."""
@@ -29,7 +34,7 @@ class PositionedTexts(Displayable):
         for (text, offset) in zip(self.texts, self.offsets):
             if not len(text):
                 continue
-            text_surface = self.font.render(text, True, (255, 255, 255))
+            text_surface = self.font.render(text, True, self.color)
             adjusted_pos = self.pos + offset
             if self.h_centered:
                 adjusted_pos.update(self.pos.x + self.horizontal_center_offset(text_surface), adjusted_pos.y)

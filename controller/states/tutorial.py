@@ -35,7 +35,7 @@ class Tutorial(Battle):
         # Used with tutorial_sequence() to determine what happens at a specific moment
         self.step = 0
 
-        # A delay between the characters showing up and the dialogue box appearing.
+        # A delay between the sheets showing up and the dialogue box appearing.
         self.dialogue_timer = DTimer(pygame.USEREVENT + 10)
 
     def cleanup(self):
