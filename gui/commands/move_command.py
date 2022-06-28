@@ -6,11 +6,12 @@ from ..elements import Idle
 class MoveCommand(Command):
     """Command used to move an Idle displayable element."""
 
-    def __init__(self, element: Idle, speed: tuple[float, float], destination: tuple[float, float]):
+    def __init__(self, element: Idle, speed: tuple[float, float], destination: tuple[float, float], func):
         super().__init__()
         self.element = element
         self.to_pos = pygame.Vector2(destination)
         self.velocity = self.calculate_velocity(self.element.get_position(), speed)
+        self.func = func
 
     def calculate_velocity(self, pos: pygame.Vector2, speed: tuple[float, float]) -> pygame.Vector2:
         """With pos -> to_pos, turns the speed into the appropriate velocity."""
@@ -38,6 +39,7 @@ class MoveCommand(Command):
     def stop(self):
         """Stop the command."""
         self.done = True
+        self.func()
 
     def update(self, dt: float):
         """Executing the command each update."""

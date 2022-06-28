@@ -1,10 +1,13 @@
 import pygame
+from ..loader import create_player
 from gui import Canvas
 from gui.commands import CommandQueue
 
 
 class State:
     """A state abstract class."""
+
+    player = create_player()
 
     def __init__(self):
         self.done = False
@@ -24,7 +27,7 @@ class State:
 
     def startup(self):
         """Setup when entering a state, such as loading songs or images."""
-        raise NotImplementedError
+        pass
 
     def reset_canvas(self):
         """Resets the canvas before leaving the state."""
