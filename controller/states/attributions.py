@@ -1,45 +1,34 @@
+from .state import State
+from ..utils import music_handler
+from ..loader import load_screen, load_font, load_sound
+from gui.elements import StaticBG, PositionedTexts
+from gui.commands import TimerCommand
+
+
 class Attributions(State):
-    """First thing you see when you open the game. Basically a place to give credit to people."""
+    """First thing you see when you open the game. Gives credit to some folks."""
 
     def __init__(self):
         super().__init__()
+        self.text_display = PositionedTexts([load_screen("black")], (0, 220), load_font("L"), 1, [(0, 0)], True)
 
-        self.timer = DTimer(pygame.USEREVENT + 1)
-        self.step = 0
+    def setup_canvas(self):
+        self.canvas.add_element(StaticBG([load_screen("black")], (0, 0)), 0)
+        self.canvas.add_element(StaticBG([load_screen("badmc")], (350, 280)), 1)
+        self.canvas.add_element(self.text_display, 0)
+        self.text_display.set_text(0, "A BMB GAME")
 
-        self.font = fonts[3]
-        self.text = self.font.render("A BMB GAME", True, (255, 255, 255))
+    def setup_commands(self):
+        self.command_queue.append_commands([TimerCommand(1.2, self.remove_face)])
+        self.command_queue.append_commands([TimerCommand(1.2, lambda: self.to("main_menu"))])
 
     def startup(self):
-        # Setup Canvas
-        self.canvas = Canvas()
-        self.canvas.add_element(StaticBG([load_img(load_s("black.png"))], (0, 0)), 0)
-        self.canvas.add_element(StaticBG([load_img(load_c("badmc100x100.png"))], (350, 280)), 1)
+        self.setup_canvas()
+        self.setup_commands()
+        music_handler.play_sfx(load_sound("one", True))
 
-        # Setup Player
-        self.player.change_name("")
-        self.player.direct_move(-100, -100)
-        self.player.display_mode("")
-
-        handle_sound("one.mp3")
-        self.timer.activate(1.2)
-
-    def handle_event(self, event):
-        if event.type == self.timer.event:
-            if self.step == 0:
-                self.text = self.font.render("Inspired by TinyDiceDungeons", True, (255, 255, 255))
-                self.canvas.delete_group(1)
-
-                handle_sound("one.mp3")
-
-                self.timer.activate(1.2)
-                self.step += 1
-            elif self.step == 1:
-                self.to("main_menu")
-
-    def update(self, surface, dt):
-        self.canvas.update(surface, dt)
-        State.player.update(surface, dt)
-        self.timer.update(dt)
-
-        surface.blit(self.text, (self.center(self.text), 220))
+    def remove_face(self):
+        """Removes the face, changes the text, and then plays a sound."""
+        self.text_display.set_text(0, "Inspired by TinyDiceDungeons")
+        self.canvas.delete_group(1)
+        music_handler.play_sfx(load_sound("one", True))

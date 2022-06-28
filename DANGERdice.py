@@ -2,7 +2,7 @@ import os
 import pygame
 import sys
 from controller import Control
-from controller.states import MainMenu
+from controller.states import Attributions, MainMenu
 
 
 ###############
@@ -37,6 +37,7 @@ pygame.key.set_repeat(500, 100)
 
 # Set up states
 STATES = {
+    "attributions": Attributions(),
     "main_menu": MainMenu()
 }
 
@@ -44,7 +45,7 @@ STATES = {
 #     RUN     #
 ###############
 
-GAME = Control("main_menu", STATES, SURFACE)
+GAME = Control("attributions", STATES, SURFACE)
 GAME.main_loop()
 pygame.quit()
 sys.exit()

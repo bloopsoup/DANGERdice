@@ -29,8 +29,8 @@ class PositionedTexts(Displayable):
         for (text, offset) in zip(self.texts, self.offsets):
             if not len(text):
                 continue
-            text_surface = self.font.render(text, True, (0, 0, 0))
+            text_surface = self.font.render(text, True, (255, 255, 255))
             adjusted_pos = self.pos + offset
             if self.h_centered:
-                adjusted_pos.update(self.horizontal_center_offset(text_surface), adjusted_pos.y)
+                adjusted_pos.update(self.pos.x + self.horizontal_center_offset(text_surface), adjusted_pos.y)
             surface.blit(text_surface, (adjusted_pos.x, adjusted_pos.y))

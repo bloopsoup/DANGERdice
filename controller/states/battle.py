@@ -552,7 +552,7 @@ class Battle(State):
             self.enemy.image = self.enemy.images[14]
 
             # Spawn the chest
-            self.canvas.add_element(StaticBG([load_img(load_c("chest100x100.png"))],
+            self.canvas.add_element(StaticBG([load_img(load_c("chest.png"))],
                                              (self.enemy_x, self.player_y)), 5)
 
             # Give the player money

@@ -1,5 +1,6 @@
 import pygame
 from gui import Canvas
+from gui.commands import CommandQueue
 
 
 class State:
@@ -11,10 +12,15 @@ class State:
         self.next = None
         self.previous = None
         self.canvas = Canvas()
+        self.command_queue = CommandQueue()
 
     def setup_canvas(self):
         """Sets up the canvas for the state."""
         raise NotImplementedError
+
+    def setup_commands(self):
+        """Sets up initial commands to run if needed."""
+        pass
 
     def startup(self):
         """Setup when entering a state, such as loading songs or images."""
@@ -31,6 +37,7 @@ class State:
     def update(self, dt: float):
         """Draws objects pertaining to this state. Generally, menu options should be on top."""
         self.canvas.update(dt)
+        self.command_queue.update(dt)
 
     def draw(self, surface: pygame.Surface):
         """Draws objects pertaining to this state."""

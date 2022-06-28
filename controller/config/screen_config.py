@@ -25,6 +25,8 @@ screen_config = {
     "bought": "bought.png",
     "broke": "broke.png",
     "refresh": "refresh.png",
+    "chest": "chest.png",
+    "badmc": "badmc.png",
 
     "ground": "ground0.png",
     "bricks": "bricks.png",
