@@ -12,6 +12,10 @@ class State:
         self.previous = None
         self.canvas = Canvas()
 
+    def setup_canvas(self):
+        """Sets up the canvas for the state."""
+        raise NotImplementedError
+
     def startup(self):
         """Setup when entering a state, such as loading songs or images."""
         raise NotImplementedError

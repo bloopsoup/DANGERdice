@@ -1,38 +1,28 @@
-from controller.states.state import *
-from controller.utils.path import load_screen
-from gui.themes import BUTTON_DEFAULT
-from gui.canvas import Canvas
-from gui.elements.moving_background import MovingBackgroundElement
-from gui.elements.static_background import StaticBG
-from gui.elements.button import Button as Butt
+from .state import State
+from ..utils import music_handler
+from ..loader import load_screen, load_button_sprites, load_sound
+from ..themes import BUTTON_DEFAULT
+from gui.elements import MovingBackgroundElement, StaticBG, Button
 
 
 class MainMenu(State):
     """Main menu."""
 
-    def __init__(self, bank: AssetBank):
-        super().__init__(bank)
+    def setup_canvas(self):
+        self.canvas.add_element(MovingBackgroundElement([load_screen("tall_squares")], (0, 2), (800, 600)), 0)
+        self.canvas.add_element(StaticBG([load_screen("logo")], (0, 0)), 0)
+        self.canvas.add_element(Button(load_button_sprites("campaign"), (150, 270), BUTTON_DEFAULT, self.intro), 0)
+        self.canvas.add_element(Button(load_button_sprites("load"), (150, 355), BUTTON_DEFAULT, self.load), 0)
+        self.canvas.add_element(Button(load_button_sprites("quit"), (150, 440), BUTTON_DEFAULT, self.quit_game), 0)
+        self.canvas.add_element(Button(load_button_sprites("music"), (730, 530), BUTTON_DEFAULT,
+                                       music_handler.toggle_music), 0)
 
     def startup(self):
-        self.canvas = Canvas()
-        self.canvas.add_element(MovingBackgroundElement(load_screen("back1.png"), (0, 2), (800, 600)), 0)
-        self.canvas.add_element(StaticBG(load_screen("logo.png"), (0, 0)), 0)
-        self.canvas.add_element(Butt(self.bank.get_images("button2", 0, 0, 3), (0, 270), BUTTON_DEFAULT, self.intro), 0)
-        self.canvas.add_element(Butt(self.bank.get_images("button2", 2, 0, 3), (0, 340), BUTTON_DEFAULT, self.load), 0)
-        self.canvas.add_element(Butt(self.bank.get_images("button2", 4, 0, 3), (0, 410), BUTTON_DEFAULT,
-                                     self.quit_game), 0)
-        self.canvas.add_element(Butt(self.bank.get_images("button", 1, 0, 3), (730, 530), BUTTON_DEFAULT, self.test), 0)
-
-        # Setup Player
-        # self.player.change_name("")
-        # self.player.direct_move(-100, -100)
-        # self.player.display_mode("")
-
-    def test(self):
-        print(self.canvas)
+        self.setup_canvas()
+        music_handler.change_music(load_sound("trooper", False))
 
     def intro(self):
-        """Onto giving your character a name!"""
+        """Go to the intro sequence."""
         self.to("intro")
 
     def load(self):

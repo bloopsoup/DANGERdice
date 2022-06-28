@@ -2,7 +2,7 @@ import os
 import pygame
 import sys
 from controller import Control
-from controller.states.main_menu import MainMenu
+from controller.states import MainMenu
 
 
 ###############

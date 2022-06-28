@@ -1,6 +1,5 @@
 import sys
 import os
-import pygame
 
 
 def rp(path: str) -> str:
@@ -29,22 +28,12 @@ def path_s(path: str) -> str:
 
 def path_song(path: str) -> str:
     """Returns a SFX path."""
-    return rp("assets/song/" + path)
+    return rp("assets/songs/" + path)
 
 
 def path_sfx(path: str) -> str:
     """Returns a SFX path."""
     return rp("assets/sfx/" + path)
-
-
-def load_img(path: str) -> pygame.Surface:
-    """Load an image from PATH."""
-    return pygame.Surface.convert_alpha(pygame.image.load(path))
-
-
-def load_screen(path: str):
-    """Load a screen image from PATH."""
-    return [load_img(path_s(path))]
 
 
 def save_data(data, file_name):

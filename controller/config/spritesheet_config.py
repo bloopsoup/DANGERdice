@@ -23,5 +23,29 @@ spritesheet_config = {
     "button1": ["1button70x3x6.png", 70, 70, 3, 6],
     "button2": ["2button75x500x6x3.png", 75, 500, 6, 3],
     "button3": ["3button70x3x6.png", 70, 70, 3, 6],
-    "button4": ["4button50x200x2x3.png", 50, 200, 2, 3]
+    "button4": ["4button50x200x2x3.png", 50, 200, 2, 3],
+    "input": ["input75x600x1x2.png", 75, 600, 1, 2]
+}
+
+button_config = {
+    "back": ["button1", 0, 0, 3],
+    "left_arrow": ["button1", 0, 3, 3],
+    "music": ["button1", 1, 0, 3],
+    "cancel": ["button1", 1, 3, 3],
+    "right_arrow": ["button1", 2, 0, 3],
+    "confirm": ["button1", 2, 3, 3],
+    "campaign": ["button2", 0, 0, 3],
+    "inventory": ["button2", 1, 0, 3],
+    "load": ["button2", 2, 0, 3],
+    "play": ["button2", 3, 0, 3],
+    "quit": ["button2", 4, 0, 3],
+    "shop": ["button2", 5, 0, 3],
+    "equip": ["button3", 0, 0, 3],
+    "sell": ["button3", 0, 3, 3],
+    "save_icon": ["button3", 1, 0, 3],
+    "load_icon": ["button3", 1, 3, 3],
+    "unequip": ["button3", 2, 0, 3],
+    "sound": ["button3", 2, 3, 3],
+    "attack": ["button4", 0, 0, 3],
+    "skip_tutorial": ["button4", 1, 0, 3]
 }

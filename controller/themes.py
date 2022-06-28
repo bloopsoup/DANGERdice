@@ -1,3 +1,6 @@
+from .utils import music_handler, path_sfx
+
+
 # THEME HELPERS
 
 def blank():
@@ -9,7 +12,7 @@ def blank():
 
 
 BUTTON_DEFAULT = {
-    "play_sfx": blank,
+    "play_sfx": lambda: music_handler.play_sfx(path_sfx("click.mp3")),
     "border_size": 4
 }
 
