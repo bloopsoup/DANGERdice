@@ -1,6 +1,6 @@
 from .state import State
 from ..utils import music_handler
-from ..loader import load_static, load_button_sprites, load_font, load_sound
+from ..loader import load_static, load_some_sprites, load_all_sprites, load_font, load_sound
 from ..themes import BUTTON_DEFAULT, INPUT_DEFAULT
 from gui.elements import StaticBG, MovingBackgroundElement, PositionedTexts, Button, InputText
 from gui.commands import TimerCommand
@@ -11,32 +11,26 @@ class Intro(State):
 
     def __init__(self):
         super().__init__()
+        # self.name_display = PositionedTexts([load_static("black")], (0, 220), load_font("L"), 1, [(0, 0)], True)
+        self.tutorial_display = PositionedTexts([load_static("black")], (0, 220), load_font("L"), 1, [(0, 0)], True)
+        self.setup_canvas()
 
         self.destination = "player_menu"
-        self.player.current_level = "l0-1"
-
-        self.text_display = PositionedTexts([load_static("black")], (0, 220), load_font("L"), 1, [(0, 0)], True)
-        self.text = self.font.render("", True, (0, 0, 0))
 
     def setup_canvas(self):
         self.canvas.add_element(StaticBG([load_static("name")], (0, 0)), 0)
         self.canvas.add_element(MovingBackgroundElement([load_static("thick_clouds")], (-1, 0), (800, 600)), 0)
-        self.canvas.add_element(Button(load_button_sprites("music"), (730, 530), BUTTON_DEFAULT,
-                                       music_handler.toggle_music), 0)
 
-        input_textbox = InputText([load_img(load_b("1600x75.png")), load_img(load_b("0600x75.png"))],
-                                  (0, 200), INPUT_DEFAULT, self.enter_name)
-        self.canvas.add_element(input_textbox, 1)
+        self.canvas.add_element(self.tutorial_display)
 
-        self.canvas.add_element(Butt(Control.sheets["button4"].load_some_images(1, 0, 3), (0, 300), BUTTON_DEFAULT,
-                                     self.skip_tutorial), 2)
-        self.canvas.add_element(Butt(Control.sheets["button"].load_some_images(0, 0, 3), (0, 0), BUTTON_DEFAULT,
-                                     self.back), 3)
-        self.canvas.add_element(Butt(Control.sheets["button"].load_some_images(2, 0, 3), (700, 130), BUTTON_DEFAULT,
-                                     input_textbox.submit_text), 4)
+        self.canvas.add_element(Button(load_some_sprites("music"), (730, 530), BUTTON_DEFAULT, music_handler.toggle), 0)
+        i_box = InputText(load_all_sprites("input"), (0, 200), INPUT_DEFAULT, self.enter_name, load_font("L"))
+        self.canvas.add_element(i_box, 1)
+        self.canvas.add_element(Button(load_some_sprites("skip_tutorial"), (0, 300), BUTTON_DEFAULT, self.skip), 2)
+        self.canvas.add_element(Button(load_some_sprites("back"), (0, 0), BUTTON_DEFAULT, self.back), 3)
+        self.canvas.add_element(Button(load_some_sprites("confirm"), (700, 130), BUTTON_DEFAULT, i_box.submit_text), 4)
 
     def startup(self):
-        # Setup Player (should be hardcoded as Player dimensions are constant)
         self.player.name_display(True)
         self.player.health_display(False)
         self.player.display_mode("")
@@ -79,7 +73,7 @@ class Intro(State):
         self.player.command_move(5, 0, 1000, 472)
         self.timer.activate(2)
 
-    def skip_tutorial(self):
+    def skip(self):
         """Skips the story and tutorial level."""
         self.player.current_level = "l0-1"
         self.destination = "player_menu"

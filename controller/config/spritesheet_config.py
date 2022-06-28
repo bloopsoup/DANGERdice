@@ -27,7 +27,7 @@ spritesheet_config = {
     "input": ["input75x600x1x2.png", 75, 600, 1, 2]
 }
 
-button_config = {
+chunk_config = {
     "back": ["button1", 0, 0, 3],
     "left_arrow": ["button1", 0, 3, 3],
     "music": ["button1", 1, 0, 3],

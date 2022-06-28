@@ -5,7 +5,7 @@ from gui.utils import Spritesheet, IndexCycler
 
 from .utils import rp, path_sheet, path_static, path_sfx, path_song
 from .config import dice_config, enemy_config, fonts_config, idle_animation_config, static_config, spritesheet_config, \
-    button_config, sound_config
+    chunk_config, sound_config
 
 
 # UTILS
@@ -43,11 +43,16 @@ def load_spritesheet(name: str) -> Spritesheet:
     return Spritesheet(path_sheet(path), height, width, rows, cols)
 
 
-def load_button_sprites(name: str) -> list[pygame.Surface]:
-    """Loads images for a button."""
-    assert name in button_config, "not a valid button"
-    sheet, row, col, amount = button_config[name]
+def load_some_sprites(name: str) -> list[pygame.Surface]:
+    """Loads some sprites using a NAME preset."""
+    assert name in chunk_config, "not a valid chunk name"
+    sheet, row, col, amount = chunk_config[name]
     return load_spritesheet(sheet).load_some_images(row, col, amount)
+
+
+def load_all_sprites(name: str) -> list[pygame.Surface]:
+    """Loads all sprites from a spritesheet."""
+    return load_spritesheet(name).load_all_images()
 
 
 # FACTORY FUNCTIONS

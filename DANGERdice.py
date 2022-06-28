@@ -39,6 +39,7 @@ pygame.key.set_repeat(500, 100)
 STATES = {
     "attributions": Attributions(),
     "main_menu": MainMenu(),
+    "intro": Intro()
 }
 
 ###############

@@ -26,9 +26,13 @@ class State:
         """Setup when entering a state, such as loading songs or images."""
         raise NotImplementedError
 
+    def reset_canvas(self):
+        """Resets the canvas before leaving the state."""
+        pass
+
     def cleanup(self):
         """Cleaning up components before leaving the state."""
-        pass
+        self.reset_canvas()
 
     def handle_event(self, event):
         """Handles events in this state."""

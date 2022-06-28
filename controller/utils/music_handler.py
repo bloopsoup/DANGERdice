@@ -13,7 +13,7 @@ class MusicHandler:
         if not self.pause:
             pygame.mixer.Sound(path).play()
 
-    def change_music(self, path: str):
+    def change(self, path: str):
         """Change the music to the song found at path. Won't do anything if it matches the current song."""
         if path == self.current_path:
             return
@@ -25,7 +25,7 @@ class MusicHandler:
         if self.pause:
             pygame.mixer.music.pause()
 
-    def toggle_music(self):
+    def toggle(self):
         """Toggles sounds."""
         if self.pause:
             pygame.mixer.music.unpause()

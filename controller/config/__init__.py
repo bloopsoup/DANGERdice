@@ -5,4 +5,4 @@ from .fonts_config import fonts_config
 from .idle_animation_config import idle_animation_config
 from .static_config import static_config
 from .sound_config import sound_config
-from .spritesheet_config import spritesheet_config, button_config
+from .spritesheet_config import spritesheet_config, chunk_config

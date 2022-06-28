@@ -24,7 +24,7 @@ BUTTON_GHOST = {
 # INPUT TEXT
 
 INPUT_DEFAULT = {
-    "play_sfx": blank,
+    "play_sfx": lambda: music_handler.play_sfx(path_sfx("click.mp3")),
     "border_size": 4,
     "padding": 35,
 }
