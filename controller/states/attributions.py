@@ -11,26 +11,22 @@ class Attributions(State):
     def __init__(self):
         super().__init__()
         self.text_display = PositionedTexts([load_static("black")], (0, 220), load_font("L"), 1, [(0, 0)], True)
-        self.setup_canvas()
+        self.text_display.set_color((255, 255, 255))
 
     def setup_canvas(self):
-        self.text_display.set_color((255, 255, 255))
         self.canvas.add_element(StaticBG([load_static("black")], (0, 0)), 0)
-        self.canvas.add_element(StaticBG([load_static("badmc")], (350, 280)), 1)
         self.canvas.add_element(self.text_display, 0)
         self.text_display.set_text(0, "A BMB GAME")
+        self.canvas.add_element(StaticBG([load_static("badmc")], (350, 280)), 1)
 
     def setup_commands(self):
         self.command_queue.append_commands([TimerCommand(1.2, self.remove_face)])
         self.command_queue.append_commands([TimerCommand(1.2, lambda: self.to("main_menu"))])
 
     def startup(self):
+        self.setup_canvas()
         self.setup_commands()
         music_handler.play_sfx(load_sound("one", True))
-
-    def reset_canvas(self):
-        self.canvas.add_element(StaticBG([load_static("badmc")], (350, 280)), 1)
-        self.text_display.set_text(0, "A BMB GAME")
 
     def remove_face(self):
         """Removes the face, changes the text, and then plays a sound."""

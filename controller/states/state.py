@@ -27,24 +27,26 @@ class State:
 
     def startup(self):
         """Setup when entering a state, such as loading songs or images."""
-        pass
-
-    def reset_canvas(self):
-        """Resets the canvas before leaving the state."""
-        pass
+        self.setup_canvas()
+        self.setup_commands()
 
     def cleanup(self):
         """Cleaning up components before leaving the state."""
-        self.reset_canvas()
+        self.canvas.delete_all()
 
     def handle_event(self, event):
         """Handles events in this state."""
         self.canvas.handle_event(event)
 
+    def update_components(self):
+        """Update dynamic components based on external information.."""
+        pass
+
     def update(self, dt: float):
-        """Draws objects pertaining to this state. Generally, menu options should be on top."""
-        self.canvas.update(dt)
+        """Update objects pertaining to this state."""
         self.command_queue.update(dt)
+        self.update_components()
+        self.canvas.update(dt)
 
     def draw(self, surface: pygame.Surface):
         """Draws objects pertaining to this state."""

@@ -8,10 +8,6 @@ from gui.elements import MovingBackgroundElement, StaticBG, Button
 class MainMenu(State):
     """Main menu."""
 
-    def __init__(self):
-        super().__init__()
-        self.setup_canvas()
-
     def setup_canvas(self):
         self.canvas.add_element(MovingBackgroundElement([load_static("tall_squares")], (0, 2), (800, 600)), 0)
         self.canvas.add_element(StaticBG([load_static("logo")], (0, 0)), 0)
@@ -21,6 +17,7 @@ class MainMenu(State):
         self.canvas.add_element(Button(load_some_sprites("music"), (730, 530), BUTTON_DEFAULT, music_handler.toggle), 0)
 
     def startup(self):
+        self.setup_canvas()
         music_handler.change(load_sound("trooper", False))
 
     def intro(self):

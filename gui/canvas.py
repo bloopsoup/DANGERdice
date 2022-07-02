@@ -20,6 +20,10 @@ class Canvas:
         """Deletes all tuple(s) with group_ID."""
         self.element_queue = [data for data in self.element_queue if data[1] != group_ID]
 
+    def delete_all(self):
+        """Deletes all elements from the canvas."""
+        self.element_queue.clear()
+
     def handle_event(self, event):
         """Passes events into each element."""
         for data in self.element_queue:
