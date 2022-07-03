@@ -4,10 +4,10 @@ class Enemy:
     def __init__(self, name: str, level: int, max_health: int, money: int, preference: list[str]):
         self.name = name
         self.level = level
-        self.max_health = max_health
-        self.health = self.max_health
         self.money = money
         self.preference = preference
+        self.max_health = max_health
+        self.health = self.max_health
 
         # STATUS
         self.poison = 0
