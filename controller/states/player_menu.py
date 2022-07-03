@@ -28,6 +28,7 @@ class PlayerMenu(State):
                                      "Gold: {0}".format(self.player.get_money())])
         self.canvas.add_element(self.level_display, 0)
         self.level_display.set_text(0, "Next Level: {0}".format(self.player.get_stage()))
+        self.add_dice_to_canvas()
 
         self.canvas.add_element(Button(load_some_sprites("play"), (150, 250), BUTTON_DEFAULT, self.play), 0)
         self.canvas.add_element(Button(load_some_sprites("inventory"), (150, 335), BUTTON_DEFAULT, self.inventory), 0)
@@ -39,6 +40,16 @@ class PlayerMenu(State):
     def startup(self):
         self.setup_canvas()
         music_handler.change(load_sound("note", False))
+
+    def add_dice_to_canvas(self):
+        """Adds dice to the canvas."""
+        current = 0
+        for i, die in enumerate(self.player.get_preference_all()):
+            die_display = Idle(load_some_sprites(self.player.get_preference(i)), (376 + current, 79),
+                               load_idle_animation("square"))
+            die_display.set_idle(False)
+            self.canvas.add_element(die_display, 0)
+            current += 100
 
     def play(self):
         """Onto battle!"""

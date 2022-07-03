@@ -36,6 +36,10 @@ class Enemy:
         assert i < len(self.preference), "preference index out of bounds"
         return self.preference[i]
 
+    def get_preference_all(self) -> list[str]:
+        """Gets the enemy's preference."""
+        return self.preference
+
     def append_to_preference(self, element: str):
         """Adds element to the enemy's preference."""
         self.preference.append(element)

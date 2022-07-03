@@ -11,7 +11,7 @@ class Die:
         self.price = price
         self.damage_type = damage_type
         self.safe = safe
-        self.name = "{0} {1}X Die".format(self.damage_type.title(), self.multiple)
+        self.name = "{0}{1}".format(self.damage_type, self.multiple)
         self.rolled = False
 
     def get_name(self) -> str:

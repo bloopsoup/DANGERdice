@@ -73,4 +73,7 @@ def create_enemy(enemy: str, tier: int) -> Enemy:
 
 def create_player() -> Player:
     """Creates a player."""
-    return Player("p0-0")
+    player = Player("p0-0")
+    player.append_to_preference("basic1")
+    player.append_to_preference("basic1")
+    return player
