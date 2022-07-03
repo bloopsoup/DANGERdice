@@ -27,6 +27,7 @@ class PositionedTexts(Displayable):
 
     def set_texts(self, texts: list[str]):
         """Sets the texts."""
+        assert len(texts) == len(self.texts), "texts length should match original"
         self.texts = texts
 
     def draw(self, surface: pygame.Surface):

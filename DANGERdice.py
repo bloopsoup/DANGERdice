@@ -2,7 +2,7 @@ import os
 import pygame
 import sys
 from controller import Control
-from controller.states import Attributions, MainMenu, Intro
+from controller.states import Attributions, MainMenu, Intro, PlayerMenu
 
 
 ###############
@@ -39,6 +39,7 @@ pygame.key.set_repeat(500, 100)
 STATES = {
     "attributions": Attributions(),
     "main_menu": MainMenu(),
+    "player_menu": PlayerMenu(),
     "intro": Intro()
 }
 

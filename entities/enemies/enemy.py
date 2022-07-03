@@ -23,6 +23,14 @@ class Enemy:
         """Changes the enemy's name."""
         self.name = name
 
+    def get_level(self) -> int:
+        """Gets the enemy's level."""
+        return self.level
+
+    def get_money(self) -> int:
+        """Gets the enemy's money."""
+        return self.money
+
     def get_preference(self, i: int):
         """Gets the ith element of the enemy's preference."""
         assert i < len(self.preference), "preference index out of bounds"
@@ -31,6 +39,14 @@ class Enemy:
     def append_to_preference(self, element: str):
         """Adds element to the enemy's preference."""
         self.preference.append(element)
+
+    def get_health(self) -> int:
+        """Gets an enemy's health."""
+        return self.health
+
+    def get_max_health(self) -> int:
+        """Gets an enemy's max health."""
+        return self.max_health
 
     def restore_health(self):
         """Restores an enemy's health."""

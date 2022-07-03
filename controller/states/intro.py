@@ -48,7 +48,7 @@ class Intro(State):
         self.canvas.delete_group(2)
         self.player.change_name(text)
         self.command_queue.append_commands([MoveCommand(self.player_display, (5, 0), (900, 472),
-                                                        lambda: self.to("attributions"))])
+                                                        lambda: self.to("player_menu"))])
 
     def skip(self):
         """Skips the story cutscene and tutorial level."""
