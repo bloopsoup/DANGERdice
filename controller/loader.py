@@ -56,11 +56,11 @@ def load_all_sprites(name: str) -> list[pygame.Surface]:
 
 
 # FACTORY FUNCTIONS
-def create_die(die_type: str, multiple: int) -> Die:
+def create_die(die_type: str) -> Die:
     """Creates a die."""
     assert die_type in dice_config, "not a valid die type"
-    side, additional_cost, safe = dice_config[die_type]
-    return Die(side, multiple, int(130 * 1.5 * (multiple + 0.5)) + additional_cost, die_type, safe)
+    side, multiple, additional_cost, damage_type, safe = dice_config[die_type]
+    return Die(side, multiple, int(130 * 1.5 * (multiple + 0.5)) + additional_cost, damage_type, safe)
 
 
 def create_enemy(enemy: str, tier: int) -> Enemy:
@@ -74,6 +74,8 @@ def create_enemy(enemy: str, tier: int) -> Enemy:
 def create_player() -> Player:
     """Creates a player."""
     player = Player("p0-0")
-    player.append_to_preference("basic1")
-    player.append_to_preference("basic1")
+    for _ in range(2):
+        player.append_to_preference("basic1")
+    for _ in range(13):
+        player.append_to_inventory("basic1")
     return player

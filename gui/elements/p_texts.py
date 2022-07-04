@@ -2,7 +2,7 @@ import pygame
 from .displayable import Displayable
 
 
-class PositionedTexts(Displayable):
+class PTexts(Displayable):
     """An element displaying positioned text elements which change frequently over time. Note that
        images and pos represent an anchor point for relative text positioning (rather than absolute)."""
 
