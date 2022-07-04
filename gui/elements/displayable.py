@@ -14,7 +14,7 @@ class Displayable:
 
         # A reference rectangle of the widget
         self.reference = self.images[0].get_rect()
-        self.reference.move_ip(self.pos.x, self.pos.y)
+        self.reference.update((self.pos.x, self.pos.y), (self.reference.width, self.reference.height))
 
     def get_position(self) -> pygame.Vector2:
         """Gets the position of the element."""
@@ -23,10 +23,12 @@ class Displayable:
     def add_position(self, pos: pygame.Vector2):
         """Adds pos to the current position."""
         self.pos = self.pos + pos
+        self.reference.update((self.pos.x, self.pos.y), (self.reference.width, self.reference.height))
 
     def set_position(self, pos: pygame.Vector2):
         """Sets the position of the element."""
         self.pos = pos
+        self.reference.update((self.pos.x, self.pos.y), (self.reference.width, self.reference.height))
 
     def horizontal_center_offset(self, text_surface: pygame.Surface) -> int:
         """Returns the offset to horizontally center text with respect to the element."""

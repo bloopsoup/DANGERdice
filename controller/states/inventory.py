@@ -1,6 +1,12 @@
+from .state import State
+from ..utils import music_handler
+from ..loader import load_static, load_some_sprites, load_all_sprites, load_font, load_sound, load_idle_animation
+from ..themes import BUTTON_DEFAULT, BUTTON_GHOST
+from gui.elements import StaticBG, MovingBackgroundElement, PositionedTexts, Idle, Button
+
+
 class Inventory(State):
-    """Where the player can change up their dice set and view their inventory of dice.
-       Features pagination for better inventory management."""
+    """Where the player can change up their dice set and view their inventory of dice."""
 
     def __init__(self):
         super().__init__()
@@ -23,40 +29,23 @@ class Inventory(State):
         self.text_amount = self.font_small.render("{0} Dice".format(len(self.player.inventory)), True, (0, 0, 0))
         self.text_money = self.font_small.render("{0} G".format(self.player.money), True, (0, 0, 0))
 
-    def cleanup(self):
-        self.selected = -1
-        self.inv_selected = -1
-        self.reference_index = 0
+    def setup_canvas(self):
+        self.canvas.add_element(MovingBackgroundElement([load_static("tall_rectangles")], (0, -1), (800, 600)), 0)
+        self.canvas.add_element(StaticBG([load_static("inventory_layout")], (0, 0)), 0)
+        self.canvas.add_element(Button(load_some_sprites("back"), (0, 0), BUTTON_DEFAULT, self.back), 0)
+        self.canvas.add_element(Button(load_some_sprites("music"), (730, 530), BUTTON_DEFAULT, music_handler.toggle), 0)
+        self.canvas.add_element(Button(load_some_sprites("right_arrow"), (625, 530), BUTTON_DEFAULT, print), 0)
+        self.canvas.add_element(Button(load_some_sprites("left_arrow"), (105, 530), BUTTON_DEFAULT, print), 0)
+
+        # placeholder = [load_img(load_b("hold_die.png")) for _ in range(3)]
+        # self.canvas.add_element(Butt(placeholder, (205, 75), BUTTON_GHOST, print), -1)
+        # self.canvas.add_element(Butt(placeholder, (308, 75), BUTTON_GHOST, print), -1)
+        # self.canvas.add_element(Butt(placeholder, (408, 75), BUTTON_GHOST, print), -1)
+        # self.canvas.add_element(Butt(placeholder, (509, 75), BUTTON_GHOST, print), -1)
 
     def startup(self):
-        # Setup Canvas
-        self.canvas = Canvas()
-        self.canvas.add_element(MovingBackgroundElement([load_img(load_s("back3.png"))], (0, -1), (800, 600)), -1)
-        self.canvas.add_element(StaticBG([load_img(load_s("inventory.png"))], (0, 0)), -1)
-
-        self.canvas.add_element(Butt(Control.sheets["button"].load_some_images(0, 0, 3), (0, 0), BUTTON_DEFAULT,
-                                     self.back), -1)
-        self.canvas.add_element(Butt(Control.sheets["button"].load_some_images(1, 0, 3), (730, 530), BUTTON_DEFAULT,
-                                     handle_music), -1)
-
-        placeholder = [load_img(load_b("hold_die.png")) for _ in range(3)]
-        self.canvas.add_element(Butt(placeholder, (205, 75), BUTTON_GHOST, lambda: self.select_own(0)), -1)
-        self.canvas.add_element(Butt(placeholder, (308, 75), BUTTON_GHOST, lambda: self.select_own(1)), -1)
-        self.canvas.add_element(Butt(placeholder, (408, 75), BUTTON_GHOST, lambda: self.select_own(2)), -1)
-        self.canvas.add_element(Butt(placeholder, (509, 75), BUTTON_GHOST, lambda: self.select_own(3)), -1)
-
-        self.reset_buttons()
-
-        self.canvas.add_element(Butt(Control.sheets["button"].load_some_images(2, 0, 3), (625, 530), BUTTON_DEFAULT,
-                                     self.scroll_right), -1)
-        self.canvas.add_element(Butt(Control.sheets["button"].load_some_images(0, 3, 3), (105, 530), BUTTON_DEFAULT,
-                                     self.scroll_left), -1)
-
-        # Setup Players
-        self.player.direct_move(-100, -100)
-        self.player.name_display(False)
-        self.player.health_display(False)
-        self.player.display_mode("")
+        self.setup_canvas()
+        music_handler.change(load_sound("note", False))
 
     def handle_event(self, event):
         """We added a BACKSPACE event to cancel the player's selection."""

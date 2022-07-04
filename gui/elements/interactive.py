@@ -10,8 +10,10 @@ class Interactive(Displayable):
         self.on_event = on_event
 
     def handle_event(self, event):
-        """Handles user input."""
-        raise NotImplementedError
+        """Trigger an event by clicking on the interactive element."""
+        if self.reference.collidepoint(pygame.mouse.get_pos()) and event.type == pygame.MOUSEBUTTONDOWN:
+            if self.on_event is not None:
+                self.on_event()
 
     def draw(self, surface: pygame.Surface):
         """Displays itself onto surface."""

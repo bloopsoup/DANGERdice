@@ -1,13 +1,13 @@
 import pygame
-from .displayable import Displayable
+from .interactive import Interactive
 from ..utils import IndexCycler
 
 
-class Idle(Displayable):
-    """An element with an idle animation."""
+class Idle(Interactive):
+    """An element with an idle animation. Can call a function when the element is clicked."""
 
-    def __init__(self, images: list[pygame.Surface], pos: tuple[float, float], idle_handler: IndexCycler):
-        super().__init__(images, pos, {})
+    def __init__(self, images: list[pygame.Surface], pos: tuple[float, float], on_event, idle_handler: IndexCycler):
+        super().__init__(images, pos, {}, on_event)
         self.image = self.images[0]
         self.idle = True
         self.idle_handler = idle_handler
@@ -26,7 +26,6 @@ class Idle(Displayable):
 
     def update(self, dt: float):
         """Updating itself."""
-        self.reference.move_ip(self.pos)
         self.idle_animate(dt)
 
     def draw(self, surface: pygame.Surface):

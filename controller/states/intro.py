@@ -12,7 +12,7 @@ class Intro(State):
 
     def __init__(self):
         super().__init__()
-        self.player_display = Idle(load_all_sprites("player"), (350, 472), load_idle_animation("player"))
+        self.player_display = Idle(load_all_sprites("player"), (350, 472), None, load_idle_animation("player"))
         self.name_display = PositionedTexts(load_all_sprites("player"), (350, 472), load_font("SS"),
                                             1, [(0, -25)], True)
         self.skip_display = PositionedTexts([load_static("black")], (0, 220), load_font("M"), 1, [(0, 0)], True)

@@ -11,7 +11,7 @@ class PlayerMenu(State):
 
     def __init__(self):
         super().__init__()
-        self.player_display = Idle(load_all_sprites("player"), (38, 72), load_idle_animation("player"))
+        self.player_display = Idle(load_all_sprites("player"), (38, 72), None, load_idle_animation("player"))
         self.stat_display = PositionedTexts([pygame.Surface((1, 1))], (145, 72), load_font("SS"), 4,
                                             [(0, 0), (0, 20), (0, 40), (0, 60)], False)
         self.level_display = PositionedTexts([load_static("black")], (0, 210), load_font("M"), 1, [(0, 0)], True)
@@ -45,7 +45,7 @@ class PlayerMenu(State):
         """Adds dice to the canvas."""
         current = 0
         for i, die in enumerate(self.player.get_preference_all()):
-            die_display = Idle(load_some_sprites(self.player.get_preference(i)), (376 + current, 79),
+            die_display = Idle(load_some_sprites(self.player.get_preference(i)), (376 + current, 79), None,
                                load_idle_animation("square"))
             die_display.set_idle(False)
             self.canvas.add_element(die_display, 0)
