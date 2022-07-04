@@ -22,6 +22,19 @@ class Player(Enemy):
         """Sets the player's current stage."""
         self.current_stage = stage
 
+    def get_inventory(self) -> list[str]:
+        """Gets a copy of the player's inventory as a list."""
+        return self.inventory[:]
+
+    def append_to_inventory(self, element: str):
+        """Adds an element to the player's inventory."""
+        self.inventory.append(element)
+
+    def remove_inventory(self, i: int):
+        """Removes and returns the ith element of the player's inventory."""
+        assert i < len(self.inventory), "inventory index out of bounds"
+        return self.inventory.pop(i)
+
     def gain_exp(self, exp: int):
         """Gives the player experience."""
         self.exp += exp

@@ -31,18 +31,22 @@ class Enemy:
         """Gets the enemy's money."""
         return self.money
 
-    def get_preference(self, i: int):
-        """Gets the ith element of the enemy's preference."""
-        assert i < len(self.preference), "preference index out of bounds"
-        return self.preference[i]
+    def add_money(self, money: int):
+        """Adds to the enemy's money."""
+        self.money += money
 
-    def get_preference_all(self) -> list[str]:
-        """Gets the enemy's preference."""
-        return self.preference
+    def get_preference(self) -> list[str]:
+        """Gets a copy of the enemy's preference as a list."""
+        return self.preference[:]
 
     def append_to_preference(self, element: str):
         """Adds element to the enemy's preference."""
         self.preference.append(element)
+
+    def remove_preference(self, i: int):
+        """Removes and returns the ith element of the enemy's preference."""
+        assert i < len(self.preference), "preference index out of bounds"
+        return self.preference.pop(i)
 
     def get_health(self) -> int:
         """Gets an enemy's health."""

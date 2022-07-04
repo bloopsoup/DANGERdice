@@ -14,6 +14,14 @@ class Die:
         self.name = "{0}{1}".format(self.damage_type, self.multiple)
         self.rolled = False
 
+    def get_price(self) -> int:
+        """Returns the die price."""
+        return self.price
+
+    def get_sell_price(self) -> int:
+        """Returns the die sell price."""
+        return self.price // 3
+
     def get_name(self) -> str:
         """Returns the die name."""
         return self.name
