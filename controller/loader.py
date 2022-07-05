@@ -8,6 +8,11 @@ from .config import dice_config, enemy_config, fonts_config, idle_animation_conf
     chunk_config, sound_config
 
 
+# Because loading files from disk is expensive
+loaded_spritesheets = {}
+loaded_static = {}
+
+
 # UTILS
 def load_idle_animation(animation: str) -> IndexCycler:
     """Loads an idle animation."""
@@ -31,16 +36,24 @@ def load_sound(name: str, sfx: bool):
 
 
 def load_static(name: str) -> pygame.Surface:
-    """Loads a screen."""
+    """Loads a static image."""
     assert name in static_config, "not a valid screen"
-    return pygame.Surface.convert_alpha(pygame.image.load(path_static(static_config[name])))
+    if name in loaded_static:
+        return loaded_static[name]
+    static = pygame.Surface.convert_alpha(pygame.image.load(path_static(static_config[name])))
+    loaded_static[name] = static
+    return static
 
 
 def load_spritesheet(name: str) -> Spritesheet:
     """Loads in images from a character or a button spritesheet."""
     assert name in spritesheet_config, "not a valid spritesheet"
+    if name in loaded_spritesheets:
+        return loaded_spritesheets[name]
     path, height, width, rows, cols = spritesheet_config[name]
-    return Spritesheet(path_sheet(path), height, width, rows, cols)
+    sheet = Spritesheet(path_sheet(path), height, width, rows, cols)
+    loaded_spritesheets[name] = sheet
+    return sheet
 
 
 def load_some_sprites(name: str) -> list[pygame.Surface]:

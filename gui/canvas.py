@@ -16,6 +16,10 @@ class Canvas:
         """Checks if tuple(s) with group_ID exists."""
         return any([data[1] == group_ID for data in self.element_queue])
 
+    def get_group(self, group_ID: int) -> list:
+        """Returns a list of elements with group_ID."""
+        return [data[0] for data in self.element_queue if data[1] == group_ID]
+
     def delete_group(self, group_ID: int):
         """Deletes all tuple(s) with group_ID."""
         self.element_queue = [data for data in self.element_queue if data[1] != group_ID]

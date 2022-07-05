@@ -1,4 +1,3 @@
-import math
 from .state import State
 from ..utils import music_handler
 from ..loader import load_static, load_some_sprites, load_font, load_sound, load_idle_animation, create_die
@@ -9,9 +8,12 @@ from gui.elements import StaticBG, MovingBackgroundElement, PTexts, Idle, Button
 class Inventory(State):
     """Where the player can change up their dice set and view their inventory of dice."""
 
+    dice_per_page = 12
+    dice_per_set = 4
+
     def __init__(self):
         super().__init__()
-        self.reference_index = 0
+        self.page_start = 0
         self.selected_index, self.in_set = -1, False
         self.info_display = PTexts([load_static("black")], (0, 0), load_font("M"), 2, [(0, 10), (0, 560)], True)
         self.stash_display = PTexts([load_static("black")], (0, 0), load_font("S"), 2, [(100, 100), (610, 100)], False)
@@ -27,7 +29,7 @@ class Inventory(State):
         self.canvas.add_element(self.info_display, 0)
         self.canvas.add_element(self.stash_display, 0)
 
-        self.add_dice_to_canvas()
+        self.add_set_to_canvas()
         self.add_inventory_to_canvas()
 
     def startup(self):
@@ -35,28 +37,32 @@ class Inventory(State):
         music_handler.change(load_sound("note", False))
 
     def update_components(self):
-        self.info_display.set_text(1, "Page {0}".format(max(1, math.ceil(self.reference_index // 12))))
+        self.info_display.set_text(1, "Page {0}".format((self.page_start // self.dice_per_page) + 1))
         self.stash_display.set_texts(["{0} Dice".format(len(self.player.get_inventory())),
-                                      "{0} Gold".format(self.player.get_money())])
+                                      "{0} G".format(self.player.get_money())])
 
-    def add_dice_to_canvas(self):
+    def add_set_to_canvas(self):
         """Adds dice from your set to the canvas."""
         for i, die in enumerate(self.player.get_preference()):
-            die_display = Idle(load_some_sprites(die), (208 + (i * 100), 75),
-                               lambda x=i: self.select(x, True), load_idle_animation("square"))
+            die_display = Idle(load_some_sprites(die), (208 + (i * 100), 75), lambda x=i: self.select(x, True),
+                               load_idle_animation("square"))
             die_display.set_idle(False)
             self.canvas.add_element(die_display, 1)
 
+    def add_set_buttons_to_canvas(self):
+        """Make the unequip button appear."""
+        if self.selected_index != 0:
+            self.canvas.add_element(Button(load_some_sprites("unequip"), (105, 200), BUTTON_DEFAULT, self.unequip), 3)
+        self.canvas.add_element(Button(load_some_sprites("cancel"), (105, 280), BUTTON_DEFAULT, self.deselect), 3)
+
     def add_inventory_to_canvas(self):
         """Adds inventory dice to the canvas."""
-        inventory = self.player.get_inventory()
-        if not len(inventory):
-            return
-
-        i, indices = 0, range(self.reference_index, len(inventory))
+        i, inventory = self.page_start, self.player.get_inventory()
         for row in range(3):
             for col in range(4):
-                die_display = Idle(load_some_sprites(inventory[indices[i]]), (205 + (100 * col), 270 + (100 * row)),
+                if i >= len(inventory):
+                    return
+                die_display = Idle(load_some_sprites(inventory[i]), (205 + (100 * col), 270 + (100 * row)),
                                    lambda x=i: self.select(x, False), load_idle_animation("square"))
                 die_display.set_idle(False)
                 self.canvas.add_element(die_display, 2)
@@ -64,20 +70,31 @@ class Inventory(State):
 
     def add_inventory_buttons_to_canvas(self):
         """Make the inventory die buttons appear."""
-        self.canvas.add_element(Button(load_some_sprites("sell"), (105, 200), BUTTON_DEFAULT, print), 3)
-        self.canvas.add_element(Button(load_some_sprites("equip"), (105, 280), BUTTON_DEFAULT, print), 3)
+        if len(self.player.get_preference()) < self.dice_per_set:
+            self.canvas.add_element(Button(load_some_sprites("equip"), (105, 280), BUTTON_DEFAULT, self.equip), 3)
+        self.canvas.add_element(Button(load_some_sprites("sell"), (105, 200), BUTTON_DEFAULT, self.sell), 3)
         self.canvas.add_element(Button(load_some_sprites("cancel"), (105, 360), BUTTON_DEFAULT, self.deselect), 3)
 
-    def add_set_buttons_to_canvas(self):
-        """Make the unequip button appear."""
-        self.canvas.add_element(Button(load_some_sprites("unequip"), (105, 200), BUTTON_DEFAULT, print), 3)
-        self.canvas.add_element(Button(load_some_sprites("cancel"), (105, 280), BUTTON_DEFAULT, self.deselect), 3)
+    def refresh_display(self):
+        """Refreshes the inventory display to reflect inventory changes."""
+        self.deselect()
+        self.canvas.delete_group(1)
+        self.add_set_to_canvas()
+        self.canvas.delete_group(2)
+        self.add_inventory_to_canvas()
 
     def show_die_info(self):
         """Shows the currently selected die's info."""
-        lst = self.player.get_preference() if self.in_set else self.player.get_inventory()
-        die = create_die(lst[self.selected_index])
-        self.info_display.set_text(0, "{0} worth {1}".format(die.get_name(), die.get_price()))
+        dice = self.player.get_preference() if self.in_set else self.player.get_inventory()
+        die = create_die(dice[self.selected_index])
+        self.info_display.set_text(0, "{0} worth {1}".format(die.get_name(), die.get_sell_price()))
+
+    def show_die_animated(self, selected: bool):
+        """Toggles the selected die's animation."""
+        if self.selected_index == -1:
+            return
+        dice_display = self.canvas.get_group(1) if self.in_set else self.canvas.get_group(2)
+        dice_display[self.selected_index % self.dice_per_page].set_idle(selected)
 
     def select(self, index: int, in_set: bool):
         """Selects a die and shows die-related buttons."""
@@ -85,24 +102,48 @@ class Inventory(State):
         self.selected_index, self.in_set = index, in_set
         self.add_set_buttons_to_canvas() if in_set else self.add_inventory_buttons_to_canvas()
         self.show_die_info()
+        self.show_die_animated(True)
 
     def deselect(self):
         """Deselects a die and deletes die-related buttons."""
-        self.selected_index, self.in_set = -1, False
         self.canvas.delete_group(3)
         self.info_display.set_text(0, "")
+        self.show_die_animated(False)
+        self.selected_index, self.in_set = -1, False
+
+    def equip(self):
+        """Equips the selected die from the inventory."""
+        self.player.append_to_preference(self.player.remove_inventory(self.selected_index))
+        self.refresh_display()
+        self.pg_reset()
+
+    def unequip(self):
+        """Unequips the selected die."""
+        self.player.append_to_inventory(self.player.remove_preference(self.selected_index))
+        self.refresh_display()
+
+    def sell(self):
+        """Sells the selected die."""
+        dice = self.player.get_preference() if self.in_set else self.player.get_inventory()
+        die = create_die(dice[self.selected_index])
+        self.player.remove_inventory(self.selected_index)
+        self.player.add_money(die.get_sell_price())
+        self.refresh_display()
+        self.pg_reset()
 
     def pg_left(self):
-        """Scroll to the left to go back a page."""
-        if self.reference_index > 0:
-            self.reference_index -= 12
+        """Go back a page."""
+        if self.page_start > 0:
+            self.page_start -= self.dice_per_page
+            self.refresh_display()
 
     def pg_right(self):
-        """Scroll to the right to reveal more dice from your inventory."""
-        if len(self.player.get_inventory()) > self.reference_index + 12:
-            self.reference_index += 12
+        """Go to the next page."""
+        if len(self.player.get_inventory()) > self.page_start + self.dice_per_page:
+            self.page_start += self.dice_per_page
+            self.refresh_display()
 
-    def empty_page(self):
-        """Scrolls left if the current page is empty."""
-        if len(self.player.get_inventory()) <= self.reference_index:
+    def pg_reset(self):
+        """Scrolls left if the page is empty."""
+        if len(self.player.get_inventory()) <= self.page_start:
             self.pg_left()
