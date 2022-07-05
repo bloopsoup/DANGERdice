@@ -2,7 +2,7 @@ import os
 import pygame
 import sys
 from controller import Control
-from controller.states import Attributions, MainMenu, Intro, PlayerMenu, Inventory, Ending
+from controller.states import Attributions, MainMenu, Intro, PlayerMenu, Inventory, Ending, GameOver
 
 
 ###############
@@ -42,7 +42,8 @@ STATES = {
     "player_menu": PlayerMenu(),
     "inventory": Inventory(),
     "intro": Intro(),
-    "ending": Ending()
+    "ending": Ending(),
+    "game_over": GameOver()
 }
 
 ###############

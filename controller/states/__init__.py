@@ -5,3 +5,4 @@ from .intro import Intro
 from .player_menu import PlayerMenu
 from .inventory import Inventory
 from .ending import Ending
+from .game_over import GameOver

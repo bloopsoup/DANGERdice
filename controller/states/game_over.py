@@ -1,38 +1,29 @@
+from .state import State
+from ..utils import music_handler
+from ..loader import load_static, load_sound, load_some_sprites, load_all_sprites, load_idle_animation
+from ..themes import BUTTON_DEFAULT
+from gui.elements import StaticBG, MovingBackgroundElement, Button, Idle
+
+
 class GameOver(State):
     """You died. Quit or load past save."""
 
     def __init__(self):
         super().__init__()
+        self.player_display = Idle(load_all_sprites("player"), (350, 472), None, load_idle_animation("player"))
+
+    def setup_canvas(self):
+        self.canvas.add_element(MovingBackgroundElement([load_static("tall_squares")], (0, 2), (800, 600)), 0)
+        self.canvas.add_element(StaticBG([load_static("bricks")], (0, 0)), 0)
+        self.canvas.add_element(StaticBG([load_static("game_over")], (0, 0)), 0)
+        self.canvas.add_element(Button(load_some_sprites("quit"), (150, 200), BUTTON_DEFAULT, self.return_menu), 0)
+        self.canvas.add_element(Button(load_some_sprites("music"), (730, 530), BUTTON_DEFAULT, music_handler.toggle), 0)
+        self.canvas.add_element(self.player_display, 0)
 
     def startup(self):
-        handle_music("menu.mp3")
-
-        # Setup Canvas
-        self.canvas = Canvas()
-        self.canvas.add_element(MovingBackgroundElement([load_img(load_s("back1.png"))], (0, 2), (800, 600)), 0)
-        self.canvas.add_element(StaticBG([load_img(load_s("bricks.png"))], (0, 0)), 0)
-        self.canvas.add_element(StaticBG([load_img(load_s("gameover.png"))], (0, 0)), 0)
-
-        self.canvas.add_element(Butt(Control.sheets["button2"].load_some_images(4, 0, 3), (0, 0), BUTTON_DEFAULT,
-                                     self.return_menu), 0)
-        self.canvas.add_element(Butt(Control.sheets["button"].load_some_images(1, 0, 3), (730, 530), BUTTON_DEFAULT,
-                                     handle_music), 0)
-
-        # Setup Player (should be hardcoded as Player dimensions are constant)
-        self.player.name_display(True)
-        self.player.health_display(False)
-        self.player.display_mode("")
-
-        self.player.status(False)
-        self.player.image = self.player.images[13]
-        self.player.direct_move(350, 472)
-
-    # Functions. Some are redundant but whatever.
+        self.setup_canvas()
+        music_handler.change(load_sound("menu", False))
 
     def return_menu(self):
-        """Goes back to the main menu. Since the player died, everything is reset for the next run if
-           the user still wants to be in the same session."""
-        self.player.reset_player()
-        self.player.dice_set = [State.gen_dice("basic1"), State.gen_dice("basic1")]
-        # Shop.refill()
+        """Goes back to the main menu."""
         self.to("main_menu")
