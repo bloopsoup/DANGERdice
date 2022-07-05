@@ -57,7 +57,19 @@ class Player(Enemy):
         self.inventory = []
         self.exp = 0
 
-    def package_data(self) -> dict:
+    def load_data(self, data: dict):
+        """Reads in a dictionary of player data and sets the player's attributes."""
+        self.name = data["name"]
+        self.level = data["level"]
+        self.health = data["health"]
+        self.max_health = data["max_health"]
+        self.money = data["money"]
+        self.preference = data["preference"]
+        self.inventory = data["inventory"]
+        self.current_stage = data["current_stage"]
+        self.exp = data["exp"]
+
+    def save_data(self) -> dict:
         """Returns a dictionary aggregating player data."""
         return {
             "name": self.name,
