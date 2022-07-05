@@ -10,6 +10,6 @@ dice_config = {
     "heal1": [[1, 2, 3, 4, 5, 6], 1, 600, "heal", True],
     "heal2": [[1, 2, 3, 4, 5, 6], 2, 600, "heal", True],
     "heal3": [[1, 2, 3, 4, 5, 6], 3, 600, "heal", True],
-    "divider": [[1, 1, 1, 2, 2, 3], 1000, True],
-    "multiplier": [[1, 1, 1, 2, 2, 3], 3000, True]
+    "divider1": [[1, 1, 1, 2, 2, 3], 1, 1000, "divide", True],
+    "multiplier1": [[1, 1, 1, 2, 2, 3], 1, 3000, "multiplier", True]
 }

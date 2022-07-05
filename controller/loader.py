@@ -1,19 +1,17 @@
+import random
 import pygame
-from entities.enemies import Enemy, Player
-from entities.dice import Die
-from gui.utils import Spritesheet, IndexCycler
-
 from .utils import rp, path_sheet, path_static, path_sfx, path_song
 from .config import dice_config, enemy_config, fonts_config, idle_animation_config, static_config, spritesheet_config, \
     chunk_config, sound_config
+from gui.utils import Spritesheet, IndexCycler
+from entities.enemies import Enemy, Player
+from entities.dice import Die
 
 
-# Because loading files from disk is expensive
 loaded_spritesheets = {}
 loaded_static = {}
 
 
-# UTILS
 def load_idle_animation(animation: str) -> IndexCycler:
     """Loads an idle animation."""
     assert animation in idle_animation_config, "not a valid animation"
@@ -68,7 +66,11 @@ def load_all_sprites(name: str) -> list[pygame.Surface]:
     return load_spritesheet(name).load_all_images()
 
 
-# FACTORY FUNCTIONS
+def random_die_name() -> str:
+    """Gets a random die name."""
+    return random.choice(list(dice_config.keys()))
+
+
 def create_die(die_type: str) -> Die:
     """Creates a die."""
     assert die_type in dice_config, "not a valid die type"
