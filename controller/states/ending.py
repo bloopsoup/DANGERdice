@@ -1,76 +1,45 @@
+import pygame
+from .state import State
+from ..utils import music_handler
+from ..loader import load_static, load_font, load_sound, load_all_sprites, load_idle_animation
+from gui.elements import StaticBG, PTexts, Idle
+from gui.commands import TimerCommand, MoveCommand
+
+
 class Ending(State):
     """The ending sequence."""
 
     def __init__(self):
         super().__init__()
+        self.player_display = Idle(load_all_sprites("player"), (-100, 472), None, load_idle_animation("player"))
+        self.text_display = PTexts([load_static("black")], (0, 220), load_font("L"), 1, [(0, 0)], True)
+        self.text_display.set_color((255, 255, 255))
 
-        self.timer = DTimer(pygame.USEREVENT + 1)
-        self.step = 0
+    def setup_canvas(self):
+        self.canvas.add_element(StaticBG([load_static("black")], (0, 0)), 0)
+        self.canvas.add_element(self.text_display, 0)
+        self.text_display.set_text(0, "AND AFTER THAT FIGHT")
+        self.canvas.add_element(self.player_display, 0)
+        self.player_display.set_position(pygame.Vector2(-100, 472))
 
-        self.font = fonts[3]
-        self.text = self.font.render("AND AFTER THAT FIGHT", True, (255, 255, 255))
-
-    def cleanup(self):
-        self.player.stop_move()
+    def setup_commands(self):
+        self.command_queue.append_commands([TimerCommand(2, lambda: self.change_text("YOU FOUND A LOT OF MONEY")),
+                                            MoveCommand(self.player_display, (10, 0), (1000, 472), None)])
+        self.command_queue.append_commands([TimerCommand(1.5, lambda: self.change_text("IN THE MOUNTAINS"))])
+        self.command_queue.append_commands([TimerCommand(2, lambda: self.change_text("DEBTS HAVE BEEN REPAID"))])
+        self.command_queue.append_commands([TimerCommand(1.5, lambda: self.change_text("HAPPY END"))])
+        self.command_queue.append_commands([TimerCommand(1.5, self.return_to_menu)])
 
     def startup(self):
-        pygame.mixer.music.stop()
+        self.setup_canvas()
+        self.setup_commands()
+        music_handler.play_sfx(load_sound("one", True))
 
-        # Setup Canvas
-        self.canvas = Canvas()
-        self.canvas.add_element(StaticBG([load_img(load_s("black.png"))], (0, 0)), 0)
+    def change_text(self, text: str):
+        """Changes the display text while playing a sound."""
+        self.text_display.set_text(0, text)
+        music_handler.play_sfx(load_sound("one", True))
 
-        # Setup Player
-        self.player.change_name("")
-        self.player.direct_move(-100, 472)
-        self.player.display_mode("")
-        self.player.command_move(5, 0, 1000, 472)
-
-        handle_sound("one.mp3")
-        self.timer.activate(2)
-
-    def handle_event(self, event):
-        if event.type == self.timer.event:
-            if self.step == 0:
-                self.text = self.font.render("YOU FOUND A LOT OF MONEY", True, (255, 255, 255))
-
-                handle_sound("one.mp3")
-
-                self.timer.activate(1.5)
-                self.step += 1
-            elif self.step == 1:
-                self.text = self.font.render("IN THE MOUNTAINS", True, (255, 255, 255))
-
-                handle_sound("one.mp3")
-
-                self.timer.activate(2)
-                self.step += 1
-            elif self.step == 2:
-                self.text = self.font.render("DEBTS HAVE BEEN REPAID", True, (255, 255, 255))
-
-                handle_sound("one.mp3")
-
-                self.timer.activate(1.5)
-                self.step += 1
-            elif self.step == 3:
-                self.text = self.font.render("HAPPY END", True, (255, 255, 255))
-
-                handle_sound("one.mp3")
-
-                self.timer.activate(1.5)
-                self.step += 1
-            else:
-                self.return_menu()
-
-    def update(self, surface, dt):
-        self.canvas.update(surface, dt)
-        State.player.update(surface, dt)
-        self.timer.update(dt)
-
-        surface.blit(self.text, (self.center(self.text), 220))
-
-    def return_menu(self):
-        """Goes back to the main menu. Resets the player since they beat the game!"""
-        self.player.reset_player()
-        self.player.dice_set = [State.gen_dice("basic1"), State.gen_dice("basic1")]
+    def return_to_menu(self):
+        """Goes back to the main menu."""
         self.to("main_menu")

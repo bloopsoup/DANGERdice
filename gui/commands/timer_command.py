@@ -5,14 +5,8 @@ class TimerCommand(Command):
     """Command which performs an action after a certain amount of time."""
 
     def __init__(self, frames: float, func):
-        super().__init__()
+        super().__init__(func)
         self.dt_runner.set_frames(frames)
-        self.func = func
-
-    def stop(self):
-        """Call the function when you are done."""
-        self.done = True
-        self.func()
 
     def update(self, dt: float):
         """Waiting for time to pass."""
