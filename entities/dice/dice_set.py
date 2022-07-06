@@ -12,17 +12,17 @@ class DiceSet:
         """Returns a copy of the list of dice."""
         return self.dice_set[:]
 
-    def roll_die(self, i: int, blessed: bool) -> int:
+    def roll_die(self, i: int, blessed: bool) -> tuple[int, str]:
         """Roll the ith die in your dice set."""
         if len(self.dice_set) > i and not self.dice_set[i].is_rolled():
             value = self.dice_set[i].roll(failsafe=blessed)
-            return value
+            return value, self.dice_set[i].get_damage_type()
 
-    def roll_die_forced(self, i: int, number: int) -> int:
+    def roll_die_forced(self, i: int, number: int) -> tuple[int, str]:
         """Roll the ith die in your inventory where outcome is the specified side."""
         if len(self.dice_set) > i and not self.dice_set[i].is_rolled():
             value = self.dice_set[i].roll(failsafe=False, number=number)
-            return value
+            return value, self.dice_set[i].get_damage_type()
 
     def needs_reset(self) -> bool:
         """Checks if all the dice has been rolled."""

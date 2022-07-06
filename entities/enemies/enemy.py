@@ -8,11 +8,6 @@ class Enemy:
         self.preference = preference
         self.max_health = max_health
         self.health = self.max_health
-
-        # STATUS
-        self.poison = 0
-        self.divided = 1
-        self.blessed = 0
         self.dead = False
 
     def get_name(self) -> str:
@@ -47,7 +42,7 @@ class Enemy:
         """Adds element to the enemy's preference."""
         self.preference.append(element)
 
-    def remove_preference(self, i: int):
+    def remove_preference(self, i: int) -> str:
         """Removes and returns the ith element of the enemy's preference."""
         assert i < len(self.preference), "preference index out of bounds"
         return self.preference.pop(i)
@@ -55,6 +50,14 @@ class Enemy:
     def get_health(self) -> int:
         """Gets an enemy's health."""
         return self.health
+
+    def add_health(self, amount: int):
+        """Increases an enemy's health."""
+        self.health += amount
+
+    def subtract_health(self, amount: int):
+        """Decreases an enemy's health."""
+        self.health -= amount
 
     def get_max_health(self) -> int:
         """Gets an enemy's max health."""
@@ -64,15 +67,8 @@ class Enemy:
         """Restores an enemy's health."""
         self.health = self.max_health
 
-    def cleanse(self):
-        """Removes all status elements."""
-        self.poison = 0
-        self.divided = 1
-        self.blessed = 0
-
     def die(self):
         """Kills the enemy. All status elements are removed first."""
-        self.cleanse()
         self.dead = True
 
     def revive(self):
