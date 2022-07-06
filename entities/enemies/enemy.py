@@ -35,6 +35,10 @@ class Enemy:
         """Adds to the enemy's money."""
         self.money += money
 
+    def subtract_money(self, money: int):
+        """Decreases the enemy's money."""
+        self.money -= money
+
     def get_preference(self) -> list[str]:
         """Gets a copy of the enemy's preference as a list."""
         return self.preference[:]

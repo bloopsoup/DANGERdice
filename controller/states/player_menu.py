@@ -43,8 +43,8 @@ class PlayerMenu(State):
 
     def add_dice_to_canvas(self):
         """Adds dice to the canvas."""
-        for i, die in enumerate(self.player.get_preference()):
-            die_display = Idle(load_some_sprites(die), (376 + (i * 100), 79), None, load_idle_animation("square"))
+        for i, die_name in enumerate(self.player.get_preference()):
+            die_display = Idle(load_some_sprites(die_name), (376 + (i * 100), 79), None, load_idle_animation("square"))
             die_display.set_idle(False)
             self.canvas.add_element(die_display, 0)
 

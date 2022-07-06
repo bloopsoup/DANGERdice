@@ -29,7 +29,7 @@ class Loot(State):
 
     def give_loot(self):
         """Gives the player loot."""
-        die = random_die_name()
-        self.player.append_to_inventory(die)
-        self.loot_display.set_text(0, "You got {0}!".format(die))
+        die_name = random_die_name()
+        self.player.append_to_inventory(die_name)
+        self.loot_display.set_text(0, "You got {0}!".format(die_name))
         music_handler.play_sfx(load_sound("good", True))

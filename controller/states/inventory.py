@@ -43,8 +43,8 @@ class Inventory(State):
 
     def add_set_to_canvas(self):
         """Adds dice from your set to the canvas."""
-        for i, die in enumerate(self.player.get_preference()):
-            die_display = Idle(load_some_sprites(die), (208 + (i * 100), 75), lambda x=i: self.select(x, True),
+        for i, die_name in enumerate(self.player.get_preference()):
+            die_display = Idle(load_some_sprites(die_name), (208 + (i * 100), 75), lambda x=i: self.select(x, True),
                                load_idle_animation("square"))
             die_display.set_idle(False)
             self.canvas.add_element(die_display, 1)
@@ -85,8 +85,8 @@ class Inventory(State):
 
     def show_die_info(self):
         """Shows the currently selected die's info."""
-        dice = self.player.get_preference() if self.in_set else self.player.get_inventory()
-        die = create_die(dice[self.selected_index])
+        dice_names = self.player.get_preference() if self.in_set else self.player.get_inventory()
+        die = create_die(dice_names[self.selected_index])
         self.info_display.set_text(0, "{0} worth {1}".format(die.get_name(), die.get_sell_price()))
 
     def show_die_animated(self, selected: bool):

@@ -9,3 +9,4 @@ from .game_over import GameOver
 from .save import Save
 from .load import Load
 from .loot import Loot
+from .shop import Shop
