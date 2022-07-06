@@ -9,8 +9,12 @@ class Canvas:
         self.element_queue = []
 
     def add_element(self, element, group_ID: int):
-        """Adds (elements, group_ID) to the queue."""
+        """Adds (element, group_ID) to the queue."""
         self.element_queue.append((element, group_ID))
+
+    def insert_element(self, element, group_ID: int, i: int):
+        """Inserts (element, group_ID) to the queue at the ith spot."""
+        self.element_queue.insert(i, (element, group_ID))
 
     def group_exists(self, group_ID: int) -> bool:
         """Checks if tuple(s) with group_ID exists."""

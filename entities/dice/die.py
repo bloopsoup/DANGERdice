@@ -12,7 +12,7 @@ class Die:
         self.damage_type = damage_type
         self.safe = safe
         self.name = "{0}{1}".format(self.damage_type, self.multiple)
-        self.rolled = False
+        self.rolled = -1
 
     def get_price(self) -> int:
         """Returns the die price."""
@@ -32,20 +32,23 @@ class Die:
 
     def is_rolled(self) -> bool:
         """Returns whether this die was rolled."""
+        return self.rolled != -1
+
+    def get_rolled(self) -> int:
+        """Returns the side the die is on."""
         return self.rolled
 
-    def roll(self, failsafe: bool, number: int = -1) -> tuple[int, int]:
+    def roll(self, failsafe: bool, number: int = -1) -> int:
         """Rolls this die. If it is 1, we return 0 since rolling a one immediately ends your turn.
            If NUMBER is provided, die will always output that side. If failsafe is TRUE, a rolled one
            gets changed to the value of the die's fifth side."""
-        self.rolled = True
         side = number if number != -1 else random.randint(0, 5)
+        if self.sides[side] == 1 and failsafe:
+            side = 4
+        self.rolled = side
         value = self.sides[side] if self.sides[side] != 1 or self.safe else 0
-
-        if value == 0 and failsafe:
-            return side, self.sides[4] * self.multiple
-        return side, value * self.multiple
+        return value * self.multiple
 
     def unroll(self):
         """Unrolls the die."""
-        self.rolled = False
+        self.rolled = -1

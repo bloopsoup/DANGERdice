@@ -12,6 +12,10 @@ class Idle(Interactive):
         self.idle = True
         self.idle_handler = idle_handler
 
+    def set_image(self, i: int):
+        """Set the image of the Idle element to the ith image."""
+        self.image = self.images[i]
+
     def set_idle(self, on: bool):
         """Indicates whether the element is idle or not."""
         self.idle = on

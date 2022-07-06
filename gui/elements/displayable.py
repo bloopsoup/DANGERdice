@@ -16,6 +16,14 @@ class Displayable:
         self.reference = self.images[0].get_rect()
         self.reference.update((self.pos.x, self.pos.y), (self.reference.width, self.reference.height))
 
+    def get_width(self) -> int:
+        """Gets the width of the element."""
+        return self.reference.width
+
+    def get_height(self) -> int:
+        """Gets the height of the element."""
+        return self.reference.height
+
     def get_position(self) -> pygame.Vector2:
         """Gets the position of the element."""
         return self.pos

@@ -5,7 +5,7 @@ from .config import dice_config, enemy_config, fonts_config, idle_animation_conf
     chunk_config, sound_config
 from gui.utils import Spritesheet, IndexCycler
 from entities.enemies import Enemy, Player
-from entities.dice import Die
+from entities.dice import Die, DiceSet
 
 
 loaded_spritesheets = {}
@@ -76,6 +76,11 @@ def create_die(die_type: str) -> Die:
     assert die_type in dice_config, "not a valid die type"
     side, multiple, additional_cost, damage_type, safe = dice_config[die_type]
     return Die(side, multiple, int(130 * 1.5 * (multiple + 0.5)) + additional_cost, damage_type, safe)
+
+
+def create_dice_set(preference: list[str]) -> DiceSet:
+    """Creates a dice set from a preference."""
+    return DiceSet([create_die(die_name) for die_name in preference])
 
 
 def create_enemy(enemy: str, tier: int) -> Enemy:

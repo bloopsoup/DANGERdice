@@ -8,16 +8,20 @@ class DiceSet:
     def __init__(self, dice_set: list[Die]):
         self.dice_set = dice_set
 
+    def get_dice(self) -> list[Die]:
+        """Returns a copy of the list of dice."""
+        return self.dice_set[:]
+
     def roll_die(self, i: int, blessed: bool) -> int:
         """Roll the ith die in your dice set."""
         if len(self.dice_set) > i and not self.dice_set[i].is_rolled():
-            _, value = self.dice_set[i].roll(failsafe=blessed)
+            value = self.dice_set[i].roll(failsafe=blessed)
             return value
 
     def roll_die_forced(self, i: int, number: int) -> int:
         """Roll the ith die in your inventory where outcome is the specified side."""
         if len(self.dice_set) > i and not self.dice_set[i].is_rolled():
-            _, value = self.dice_set[i].roll(failsafe=False, number=number)
+            value = self.dice_set[i].roll(failsafe=False, number=number)
             return value
 
     def needs_reset(self) -> bool:
