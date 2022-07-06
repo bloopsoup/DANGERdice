@@ -1,6 +1,6 @@
 import pygame
 from .state import State
-from ..utils import music_handler
+from ..utils import music_handler, DamageHandler
 from ..loader import load_static, load_some_sprites, load_all_sprites, load_font, load_sound, load_idle_animation, \
     create_dice_set, create_enemy
 from ..themes import BUTTON_DEFAULT
@@ -13,10 +13,10 @@ class Battle(State):
 
     def __init__(self, enemy_name: str, tier: int):
         super().__init__()
-        self.your_turn = True
+        self.active, self.your_turn = False, True
+        self.damage_handler = DamageHandler(2)
 
         self.enemy = create_enemy(enemy_name, tier)
-
         self.player_set = create_dice_set(self.player.get_preference())
         self.enemy_set = create_dice_set(self.enemy.get_preference())
 
@@ -35,58 +35,90 @@ class Battle(State):
         self.canvas.add_element(self.enemy_display, 0)
         self.enemy_display.set_position(pygame.Vector2(1000, 357 - self.enemy_display.get_height()))
         self.canvas.add_element(self.damage_display, 0)
-        self.damage_display.set_texts(["", "DMG: 0 PSN: 0 HEAL: 0 WKN: 1X"])
+        self.damage_display.set_texts(["", str(self.damage_handler)])
         self.canvas.add_element(self.reward_display, 0)
         self.reward_display.set_text(0, "")
-        self.add_player_set_to_canvas()
 
         self.canvas.add_element(Button(load_some_sprites("music"), (730, 0), BUTTON_DEFAULT, music_handler.toggle), 0)
-        self.canvas.add_element(Button(load_some_sprites("attack"), (580, 370), BUTTON_DEFAULT, print), 2)
+        self.canvas.add_element(Button(load_some_sprites("attack"), (580, 370), BUTTON_DEFAULT, self.attack), 1)
+        self.add_player_set_to_canvas()
 
     def setup_commands(self):
-        enemy_destination = (740 - self.enemy_display.get_width(), 357 - self.enemy_display.get_height())
+        enemy_pos = (740 - self.enemy_display.get_width(), 357 - self.enemy_display.get_height())
         self.command_queue.append_commands([MoveCommand(self.player_display, (10, 0), (60, 257), None),
-                                            MoveCommand(self.enemy_display, (10, 0), enemy_destination, None)])
+                                            MoveCommand(self.enemy_display, (10, 0), enemy_pos, self.enable_hud)])
+
+    def startup(self):
+        self.setup_canvas()
+        self.setup_commands()
+        music_handler.change(load_sound("huh", False))
 
     def update_components(self):
-        dice_set = self.player_set if self.your_turn else self.enemy_set
-        for die_display, die in zip(self.canvas.get_group(3), dice_set.get_dice()):
-            die_display.set_idle(not die.is_rolled())
-            die_display.set_image(die.get_rolled())
+        self.damage_display.set_text(1 if self.your_turn else 0, str(self.damage_handler))
+        self.update_set_on_canvas()
 
     def add_player_set_to_canvas(self):
         """Adds a player's or enemy's dice to the canvas."""
         preference = self.player.get_preference() if self.your_turn else self.enemy.get_preference()
-        x_start = 369 if self.your_turn else 33
+        x_start = 375 if self.your_turn else 40
         for i, die_name in enumerate(preference):
-            die_display = Idle(load_some_sprites(die_name), (x_start + (i * 100), 455),
-                               lambda: self.roll(i) if self.your_turn else None, load_idle_animation("square"))
-            die_display.set_idle(True)
-            self.canvas.add_element(die_display, 3)
+            die_display = Idle(load_some_sprites(die_name), (x_start + (i * 100), 460),
+                               lambda x=i: self.roll(x) if self.your_turn else None, load_idle_animation("square"))
+            self.canvas.add_element(die_display, 2)
+
+    def update_set_on_canvas(self):
+        """Updates the dice to stop animating when rolled."""
+        dice_set = self.player_set if self.your_turn else self.enemy_set
+        for die_display, die in zip(self.canvas.get_group(2), dice_set.get_dice()):
+            die_display.set_idle(not die.is_rolled())
+            if die.is_rolled():
+                die_display.set_image(die.get_rolled())
+
+    def enable_hud(self):
+        """Enables the HUD for interaction."""
+        self.active = True
+
+    def disable_hud(self):
+        """Disables the HUD."""
+        self.active = False
+
+    def switch_hud(self):
+        """Switches the HUD for the turn player."""
+        self.canvas.delete_group(1)
+        hud = "player_hud" if self.your_turn else "enemy_hud"
+        self.canvas.insert_element(StaticBG([load_static(hud)], (0, 0)), 1, 2)
+        if self.your_turn:
+            self.canvas.add_element(Button(load_some_sprites("attack"), (580, 370), BUTTON_DEFAULT, self.attack), 1)
+
+        self.canvas.delete_group(2)
+        self.add_player_set_to_canvas()
+
+        new_texts = ["", str(self.damage_handler)] if self.your_turn else [str(self.damage_handler), ""]
+        self.damage_display.set_texts(new_texts)
 
     def roll(self, i: int):
-        """Roll the player's ith die."""
-        current = self.turn_player.roll_die(index)
-        if current == 0:
-            self.rolled_one()
-        elif current is not None:
-            handle_sound("roll.mp3")
+        """Roll the player's ith die and update the damage handler."""
+        if not self.active:
+            return
+        dice_set = self.player_set if self.your_turn else self.enemy_set
+        amount, damage_type = dice_set.roll_die(i, False)
+        if dice_set.needs_reset():
+            dice_set.reset_dice()
+        music_handler.play_sfx(load_sound("roll", True))
+        self.damage_handler.add_damage(amount, damage_type)
+        if amount == 0:
+            self.end_turn()
 
-    def switch(self):
-        """Handles the hub and displays and also enables and disables the AI."""
-        if self.turn_player == self.player:
-            self.canvas.delete_group(2)
-            self.canvas.add_element(StaticBG([load_img(load_s("phub0.png"))], (0, 0)), 1)
-            self.player.display_mode("player")
-            self.enemy.display_mode("")
-            self.canvas.add_element(Butt(Control.sheets["button4"].load_some_images(0, 0, 3), (580, 370),
-                                         BUTTON_DEFAULT, self.end_turn), -1)
-            self.timer.deactivate()
-        else:
-            self.canvas.delete_group(1)
-            self.canvas.add_element(StaticBG([load_img(load_s("ehub0.png"))], (0, 0)), 2)
-            self.player.display_mode("")
-            self.enemy.display_mode("enemy")
-            self.canvas.delete_group(-1)
+    def attack(self):
+        """Applies damage to the other player."""
+        self.disable_hud()
+        self.damage_handler.apply_damage(self.enemy if self.your_turn else self.player, 1 if self.your_turn else 0)
+        self.end_turn()
 
-            self.timer.activate(1, True)
+    def end_turn(self):
+        """Switches to the other player's turn."""
+        self.disable_hud()
+        self.your_turn = not self.your_turn
+        self.damage_handler.reset()
+        self.switch_hud()
+        self.enable_hud()

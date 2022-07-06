@@ -17,12 +17,14 @@ class DiceSet:
         if len(self.dice_set) > i and not self.dice_set[i].is_rolled():
             value = self.dice_set[i].roll(failsafe=blessed)
             return value, self.dice_set[i].get_damage_type()
+        return -1, "n/a"
 
     def roll_die_forced(self, i: int, number: int) -> tuple[int, str]:
         """Roll the ith die in your inventory where outcome is the specified side."""
         if len(self.dice_set) > i and not self.dice_set[i].is_rolled():
             value = self.dice_set[i].roll(failsafe=False, number=number)
             return value, self.dice_set[i].get_damage_type()
+        return -1, "n/a"
 
     def needs_reset(self) -> bool:
         """Checks if all the dice has been rolled."""

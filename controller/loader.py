@@ -94,7 +94,7 @@ def create_enemy(enemy: str, tier: int) -> Enemy:
 def create_player() -> Player:
     """Creates a player."""
     player = Player("p0-0")
-    for _ in range(2):
+    for _ in range(4):
         player.append_to_preference("basic1")
     for _ in range(13):
         player.append_to_inventory("basic1")
