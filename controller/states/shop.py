@@ -94,7 +94,7 @@ class Shop(State):
         """Pops up a notice for a short time and handles timing issues."""
         self.deactivate()
         self.canvas.add_element(StaticBG([load_static("bought" if sold else "broke")], (0, 130) if sold else (0, 0)), 3)
-        self.command_queue.append_commands([TimerCommand(0.5, self.activate)])
+        self.command_queue.add([TimerCommand(0.5, self.activate)])
 
     def buy(self):
         """Purchases the selected die."""

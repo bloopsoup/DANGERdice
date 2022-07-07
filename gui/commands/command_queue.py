@@ -7,7 +7,7 @@ class CommandQueue:
     def __init__(self):
         self.queue = []
 
-    def append_commands(self, commands: list[Command]):
+    def add(self, commands: list[Command]):
         """Append a set of commands to the queue."""
         assert len(commands), "commands cannot be empty"
         self.queue.append(commands)

@@ -20,8 +20,8 @@ class Attributions(State):
         self.canvas.add_element(StaticBG([load_static("badmc")], (350, 280)), 1)
 
     def setup_commands(self):
-        self.command_queue.append_commands([TimerCommand(1.2, self.remove_face)])
-        self.command_queue.append_commands([TimerCommand(1.2, lambda: self.to("main_menu"))])
+        self.command_queue.add([TimerCommand(1.2, self.remove_face)])
+        self.command_queue.add([TimerCommand(1.2, lambda: self.to("main_menu"))])
 
     def startup(self):
         self.setup_canvas()

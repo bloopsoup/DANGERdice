@@ -58,17 +58,17 @@ class Battle(State):
     def setup_commands(self):
         e_start = (1000, 357 - self.enemy_display.get_height())
         e_pos = (740 - self.enemy_display.get_width(), 357 - self.enemy_display.get_height())
-        self.command_queue.append_commands([MoveCommand(self.player_display, (10, 0), (-300, 257), (60, 257), None),
-                                            MoveCommand(self.enemy_display, (10, 0), e_start, e_pos, self.enable_hud)])
+        self.command_queue.add([MoveCommand(self.player_display, (10, 0), (-300, 257), (60, 257), None),
+                                MoveCommand(self.enemy_display, (10, 0), e_start, e_pos, self.enable_hud)])
 
     def s(self):
         e_pos = (740 - self.enemy_display.get_width(), 357 - self.enemy_display.get_height())
-        self.command_queue.append_commands([MoveCommand(self.player_display, (2, 0), (60, 257), (0, 257), None)])
-        self.command_queue.append_commands([MoveCommand(self.player_display, (14, 0), (0, 257), (e_pos[0]-100, 257), None)])
-        self.command_queue.append_commands([MoveCommand(self.enemy_display, (9, 0), e_pos, (e_pos[0]+100, e_pos[1]), None)])
-        self.command_queue.append_commands([TimerCommand(0.5, None)])
-        self.command_queue.append_commands([MoveCommand(self.player_display, (10, 0), (e_pos[0]-100, 257), (60, 257), None),
-                                            MoveCommand(self.enemy_display, (3, 0), (e_pos[0]+100, e_pos[1]), e_pos, None)])
+        self.command_queue.add([MoveCommand(self.player_display, (2, 0), (60, 257), (0, 257), None)])
+        self.command_queue.add([MoveCommand(self.player_display, (14, 0), (0, 257), (e_pos[0] - 100, 257), None)])
+        self.command_queue.add([MoveCommand(self.enemy_display, (9, 0), e_pos, (e_pos[0] + 100, e_pos[1]), None)])
+        self.command_queue.add([TimerCommand(0.5, None)])
+        self.command_queue.add([MoveCommand(self.player_display, (10, 0), (e_pos[0] - 100, 257), (60, 257), None),
+                                MoveCommand(self.enemy_display, (3, 0), (e_pos[0]+100, e_pos[1]), e_pos, None)])
 
     def startup(self):
         self.setup_canvas()
@@ -136,7 +136,7 @@ class Battle(State):
         """Pops up a notice for a short time and runs func after."""
         self.disable_hud()
         self.canvas.add_element(StaticBG([load_static(notice)], (0, 210)), 3)
-        self.command_queue.append_commands([TimerCommand(0.5, func)])
+        self.command_queue.add([TimerCommand(0.5, func)])
 
     def roll(self, i: int):
         """Roll the player's ith die and update the damage handler."""
@@ -176,7 +176,7 @@ class Battle(State):
     def queue_ai_action(self):
         """If it's the enemy's turn, queue up an AI action."""
         if not self.your_turn:
-            self.command_queue.append_commands([TimerCommand(0.7, self.run_ai)])
+            self.command_queue.add([TimerCommand(0.7, self.run_ai)])
 
     def attack(self):
         """Applies damage to the other player."""
