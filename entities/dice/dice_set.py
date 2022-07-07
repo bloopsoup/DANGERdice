@@ -35,10 +35,9 @@ class DiceSet:
         for die in self.dice_set:
             die.unroll()
 
-    def basic_roll(self, player_health: int, damage: int, poison: int, heal: int, weaken: int) -> int:
-        """Returns a random index of the dice to roll. -1 signals ending a turn.
-           END CONDITIONS: 25% chance, guaranteed lethal, will weaken, heal 20, damage more than 20."""
-        if random.randint(0, 3) == 0 or max(damage, poison) >= player_health or weaken > 1 or heal >= 20 or damage > 30:
+    def basic_decide(self) -> int:
+        """Returns a random index of the dice to roll. -1 signals ending a turn."""
+        if random.randint(0, 3) == 0:
             return -1
         if not self.needs_reset():
             return random.choice([i for i in range(len(self.dice_set)) if not self.dice_set[i].is_rolled()])

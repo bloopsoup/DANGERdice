@@ -129,25 +129,41 @@ class Battle(State):
         """Roll the player's ith die and update the damage handler."""
         if not self.active:
             return
-
         dice_set = self.player_set if self.your_turn else self.enemy_set
         amount, damage_type = dice_set.roll_die(i, False)
         self.damage_handler.add_damage(amount, damage_type)
-
-        if amount != -1:
-            music_handler.play_sfx(load_sound("roll", True))
-        if amount == 0:
-            music_handler.play_sfx(load_sound("one", True))
-            self.popup_notice("rolled_one", self.end_turn)
-        elif dice_set.needs_reset():
-            music_handler.play_sfx(load_sound("good", True))
-            self.popup_notice("refresh", lambda: self.reset_rolls(dice_set))
+        self.direct_turn_flow(amount, dice_set)
 
     def reset_rolls(self, dice_set: DiceSet):
         """Reset the rolls and removes the REFRESH display."""
         self.canvas.delete_group(3)
         dice_set.reset_dice()
         self.enable_hud()
+
+    def direct_turn_flow(self, result: int, dice_set: DiceSet):
+        """Determines what to do after rolling a die. Either you end your turn prematurely,
+           reset the dice (which queues another AI action), or continue your turn normally."""
+        if result != -1:
+            music_handler.play_sfx(load_sound("roll", True))
+        if result == 0:
+            music_handler.play_sfx(load_sound("one", True))
+            self.popup_notice("rolled_one", self.end_turn)
+        elif dice_set.needs_reset():
+            music_handler.play_sfx(load_sound("good", True))
+            self.popup_notice("refresh", lambda: self.reset_rolls(dice_set))
+            self.queue_ai_action()
+        else:
+            self.queue_ai_action()
+
+    def run_ai(self):
+        """Enemy decides whether to roll or attack."""
+        decision = self.enemy_set.basic_decide()
+        self.roll(decision) if decision != -1 else self.attack()
+
+    def queue_ai_action(self):
+        """If it's the enemy's turn, queue up an AI action."""
+        if not self.your_turn:
+            self.command_queue.append_commands([TimerCommand(0.3, self.run_ai)])
 
     def attack(self):
         """Applies damage to the other player."""
@@ -165,3 +181,4 @@ class Battle(State):
         self.canvas.delete_group(3)
         self.switch_hud()
         self.enable_hud()
+        self.queue_ai_action()
