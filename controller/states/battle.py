@@ -6,7 +6,7 @@ from ..loader import load_static, load_some_sprites, load_all_sprites, load_font
 from ..themes import BUTTON_DEFAULT
 from entities.dice import DiceSet
 from gui.elements import StaticBG, MovingBackgroundElement, PTexts, Idle, Button
-from gui.commands import TimerCommand, MoveCommand
+from gui.commands import TimerCommand, AnimationHandler
 
 
 class Battle(State):
@@ -22,13 +22,12 @@ class Battle(State):
         self.enemy_set = create_dice_set(self.enemy.get_preference())
 
         self.player_display = Idle(load_all_sprites("player"), (0, 0), None, load_idle_animation("player"))
-        self.player_s_display = PTexts(load_all_sprites("player"), (0, 0), load_font("SS"), 2,
-                                       [(0, -50), (0, -25)], True)
+        self.player_s_display = PTexts(load_all_sprites("player"), (0, 0), load_font("SS"), 2, [(0, -50), (0, -25)], True)
         self.enemy_display = Idle(load_all_sprites(enemy_name), (0, 0), None, load_idle_animation(enemy_name))
-        self.enemy_s_display = PTexts(load_all_sprites(enemy_name), (0, 0), load_font("SS"), 2,
-                                      [(0, -50), (0, -25)], True)
-        self.stat_display = PTexts([pygame.Surface((1, 1))], (38, 460), load_font("SS"), 4,
-                                   [(0, 0), (0, 20), (0, 40), (0, 60)], False)
+        self.enemy_s_display = PTexts(load_all_sprites(enemy_name), (0, 0), load_font("SS"), 2, [(0, -50), (0, -25)], True)
+        self.animation_handler = AnimationHandler(self.player_display, (60, 257), self.enemy_display, (740 - self.enemy_display.get_width(), 357 - self.enemy_display.get_height()), self.command_queue)
+
+        self.stat_display = PTexts([pygame.Surface((1, 1))], (38, 460), load_font("SS"), 4, [(0, 0), (0, 20), (0, 40), (0, 60)], False)
         self.damage_display = PTexts([load_static("black")], (0, 0), load_font("SS"), 2, [(50, 435), (370, 435)], False)
         self.reward_display = PTexts([load_static("black")], (0, 0), load_font("M"), 1, [(0, 100)], True)
 
@@ -56,28 +55,7 @@ class Battle(State):
         self.add_player_set_to_canvas()
 
     def setup_commands(self):
-        e_start = (1000, 357 - self.enemy_display.get_height())
-        e_pos = (740 - self.enemy_display.get_width(), 357 - self.enemy_display.get_height())
-        self.command_queue.add([MoveCommand(self.player_display, (10, 0), (-300, 257), (60, 257), None),
-                                MoveCommand(self.enemy_display, (10, 0), e_start, e_pos, self.enable_hud)])
-
-    def player_rush(self):
-        e_pos = (740 - self.enemy_display.get_width(), 357 - self.enemy_display.get_height())
-        self.command_queue.add([MoveCommand(self.player_display, (2, 0), (60, 257), (0, 257), None)])
-        self.command_queue.add([MoveCommand(self.player_display, (14, 0), (0, 257), (e_pos[0] - 100, 257), None)])
-        self.command_queue.add([MoveCommand(self.enemy_display, (9, 0), e_pos, (e_pos[0] + 100, e_pos[1]), None)])
-        self.command_queue.add([TimerCommand(0.5, None)])
-        self.command_queue.add([MoveCommand(self.player_display, (10, 0), (e_pos[0] - 100, 257), (60, 257), None),
-                                MoveCommand(self.enemy_display, (3, 0), (e_pos[0] + 100, e_pos[1]), e_pos, None)])
-
-    def enemy_rush(self):
-        e1 = (740 - self.enemy_display.get_width(), 357 - self.enemy_display.get_height())
-        self.command_queue.add([MoveCommand(self.enemy_display, (2, 0), e1, (e1[0] + 60, e1[1]), None)])
-        self.command_queue.add([MoveCommand(self.enemy_display, (14, 0), (e1[0] + 60, e1[1]), (160, e1[1]), None)])
-        self.command_queue.add([MoveCommand(self.player_display, (9, 0), (60, 257), (-40, 257), None)])
-        self.command_queue.add([TimerCommand(0.5, None)])
-        self.command_queue.add([MoveCommand(self.enemy_display, (10, 0), (160, e1[1]), e1, None),
-                                MoveCommand(self.player_display, (3, 0), (-40, 257), (60, 257), None)])
+        self.animation_handler.to_start(self.enable_hud)
 
     def startup(self):
         self.setup_canvas()
@@ -180,7 +158,7 @@ class Battle(State):
     def run_ai(self):
         """Enemy decides whether to roll or attack."""
         decision = self.enemy_set.basic_decide()
-        self.roll(decision) if decision != -1 else self.attack()
+        self.roll(decision) if decision != -1 or not self.damage_handler.has_damage() else self.attack()
 
     def queue_ai_action(self):
         """If it's the enemy's turn, queue up an AI action."""
@@ -188,8 +166,16 @@ class Battle(State):
             self.command_queue.add([TimerCommand(0.7, self.run_ai)])
 
     def attack(self):
-        """Applies damage to the other player."""
+        """Disables the HUD and starts the attacking animation. Can't attack with no damage."""
+        if not self.damage_handler.has_damage():
+            return
         self.disable_hud()
+        hooks = [lambda: music_handler.play_sfx(load_sound("charge", True)),
+                 lambda: music_handler.play_sfx(load_sound("shatter", True)), self.apply_damage]
+        self.animation_handler.rush(self.your_turn, hooks)
+
+    def apply_damage(self):
+        """Applies damage to the other player and then ends the turn."""
         self.damage_handler.apply_damage(self.enemy if self.your_turn else self.player, 1 if self.your_turn else 0)
         self.end_turn()
 

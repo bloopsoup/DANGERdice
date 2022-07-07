@@ -82,6 +82,10 @@ class DamageHandler:
         elif damage_type == 'weaken':
             self.weaken += amount
 
+    def has_damage(self):
+        """Is there damage present?"""
+        return self.damage > 0 or self.heal > 0 or self.poison > 0 or self.weaken > 0
+
     def apply_damage(self, target: Enemy, i: int):
         """Applies the damage to target and ith Status."""
         status = self.statuses[i]
