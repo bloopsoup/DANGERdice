@@ -52,7 +52,7 @@ class Battle(State):
         self.reward_display.set_text(0, "")
 
         self.canvas.add_element(Button(load_some_sprites("music"), (730, 0), BUTTON_DEFAULT, music_handler.toggle), 0)
-        self.canvas.add_element(Button(load_some_sprites("attack"), (580, 370), BUTTON_DEFAULT, self.s), 1)
+        self.canvas.add_element(Button(load_some_sprites("attack"), (580, 370), BUTTON_DEFAULT, self.attack), 1)
         self.add_player_set_to_canvas()
 
     def setup_commands(self):
@@ -61,14 +61,23 @@ class Battle(State):
         self.command_queue.add([MoveCommand(self.player_display, (10, 0), (-300, 257), (60, 257), None),
                                 MoveCommand(self.enemy_display, (10, 0), e_start, e_pos, self.enable_hud)])
 
-    def s(self):
+    def player_rush(self):
         e_pos = (740 - self.enemy_display.get_width(), 357 - self.enemy_display.get_height())
         self.command_queue.add([MoveCommand(self.player_display, (2, 0), (60, 257), (0, 257), None)])
         self.command_queue.add([MoveCommand(self.player_display, (14, 0), (0, 257), (e_pos[0] - 100, 257), None)])
         self.command_queue.add([MoveCommand(self.enemy_display, (9, 0), e_pos, (e_pos[0] + 100, e_pos[1]), None)])
         self.command_queue.add([TimerCommand(0.5, None)])
         self.command_queue.add([MoveCommand(self.player_display, (10, 0), (e_pos[0] - 100, 257), (60, 257), None),
-                                MoveCommand(self.enemy_display, (3, 0), (e_pos[0]+100, e_pos[1]), e_pos, None)])
+                                MoveCommand(self.enemy_display, (3, 0), (e_pos[0] + 100, e_pos[1]), e_pos, None)])
+
+    def enemy_rush(self):
+        e1 = (740 - self.enemy_display.get_width(), 357 - self.enemy_display.get_height())
+        self.command_queue.add([MoveCommand(self.enemy_display, (2, 0), e1, (e1[0] + 60, e1[1]), None)])
+        self.command_queue.add([MoveCommand(self.enemy_display, (14, 0), (e1[0] + 60, e1[1]), (160, e1[1]), None)])
+        self.command_queue.add([MoveCommand(self.player_display, (9, 0), (60, 257), (-40, 257), None)])
+        self.command_queue.add([TimerCommand(0.5, None)])
+        self.command_queue.add([MoveCommand(self.enemy_display, (10, 0), (160, e1[1]), e1, None),
+                                MoveCommand(self.player_display, (3, 0), (-40, 257), (60, 257), None)])
 
     def startup(self):
         self.setup_canvas()
