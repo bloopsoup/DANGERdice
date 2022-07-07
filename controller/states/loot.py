@@ -23,7 +23,7 @@ class Loot(State):
         self.loot_display.set_text(0, "")
 
     def setup_commands(self):
-        self.command_queue.append_commands([MoveCommand(self.player_display, (10, 0), (300, 257), None),
+        self.command_queue.append_commands([MoveCommand(self.player_display, (10, 0), (-300, 257), (300, 257), None),
                                             TimerCommand(1.5, self.give_loot)])
         self.command_queue.append_commands([TimerCommand(2, lambda: self.to("player_menu"))])
 

@@ -24,7 +24,7 @@ class Ending(State):
 
     def setup_commands(self):
         self.command_queue.append_commands([TimerCommand(2, lambda: self.change_text("YOU FOUND A LOT OF MONEY")),
-                                            MoveCommand(self.player_display, (10, 0), (1000, 472), None)])
+                                            MoveCommand(self.player_display, (10, 0), (-100, 472), (1000, 472), None)])
         self.command_queue.append_commands([TimerCommand(1.5, lambda: self.change_text("IN THE MOUNTAINS"))])
         self.command_queue.append_commands([TimerCommand(2, lambda: self.change_text("DEBTS HAVE BEEN REPAID"))])
         self.command_queue.append_commands([TimerCommand(1.5, lambda: self.change_text("HAPPY END"))])
