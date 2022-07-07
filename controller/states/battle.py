@@ -4,6 +4,7 @@ from ..utils import music_handler, DamageHandler
 from ..loader import load_static, load_some_sprites, load_all_sprites, load_font, load_sound, load_idle_animation, \
     create_dice_set, create_enemy
 from ..themes import BUTTON_DEFAULT
+from entities.dice import DiceSet
 from gui.elements import StaticBG, MovingBackgroundElement, PTexts, Idle, Button
 from gui.commands import TimerCommand, MoveCommand
 
@@ -21,7 +22,10 @@ class Battle(State):
         self.enemy_set = create_dice_set(self.enemy.get_preference())
 
         self.player_display = Idle(load_all_sprites("player"), (0, 0), None, load_idle_animation("player"))
+        self.player_s_display = PTexts(load_all_sprites("player"), (0, 0), load_font("SS"), 2, [(0, -50), (0, -25)], True)
         self.enemy_display = Idle(load_all_sprites(enemy_name), (0, 0), None, load_idle_animation(enemy_name))
+        self.enemy_s_display = PTexts(load_all_sprites(enemy_name), (0, 0), load_font("SS"), 2, [(0, -50), (0, -25)], True)
+        self.stat_display = PTexts([pygame.Surface((1, 1))], (38, 460), load_font("SS"), 4, [(0, 0), (0, 20), (0, 40), (0, 60)], False)
         self.damage_display = PTexts([load_static("black")], (0, 0), load_font("SS"), 2, [(50, 435), (370, 435)], False)
         self.reward_display = PTexts([load_static("black")], (0, 0), load_font("M"), 1, [(0, 100)], True)
 
@@ -32,8 +36,13 @@ class Battle(State):
 
         self.canvas.add_element(self.player_display, 0)
         self.player_display.set_position(pygame.Vector2(-300, 257))
+        self.canvas.add_element(self.player_s_display, 0)
+        self.player_s_display.set_text(0, self.player.get_name())
         self.canvas.add_element(self.enemy_display, 0)
         self.enemy_display.set_position(pygame.Vector2(1000, 357 - self.enemy_display.get_height()))
+        self.canvas.add_element(self.enemy_s_display, 0)
+        self.enemy_s_display.set_text(0, self.enemy.get_name())
+        self.canvas.add_element(self.stat_display, 0)
         self.canvas.add_element(self.damage_display, 0)
         self.damage_display.set_texts(["", str(self.damage_handler)])
         self.canvas.add_element(self.reward_display, 0)
@@ -54,8 +63,8 @@ class Battle(State):
         music_handler.change(load_sound("huh", False))
 
     def update_components(self):
-        self.damage_display.set_text(1 if self.your_turn else 0, str(self.damage_handler))
         self.update_set_on_canvas()
+        self.update_text_on_canvas()
 
     def add_player_set_to_canvas(self):
         """Adds a player's or enemy's dice to the canvas."""
@@ -73,6 +82,18 @@ class Battle(State):
             die_display.set_idle(not die.is_rolled())
             if die.is_rolled():
                 die_display.set_image(die.get_rolled())
+
+    def update_text_on_canvas(self):
+        """Updates the text to reflect the latest state."""
+        self.player_s_display.set_position(self.player_display.get_position())
+        self.player_s_display.set_text(1, "{0} HP".format(self.player.get_health()))
+        self.enemy_s_display.set_position(self.enemy_display.get_position())
+        self.enemy_s_display.set_text(1, "{0} HP".format(self.enemy.get_health()))
+        entity = self.player if self.your_turn else self.enemy
+        self.stat_display.set_texts([entity.get_name(), "LVL: {0}".format(entity.get_level()),
+                                     "HP: {0} / {1}".format(entity.get_health(), entity.get_max_health()),
+                                     "Gold: {0}".format(entity.get_money())])
+        self.damage_display.set_text(1 if self.your_turn else 0, str(self.damage_handler))
 
     def enable_hud(self):
         """Enables the HUD for interaction."""
@@ -93,21 +114,40 @@ class Battle(State):
         self.canvas.delete_group(2)
         self.add_player_set_to_canvas()
 
+        pos = (38, 460) if self.your_turn else (450, 460)
+        self.stat_display.set_position(pygame.Vector2(pos))
         new_texts = ["", str(self.damage_handler)] if self.your_turn else [str(self.damage_handler), ""]
         self.damage_display.set_texts(new_texts)
+
+    def popup_notice(self, notice: str, func):
+        """Pops up a notice for a short time and runs func after."""
+        self.disable_hud()
+        self.canvas.add_element(StaticBG([load_static(notice)], (0, 210)), 3)
+        self.command_queue.append_commands([TimerCommand(0.5, func)])
 
     def roll(self, i: int):
         """Roll the player's ith die and update the damage handler."""
         if not self.active:
             return
+
         dice_set = self.player_set if self.your_turn else self.enemy_set
         amount, damage_type = dice_set.roll_die(i, False)
-        if dice_set.needs_reset():
-            dice_set.reset_dice()
-        music_handler.play_sfx(load_sound("roll", True))
         self.damage_handler.add_damage(amount, damage_type)
+
+        if amount != -1:
+            music_handler.play_sfx(load_sound("roll", True))
         if amount == 0:
-            self.end_turn()
+            music_handler.play_sfx(load_sound("one", True))
+            self.popup_notice("rolled_one", self.end_turn)
+        elif dice_set.needs_reset():
+            music_handler.play_sfx(load_sound("good", True))
+            self.popup_notice("refresh", lambda: self.reset_rolls(dice_set))
+
+    def reset_rolls(self, dice_set: DiceSet):
+        """Reset the rolls and removes the REFRESH display."""
+        self.canvas.delete_group(3)
+        dice_set.reset_dice()
+        self.enable_hud()
 
     def attack(self):
         """Applies damage to the other player."""
@@ -119,6 +159,9 @@ class Battle(State):
         """Switches to the other player's turn."""
         self.disable_hud()
         self.your_turn = not self.your_turn
+        self.player_set.reset_dice()
+        self.enemy_set.reset_dice()
         self.damage_handler.reset()
+        self.canvas.delete_group(3)
         self.switch_hud()
         self.enable_hud()
