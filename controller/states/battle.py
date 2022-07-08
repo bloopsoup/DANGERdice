@@ -29,7 +29,7 @@ class Battle(State):
 
         self.stat_display = PTexts([pygame.Surface((1, 1))], (38, 460), load_font("SS"), 4, [(0, 0), (0, 20), (0, 40), (0, 60)], False)
         self.damage_display = PTexts([load_static("black")], (0, 0), load_font("SS"), 2, [(50, 435), (370, 435)], False)
-        self.reward_display = PTexts([load_static("black")], (0, 0), load_font("M"), 1, [(0, 100)], True)
+        self.reward_display = PTexts([load_static("black")], (0, 0), load_font("L"), 1, [(0, 100)], True)
 
     def setup_canvas(self):
         self.canvas.add_element(StaticBG([load_static("hills")], (0, 0)), 0)
@@ -60,11 +60,19 @@ class Battle(State):
     def startup(self):
         self.setup_canvas()
         self.setup_commands()
-        music_handler.change(load_sound("huh", False))
+        music_handler.change(load_sound("zins", False))
 
     def update_components(self):
         self.update_set_on_canvas()
         self.update_text_on_canvas()
+
+    def enable_hud(self):
+        """Enables the HUD for interaction."""
+        self.active = True
+
+    def disable_hud(self):
+        """Disables the HUD."""
+        self.active = False
 
     def add_player_set_to_canvas(self):
         """Adds a player's or enemy's dice to the canvas."""
@@ -74,6 +82,22 @@ class Battle(State):
             die_display = Idle(load_some_sprites(die_name), (x_start + (i * 100), 460),
                                lambda x=i: self.roll(x) if self.your_turn else None, load_idle_animation("square"))
             self.canvas.add_element(die_display, 2)
+
+    def switch_hud(self):
+        """Switches the HUD for the turn player."""
+        self.canvas.delete_group(1)
+        hud = "player_hud" if self.your_turn else "enemy_hud"
+        self.canvas.insert_element(StaticBG([load_static(hud)], (0, 0)), 1, 2)
+        if self.your_turn:
+            self.canvas.add_element(Button(load_some_sprites("attack"), (580, 370), BUTTON_DEFAULT, self.attack), 1)
+
+        self.canvas.delete_group(2)
+        self.add_player_set_to_canvas()
+
+        pos = (38, 460) if self.your_turn else (450, 460)
+        self.stat_display.set_position(pygame.Vector2(pos))
+        new_texts = ["", str(self.damage_handler)] if self.your_turn else [str(self.damage_handler), ""]
+        self.damage_display.set_texts(new_texts)
 
     def update_set_on_canvas(self):
         """Updates the dice to stop animating when rolled."""
@@ -95,36 +119,6 @@ class Battle(State):
                                      "Gold: {0}".format(entity.get_money())])
         self.damage_display.set_text(1 if self.your_turn else 0, str(self.damage_handler))
 
-    def enable_hud(self):
-        """Enables the HUD for interaction."""
-        self.active = True
-
-    def disable_hud(self):
-        """Disables the HUD."""
-        self.active = False
-
-    def switch_hud(self):
-        """Switches the HUD for the turn player."""
-        self.canvas.delete_group(1)
-        hud = "player_hud" if self.your_turn else "enemy_hud"
-        self.canvas.insert_element(StaticBG([load_static(hud)], (0, 0)), 1, 2)
-        if self.your_turn:
-            self.canvas.add_element(Button(load_some_sprites("attack"), (580, 370), BUTTON_DEFAULT, self.attack), 1)
-
-        self.canvas.delete_group(2)
-        self.add_player_set_to_canvas()
-
-        pos = (38, 460) if self.your_turn else (450, 460)
-        self.stat_display.set_position(pygame.Vector2(pos))
-        new_texts = ["", str(self.damage_handler)] if self.your_turn else [str(self.damage_handler), ""]
-        self.damage_display.set_texts(new_texts)
-
-    def popup_notice(self, notice: str, func):
-        """Pops up a notice for a short time and runs func after."""
-        self.disable_hud()
-        self.canvas.add_element(StaticBG([load_static(notice)], (0, 210)), 3)
-        self.command_queue.add([TimerCommand(0.5, func)])
-
     def roll(self, i: int):
         """Roll the player's ith die and update the damage handler."""
         if not self.active:
@@ -139,6 +133,56 @@ class Battle(State):
         self.canvas.delete_group(3)
         dice_set.reset_dice()
         self.enable_hud()
+
+    def run_ai(self):
+        """Enemy decides whether to roll or attack."""
+        decision = self.enemy_set.basic_decide()
+        self.roll(decision) if decision != -1 or not self.damage_handler.has_damage() else self.attack()
+
+    def queue_ai_action(self):
+        """If it's the enemy's turn, queue up an AI action."""
+        if not self.your_turn:
+            self.command_queue.add([TimerCommand(0.3, self.run_ai)])
+
+    def popup_notice(self, notice: str, func):
+        """Pops up a notice for a short time and runs func after."""
+        self.disable_hud()
+        self.canvas.add_element(StaticBG([load_static(notice)], (0, 210)), 3)
+        self.command_queue.add([TimerCommand(0.5, func)])
+
+    def attack(self):
+        """Disables the HUD and starts the attacking animation. Can't attack with no damage."""
+        if not self.active or not self.damage_handler.has_damage():
+            return
+        self.disable_hud()
+        hooks = [lambda: music_handler.play_sfx(load_sound("charge", True)),
+                 lambda: music_handler.play_sfx(load_sound("shatter", True)), self.apply_damage]
+        self.animation_handler.rush(self.your_turn, hooks)
+
+    def apply_damage(self):
+        """Applies damage to the other player and then ends the turn."""
+        self.damage_handler.apply_damage(self.enemy if self.your_turn else self.player, 1 if self.your_turn else 0)
+        self.end_turn()
+
+    def apply_status_damage(self):
+        """Applies status damage to the turn player."""
+
+    def end_battle(self):
+        """Ends the battle when the player wins."""
+        self.reward_display.set_text(0, "You won!")
+        music_handler.play_sfx(load_sound("good", True))
+        self.command_queue.add([TimerCommand(2, lambda: self.to("player_menu"))])
+
+    def switch_turn(self):
+        """Switches to the other player's turn."""
+        self.your_turn = not self.your_turn
+        self.player_set.reset_dice()
+        self.enemy_set.reset_dice()
+        self.damage_handler.reset()
+        self.canvas.delete_group(3)
+        self.switch_hud()
+        self.enable_hud()
+        self.queue_ai_action()
 
     def direct_turn_flow(self, result: int, dice_set: DiceSet):
         """Determines what to do after rolling a die. Either you end your turn prematurely,
@@ -155,38 +199,11 @@ class Battle(State):
         else:
             self.queue_ai_action()
 
-    def run_ai(self):
-        """Enemy decides whether to roll or attack."""
-        decision = self.enemy_set.basic_decide()
-        self.roll(decision) if decision != -1 or not self.damage_handler.has_damage() else self.attack()
-
-    def queue_ai_action(self):
-        """If it's the enemy's turn, queue up an AI action."""
-        if not self.your_turn:
-            self.command_queue.add([TimerCommand(0.7, self.run_ai)])
-
-    def attack(self):
-        """Disables the HUD and starts the attacking animation. Can't attack with no damage."""
-        if not self.damage_handler.has_damage():
-            return
-        self.disable_hud()
-        hooks = [lambda: music_handler.play_sfx(load_sound("charge", True)),
-                 lambda: music_handler.play_sfx(load_sound("shatter", True)), self.apply_damage]
-        self.animation_handler.rush(self.your_turn, hooks)
-
-    def apply_damage(self):
-        """Applies damage to the other player and then ends the turn."""
-        self.damage_handler.apply_damage(self.enemy if self.your_turn else self.player, 1 if self.your_turn else 0)
-        self.end_turn()
-
     def end_turn(self):
-        """Switches to the other player's turn."""
+        """Ends the turn where the next step depends on if the other player is defeated."""
         self.disable_hud()
-        self.your_turn = not self.your_turn
-        self.player_set.reset_dice()
-        self.enemy_set.reset_dice()
-        self.damage_handler.reset()
-        self.canvas.delete_group(3)
-        self.switch_hud()
-        self.enable_hud()
-        self.queue_ai_action()
+        target = self.enemy if self.your_turn else self.player
+        if not target.is_dead():
+            self.switch_turn()
+        else:
+            self.animation_handler.scavenge(self.your_turn, self.end_battle)

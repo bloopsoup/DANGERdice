@@ -67,6 +67,15 @@ class Enemy:
         """Restores an enemy's health."""
         self.health = self.max_health
 
+    def is_dead(self) -> bool:
+        """Is the enemy dead?"""
+        return self.dead
+
+    def try_die(self):
+        """Tries to kill the enemy if it's health is 0 or below."""
+        if self.health <= 0:
+            self.dead = True
+
     def die(self):
         """Kills the enemy. All status elements are removed first."""
         self.dead = True

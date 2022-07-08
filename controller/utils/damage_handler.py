@@ -93,4 +93,5 @@ class DamageHandler:
         target.add_health(self.heal)
         status.add_poison(self.poison)
         status.add_weaken(self.weaken)
+        target.try_die()
         self.reset()
