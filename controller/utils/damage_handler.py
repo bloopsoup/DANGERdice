@@ -9,6 +9,10 @@ class Status:
         self.blessed = 0
         self.weaken = 0
 
+    def get_poison(self) -> int:
+        """Gets the poison."""
+        return self.poison
+
     def add_poison(self, amount: int):
         """Increases poison."""
         self.poison += amount
@@ -48,6 +52,10 @@ class DamageHandler:
     def __str__(self):
         return "DMG: {0} PSN: {1} HEAL: {2} WKN: {3}X".format(self.damage, self.poison, self.heal, self.weaken)
 
+    def get_status(self, i: int) -> Status:
+        """Returns the ith status."""
+        return self.statuses[i]
+
     def get_damage(self) -> int:
         """Returns the damage."""
         return self.damage
@@ -85,6 +93,20 @@ class DamageHandler:
     def has_damage(self):
         """Is there damage present?"""
         return self.damage > 0 or self.heal > 0 or self.poison > 0 or self.weaken > 0
+
+    def has_status_damage(self, i: int):
+        """Is there status damage present in the ith status?"""
+        status = self.statuses[i]
+        return status.get_poison() > 0
+
+    def apply_s_damage(self, target: Enemy, i: int):
+        """Applies status damage from the ith status to target. Returns True
+           if it did apply damage."""
+        status = self.statuses[i]
+        if status.get_poison() > 0:
+            target.subtract_health(status.get_poison())
+            status.subtract_poison(1)
+        target.try_die()
 
     def apply_damage(self, target: Enemy, i: int):
         """Applies the damage to target and ith Status."""

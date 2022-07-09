@@ -20,7 +20,7 @@ class AnimationHandler:
 
     def scavenge(self, a_run: bool, hook):
         """Adds a command where one element rises up while the other element runs to its position."""
-        run, rise = self.a if a_run else self.b, self.b if a_run else self.b
+        run, rise = self.a if a_run else self.b, self.b if a_run else self.a
         run_start, rise_start = self.a_start if a_run else self.b_start, self.b_start if a_run else self.a_start
         self.queue.add([MoveCommand(rise, (0, 10), rise_start, (rise_start[0], rise_start[1] - 600), None)])
         self.queue.add([MoveCommand(run, (6, 0), run_start, (rise_start[0], run_start[1]), None)])

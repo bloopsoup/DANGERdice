@@ -22,9 +22,9 @@ class Battle(State):
         self.enemy_set = create_dice_set(self.enemy.get_preference())
 
         self.player_display = Idle(load_all_sprites("player"), (0, 0), None, load_idle_animation("player"))
-        self.player_s_display = PTexts(load_all_sprites("player"), (0, 0), load_font("SS"), 2, [(0, -50), (0, -25)], True)
+        self.player_s_display = PTexts(load_all_sprites("player"), (0, 0), load_font("SS"), 3, [(0, -75), (0, -50), (0, -25)], True)
         self.enemy_display = Idle(load_all_sprites(enemy_name), (0, 0), None, load_idle_animation(enemy_name))
-        self.enemy_s_display = PTexts(load_all_sprites(enemy_name), (0, 0), load_font("SS"), 2, [(0, -50), (0, -25)], True)
+        self.enemy_s_display = PTexts(load_all_sprites(enemy_name), (0, 0), load_font("SS"), 3, [(0, -75), (0, -50), (0, -25)], True)
         self.animation_handler = AnimationHandler(self.player_display, (60, 257), self.enemy_display, (740 - self.enemy_display.get_width(), 357 - self.enemy_display.get_height()), self.command_queue)
 
         self.stat_display = PTexts([pygame.Surface((1, 1))], (38, 460), load_font("SS"), 4, [(0, 0), (0, 20), (0, 40), (0, 60)], False)
@@ -60,7 +60,6 @@ class Battle(State):
     def startup(self):
         self.setup_canvas()
         self.setup_commands()
-        music_handler.change(load_sound("zins", False))
 
     def update_components(self):
         self.update_set_on_canvas()
@@ -111,8 +110,12 @@ class Battle(State):
         """Updates the text to reflect the latest state."""
         self.player_s_display.set_position(self.player_display.get_position())
         self.player_s_display.set_text(1, "{0} HP".format(self.player.get_health()))
+        self.player_s_display.set_text(2, "{0} PSN".format(self.damage_handler.get_status(0).get_poison()))
+
         self.enemy_s_display.set_position(self.enemy_display.get_position())
         self.enemy_s_display.set_text(1, "{0} HP".format(self.enemy.get_health()))
+        self.enemy_s_display.set_text(2, "{0} PSN".format(self.damage_handler.get_status(1).get_poison()))
+
         entity = self.player if self.your_turn else self.enemy
         self.stat_display.set_texts([entity.get_name(), "LVL: {0}".format(entity.get_level()),
                                      "HP: {0} / {1}".format(entity.get_health(), entity.get_max_health()),
@@ -160,18 +163,28 @@ class Battle(State):
         self.animation_handler.rush(self.your_turn, hooks)
 
     def apply_damage(self):
-        """Applies damage to the other player and then ends the turn."""
+        """Applies damage to the other player and then apply status damage."""
         self.damage_handler.apply_damage(self.enemy if self.your_turn else self.player, 1 if self.your_turn else 0)
-        self.end_turn()
+        self.apply_status_damage()
 
     def apply_status_damage(self):
-        """Applies status damage to the turn player."""
+        """Applies damage to the turn player before ending the turn."""
+        self.canvas.delete_group(3)
+        status_idx = 0 if self.your_turn else 1
+        if self.damage_handler.has_status_damage(status_idx):
+            self.damage_handler.apply_s_damage(self.player if self.your_turn else self.enemy, status_idx)
+            music_handler.play_sfx(load_sound("poison", True))
+            self.command_queue.add([TimerCommand(1, self.end_turn)])
+        else:
+            self.end_turn()
 
     def end_battle(self):
         """Ends the battle when the player wins."""
-        self.reward_display.set_text(0, "You won!")
+        msg = "You won!" if self.enemy.is_dead() else "Ouch."
+        destination = "player_menu" if self.enemy.is_dead() else "game_over"
+        self.reward_display.set_text(0, msg)
         music_handler.play_sfx(load_sound("good", True))
-        self.command_queue.add([TimerCommand(2, lambda: self.to("player_menu"))])
+        self.command_queue.add([TimerCommand(2, lambda: self.to(destination))])
 
     def switch_turn(self):
         """Switches to the other player's turn."""
@@ -179,7 +192,6 @@ class Battle(State):
         self.player_set.reset_dice()
         self.enemy_set.reset_dice()
         self.damage_handler.reset()
-        self.canvas.delete_group(3)
         self.switch_hud()
         self.enable_hud()
         self.queue_ai_action()
@@ -191,7 +203,7 @@ class Battle(State):
             music_handler.play_sfx(load_sound("roll", True))
         if result == 0:
             music_handler.play_sfx(load_sound("one", True))
-            self.popup_notice("rolled_one", self.end_turn)
+            self.popup_notice("rolled_one", self.apply_status_damage)
         elif dice_set.needs_reset():
             music_handler.play_sfx(load_sound("good", True))
             self.popup_notice("refresh", lambda: self.reset_rolls(dice_set))
@@ -201,9 +213,11 @@ class Battle(State):
 
     def end_turn(self):
         """Ends the turn where the next step depends on if the other player is defeated."""
-        self.disable_hud()
-        target = self.enemy if self.your_turn else self.player
-        if not target.is_dead():
-            self.switch_turn()
-        else:
+        src, target = self.player if self.your_turn else self.enemy, self.enemy if self.your_turn else self.player
+        if target.is_dead():
+            src.try_revive()
             self.animation_handler.scavenge(self.your_turn, self.end_battle)
+        elif src.is_dead():
+            self.animation_handler.scavenge(not self.your_turn, self.end_battle)
+        else:
+            self.switch_turn()

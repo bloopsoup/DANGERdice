@@ -76,9 +76,11 @@ class Enemy:
         if self.health <= 0:
             self.dead = True
 
-    def die(self):
-        """Kills the enemy. All status elements are removed first."""
-        self.dead = True
+    def try_revive(self):
+        """Tries to revive the enemy to one health if they died."""
+        if self.dead:
+            self.dead = False
+            self.health = 1
 
     def revive(self):
         """Revives the enemy."""
