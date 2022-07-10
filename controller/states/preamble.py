@@ -1,69 +1,29 @@
+import pygame
+from .state import State
+from ..loader import load_static, load_some_sprites, load_all_sprites, load_font, load_sound, load_idle_animation
+from gui.elements import StaticBG, MovingBackgroundElement, Idle
+from gui.commands import AnimationHandler
+
+
 class Preamble(State):
     """Sometimes you have a chit-chat before battle."""
 
-    def __init__(self, enemy, bg, destination):
+    def __init__(self, enemy_name: str):
         super().__init__()
+        self.player_display = Idle(load_all_sprites("player"), (0, 0), None, load_idle_animation("player"))
+        self.enemy_display = Idle(load_all_sprites(enemy_name), (0, 0), None, load_idle_animation(enemy_name))
+        self.animation_handler = AnimationHandler(self.player_display, (60, 257), self.enemy_display, (
+            740 - self.enemy_display.get_width(), 357 - self.enemy_display.get_height()), self.command_queue)
 
-        self.destination = destination
-        self.enemy = enemy
-        self.bg = bg
+    def setup_canvas(self):
+        self.canvas.add_element(StaticBG([load_static("hills")], (0, 0)), 0)
+        self.canvas.add_element(MovingBackgroundElement([load_static("thick_clouds")], (-1, 0), (800, 600)), 0)
+        self.canvas.add_element(StaticBG([load_static("ground")], (0, 0)), 0)
 
-        self.text_info = self.enemy.preamble
-        self.portraits = [Control.sheets["portrait1"].load_image(0, 0),
-                          Control.sheets["portrait1"].load_image(self.text_info[2][0], self.text_info[2][1])]
-        self.d_box = None
+        self.canvas.add_element(self.player_display, 0)
+        self.player_display.set_position(pygame.Vector2(-300, 257))
+        self.canvas.add_element(self.enemy_display, 0)
+        self.enemy_display.set_position(pygame.Vector2(1000, 357 - self.enemy_display.get_height()))
 
-        self.player_x = 60
-        self.player_y = 257
-        self.enemy_x = 800 - self.player_x - self.enemy.image.get_width()
-        self.enemy_y = self.player_y - self.enemy.image.get_height() + 100
-
-        self.timer = DTimer(pygame.USEREVENT + 1)
-
-    def startup(self):
-        pygame.mixer.music.stop()
-
-        self.timer.activate(1)
-
-        self.canvas = Canvas()
-        self.canvas.add_element(StaticBG([load_img(load_s("{0}.png".format(self.bg)))], (0, 0)), 0)
-        self.canvas.add_element(MovingBackgroundElement([load_img(load_s("cloud{0}.png".format(self.bg)))],
-                                                        (-1, 0), (800, 600)), 0)
-        self.canvas.add_element(StaticBG([load_img(load_s("ground0.png"))], (0, 0)), 1)
-
-        self.canvas.add_element(Butt(Control.sheets["button"].load_some_images(1, 0, 3), (730, 530), BUTTON_DEFAULT,
-                                     handle_music), 0)
-        d_data = DData(self.text_info[0], self.portraits, self.text_info[1])
-        self.d_box = DBox([load_img(load_b("text600x200.png"))], (0, 100), DIALOGUE_DEFAULT, self.next_dialogue, d_data)
-        self.canvas.add_element(self.d_box, 1)
-
-        self.player.direct_move(-300, self.player_y)
-        self.player.command_move(10, 0, self.player_x, self.player_y)
-        self.player.name_display(False)
-        self.player.display_mode("")
-        self.player.health_display(False)
-
-        self.enemy.direct_move(1000, self.enemy_y)
-        self.enemy.command_move(10, 0, self.enemy_x, self.enemy_y)
-        self.enemy.name_display(False)
-        self.enemy.display_mode("")
-        self.enemy.health_display(False)
-
-    def handle_event(self, event):
-        """Handles events in this state."""
-        self.canvas.handle_event(event)
-        if event.type == self.timer.event:
-            self.d_box.toggle_visibility()
-
-    def update(self, surface, dt):
-        """Draws stuff pertaining to this state. Generally, menu options should be on top."""
-        self.canvas.update(surface, dt)
-        State.player.update(surface, dt)
-        self.enemy.update(surface, dt)
-        self.timer.update(dt)
-
-    # Functions
-    def next_dialogue(self):
-        """Signals to dialogue widget to move to the next script. Reaching end of script triggers something."""
-        if not self.d_box.next_script():
-            self.to(self.destination)
+    def setup_commands(self):
+        self.animation_handler.to_start(print)
