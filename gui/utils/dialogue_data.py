@@ -4,7 +4,7 @@ import pygame
 class DialogueData:
     """Dialogue related data."""
 
-    def __init__(self, texts: list[str], portraits: list[pygame.Surface], portrait_seq: list[int]):
+    def __init__(self, texts: list[str], portraits: list[list[pygame.Surface]], portrait_seq: list[tuple[int, int]]):
         self.texts = texts
         self.portraits = portraits
         self.portrait_seq = portrait_seq
@@ -22,4 +22,5 @@ class DialogueData:
 
     def get_portrait(self) -> pygame.Surface:
         """Returns the current portrait."""
-        return self.portraits[int(self.portrait_seq[self.seq_idx])]
+        portraits, portrait_index = self.portrait_seq[self.seq_idx]
+        return self.portraits[portraits][portrait_index]

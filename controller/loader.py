@@ -2,21 +2,14 @@ import random
 import pygame
 from .utils import rp, path_sheet, path_static, path_sfx, path_song
 from .config import dice_config, enemy_config, fonts_config, idle_animation_config, static_config, spritesheet_config, \
-    chunk_config, sound_config
-from gui.utils import Spritesheet, IndexCycler
+    chunk_config, sound_config, dialogue_config
+from gui.utils import Spritesheet, IndexCycler, DialogueData
 from entities.enemies import Enemy, Player
 from entities.dice import Die, DiceSet
 
 
 loaded_spritesheets = {}
 loaded_static = {}
-
-
-def load_idle_animation(animation: str) -> IndexCycler:
-    """Loads an idle animation."""
-    assert animation in idle_animation_config, "not a valid animation"
-    indices, frames = idle_animation_config[animation]
-    return IndexCycler(indices, frames)
 
 
 def load_font(size: str) -> pygame.font.Font:
@@ -64,6 +57,21 @@ def load_some_sprites(name: str) -> list[pygame.Surface]:
 def load_all_sprites(name: str) -> list[pygame.Surface]:
     """Loads all sprites from a spritesheet."""
     return load_spritesheet(name).load_all_images()
+
+
+def load_idle_animation(animation: str) -> IndexCycler:
+    """Loads an idle animation."""
+    assert animation in idle_animation_config, "not a valid animation"
+    indices, frames = idle_animation_config[animation]
+    return IndexCycler(indices, frames)
+
+
+def load_dialogue(dialogue: str) -> DialogueData:
+    """Loads dialogue."""
+    assert dialogue in dialogue_config, "no dialogue has that name"
+    texts, portrait_seq = random.choice(dialogue_config[dialogue])
+    portraits = [load_all_sprites("player_icons"), load_all_sprites("{0}_icons".format(dialogue))]
+    return DialogueData(texts, portraits, portrait_seq)
 
 
 def random_die_name() -> str:
