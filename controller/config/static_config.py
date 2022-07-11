@@ -35,6 +35,7 @@ static_config = {
     "crate": "land2.png",
 
     "inventory_layout": "inventory.png",
+    "text_box": "text600x200.png",
     "shop": "shop.png",
     "enemy_hud": "ehub0.png",
     "menu_hud": "mhub1.png",

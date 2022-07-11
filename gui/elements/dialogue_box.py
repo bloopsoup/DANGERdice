@@ -44,12 +44,10 @@ class DialogueBox(Interactive):
         self.letter_idx += 1
 
     def handle_event(self, event):
-        """Trigger an event by clicking on the dialogue box. Defaults to moving to the next script."""
+        """Clicking on the dialogue box goes to the next script. Calls on_event if there are no more scripts."""
         if self.reference.collidepoint(pygame.mouse.get_pos()) and event.type == pygame.MOUSEBUTTONDOWN:
-            if self.on_event is not None:
+            if not self.next_script():
                 self.on_event()
-            else:
-                self.next_script()
 
     def update(self, dt: float):
         """Updating itself."""
@@ -68,7 +66,7 @@ class DialogueBox(Interactive):
         # Draw text box + portrait
         surface.blit(self.images[0], (self.pos.x, self.pos.y))
         self.draw_border(surface)
-        surface.blit(self.d_data.get_portrait(), (self.pos.x, self.pos.y - 100))
+        surface.blit(self.d_data.get_portrait(), (self.pos.x + 20, self.pos.y + 45))
 
         # Display the text
         for i in range(self.theme["lines"]):

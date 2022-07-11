@@ -32,10 +32,10 @@ INPUT_DEFAULT = {
 # DIALOGUE BOX
 
 DIALOGUE_DEFAULT = {
-    "play_sfx": blank,
+    "play_sfx": lambda: music_handler.play_sfx(path_sfx("text.mp3")),
     "border_size": 4,
-    "padding": 35,
-    "LPL": 40,
+    "padding": 140,
+    "LPL": 20,
     "line_spacing": 35,
     "lines": 3
 }
