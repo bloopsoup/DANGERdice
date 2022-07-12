@@ -36,6 +36,7 @@ static_config = {
 
     "inventory_layout": "inventory.png",
     "text_box": "text600x200.png",
+    "text_box_small": "textsmall.png",
     "shop": "shop.png",
     "enemy_hud": "ehub0.png",
     "menu_hud": "mhub1.png",

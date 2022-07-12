@@ -41,7 +41,7 @@ class Intro(State):
         self.name_display.set_text(0, self.player.get_name())
         self.name_display.set_position(self.player_display.get_position())
 
-    def enter_name(self, text):
+    def enter_name(self, text: str):
         """Once you entered a name, gives the player that name and moves him off-screen."""
         self.canvas.delete_group(1)
         self.canvas.delete_group(2)

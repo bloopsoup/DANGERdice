@@ -59,7 +59,7 @@ class Shop(State):
         if self.selected_index != -1:
             self.canvas.get_group(1)[self.selected_index].set_idle(selected)
 
-    def select(self, i):
+    def select(self, i: int):
         """Select a die. Can't select if HUD is disabled or the die is grayed out."""
         if not self.active or not len(self.inventory[i]):
             return

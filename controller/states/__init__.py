@@ -13,3 +13,4 @@ from .shop import Shop
 from .battle import Battle
 from .preamble import Preamble
 from .story import Story
+from .tutorial import Tutorial
