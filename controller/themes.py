@@ -35,7 +35,7 @@ DIALOGUE_DEFAULT = {
     "play_sfx": lambda: music_handler.play_sfx(path_sfx("text.mp3")),
     "border_size": 4,
     "padding": 140,
-    "LPL": 20,
+    "LPL": 27,
     "line_spacing": 35,
     "lines": 3
 }

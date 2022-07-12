@@ -1,6 +1,6 @@
 AARON_0 = [["Greetings! ``````I am the tutorial man.", "And it looks like you need a tutorial!",
-            "Uh... `````weren't you the one that got the  last of my money?",
-            "Yes, ````but many others haven't gotten     their money.",
+            "Uh... `````weren't you the one that got the last of my money?",
+            "Yes, ````but many others haven't gotten their money.",
             "They want to fight you for it, so let's prepare you!",
             "Sure..."], [(1, 0), (1, 1), (0, 0), (1, 0), (1, 1), (0, 0)]]
 AARON_1 = [["Well well well.", "We meet again."], [(1, 0), (1, 3)]]
@@ -50,14 +50,14 @@ RIA_1 = [["I'll kill you.", "But why?", "Girl, ``````I dunno."], [(1, 3), (0, 5)
 RIA_2 = [["You should go skydiving", "without a parachute. <3", "At least you're not outright saying it."],
          [(1, 0), (1, 2), (0, 0)]]
 RIA_3 = [["I'll steal your heart", "literally.", "Oh no."], [(1, 1), (1, 2), (0, 0)]]
-RIA_4 = [["Maybe trying to kill you isn't a good   idea.", "You need a hobby.", "I'll kill you."],
+RIA_4 = [["Maybe trying to kill you isn't a good idea.", "You need a hobby.", "I'll kill you."],
          [(1, 5), (0, 3), (1, 4)]]
 RIA_5 = [["Violence.", "You speak violence.", "I'll kill you."], [(0, 0), (0, 3), (1, 4)]]
 
 WANDRE_0 = [["Woah. ```````A cloud with a hoop.", "And what about it?"], [(0, 1), (1, 3)]]
 WANDRE_1 = [["You look like a mess.", "That's very mean."], [(1, 3), (0, 3)]]
 WANDRE_2 = [["So are you getting the new album?", "Hell no.", "So you do wanna die."], [(1, 2), (0, 3), (1, 4)]]
-WANDRE_3 = [["You built like a box.", "What?"], "10", [(1, 0), (0, 6)]]
+WANDRE_3 = [["You built like a box.", "What?"], [(1, 0), (0, 6)]]
 WANDRE_4 = [["I'm craving some food right now.", "Then go get some food.", "I would if you PAID me", "broke ass."],
             [(1, 5), (0, 0), (1, 3), (1, 4)]]
 WANDRE_5 = [["Money?", "No."], [(1, 0), (0, 0)]]

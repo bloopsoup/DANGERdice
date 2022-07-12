@@ -45,7 +45,7 @@ class DialogueBox(Interactive):
 
     def handle_event(self, event):
         """Clicking on the dialogue box goes to the next script. Calls on_event if there are no more scripts."""
-        if self.reference.collidepoint(pygame.mouse.get_pos()) and event.type == pygame.MOUSEBUTTONDOWN:
+        if self.reference.collidepoint(pygame.mouse.get_pos()) and event.type == pygame.MOUSEBUTTONDOWN and self.active:
             if not self.next_script():
                 self.on_event()
 

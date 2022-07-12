@@ -19,7 +19,7 @@ spritesheet_config = {
     "kiran_icons": ["kiran_icon.png", 100, 100, 2, 4],
     "migahexx.xml": ["mik3x5x220x220.png", 220, 220, 3, 5],
     "player": ["mc100x3x5.png", 100, 100, 3, 5],
-    "player_icons": ["mc_icon.png", 100, 100, 3, 5],
+    "player_icons": ["mc_icon.png", 100, 100, 2, 4],
     "ria": ["ria140x3x5.png", 140, 140, 3, 5],
     "ria_icons": ["ria_icon.png", 100, 100, 2, 4],
     "shopkeeper": ["shop45x3x5.png", 45, 45, 3, 5],
