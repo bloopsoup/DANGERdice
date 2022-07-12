@@ -3,7 +3,7 @@ import pygame
 import sys
 from controller import Control
 from controller.states import Attributions, MainMenu, Intro, PlayerMenu, Inventory, Ending, GameOver, Load, Save, \
-    Loot, Shop, Battle, Preamble
+    Loot, Shop, Battle, Preamble, Story
 
 
 ###############
@@ -50,14 +50,15 @@ STATES = {
     "loot": Loot(),
     "shop": Shop(),
     "battle": Battle("aaron", 0),
-    "preamble": Preamble("aaron")
+    "preamble": Preamble("aaron"),
+    "story": Story()
 }
 
 ###############
 #     RUN     #
 ###############
 
-GAME = Control("preamble", STATES, SURFACE)
+GAME = Control("story", STATES, SURFACE)
 GAME.main_loop()
 pygame.quit()
 sys.exit()

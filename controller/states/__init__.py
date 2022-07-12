@@ -12,3 +12,4 @@ from .loot import Loot
 from .shop import Shop
 from .battle import Battle
 from .preamble import Preamble
+from .story import Story

@@ -25,10 +25,10 @@ class DialogueBox(Interactive):
         self.active = not self.active
 
     def next_script(self) -> bool:
-        """Moves to the next text and portrait. Returns FALSE if there's no more content."""
+        """Moves to the next text and portrait and calls the current hook. Returns FALSE if there's no more content."""
         self.display = ""
         self.letter_idx = 0
-
+        self.d_data.call_hook()
         if not self.d_data.advance():
             self.toggle_visibility()
             return False
@@ -37,7 +37,6 @@ class DialogueBox(Interactive):
     def add_letter(self):
         """Adds another letter from the script to the display text."""
         char = self.d_data.get_text()[self.letter_idx]
-        # (`) is a pause character
         if char != "`":
             self.theme["play_sfx"]()
             self.display += char
@@ -53,8 +52,6 @@ class DialogueBox(Interactive):
         """Updating itself."""
         if not self.active:
             return
-
-        # Adding one letter at a time
         if self.letter_idx < len(self.d_data.get_text()):
             self.dt_runner.dt_update(dt, self.add_letter)
 

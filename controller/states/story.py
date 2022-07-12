@@ -1,190 +1,89 @@
+import pygame
+from .state import State
+from ..utils import music_handler
+from ..loader import load_static, load_all_sprites, load_font, load_sound, load_idle_animation
+from ..themes import DIALOGUE_DEFAULT
+from gui.elements import StaticBG, MovingBackgroundElement, PTexts, Idle, DialogueBox
+from gui.commands import TimerCommand, MoveCommand
+from gui.utils import DialogueData
+
+
 class Story(State):
     """Today is not your lucky day."""
 
     def __init__(self):
         super().__init__()
+        self.text_display = PTexts([load_static("black")], (0, 220), load_font("L"), 1, [(0, 0)], True)
+        self.text_display.set_color((255, 255, 255))
+        self.player_display = Idle(load_all_sprites("player"), (0, 0), None, load_idle_animation("player"))
+        self.aaron_display = Idle(load_all_sprites("aaron"), (0, 0), None, load_idle_animation("aaron"))
+        self.dorita_display = Idle(load_all_sprites("dorita"), (0, 0), None, load_idle_animation("dorita"))
+        self.dialogue_box = DialogueBox([load_static("text_box")], (100, 350), DIALOGUE_DEFAULT,
+                                        lambda: self.to("player_menu"), load_font("M"), self.load_story_dialogue())
 
-        self.enemy = State.gen_enemy("dorita", 0)
-        self.enemy_extra = State.gen_enemy("aaron", 0)
+    def setup_canvas(self):
+        self.canvas.add_element(StaticBG([load_static("casino")], (0, 0)), 0)
+        self.canvas.add_element(MovingBackgroundElement([load_static("thin_clear_clouds")], (-1, 0), (800, 600)), 0)
+        self.canvas.add_element(StaticBG([load_static("ground")], (0, 0)), 0)
+        self.canvas.add_element(self.text_display, 0)
+        self.text_display.set_text(0, "")
+        self.canvas.add_element(self.player_display, 0)
+        self.player_display.set_position(pygame.Vector2(-100, 257))
+        self.canvas.add_element(self.aaron_display, 0)
+        self.aaron_display.set_position(pygame.Vector2(900, 237))
+        self.canvas.add_element(self.dorita_display, 0)
+        self.dorita_display.set_position(pygame.Vector2(900, 227))
+        self.canvas.add_element(self.dialogue_box, 0)
 
-        self.text_info = [["Ah Monday.",
-                           "Another day running my shady casino.",
-                           "Good morning.",
-                           "Wow, you're already here.",
-                           "Don't you think it's a bit early for    gambling everything away?",
-                           "It's never too early.",
-                           "And besides, ````````I'm feeling lucky.",
-                           "And so do other people.",
-                           "There goes the last of my money.",
-                           "Why do people keep getting jackpots?",
-                           "Told you so.",
-                           "Got my jackpot as well, ````so where's my   money?",
-                           "Well... ``````",
-                           "Do you take I.O.U's?",
-                           "No.",
-                           "Then I have another solution.",
-                           "What is it?",
-                           "What the...",
-                           "MY MONEY!"], "0010011100110010111", [0, 4]]
-        self.portraits = [Control.sheets["portrait1"].load_image(0, 0),
-                          Control.sheets["portrait1"].load_image(self.text_info[2][0], self.text_info[2][1])]
+    def setup_commands(self):
+        self.command_queue.add([MoveCommand(self.player_display, (2, 0), (-100, 257), (100, 257),
+                                            lambda: self.dialogue_box.toggle_visibility())])
 
-        self.timer = DTimer(pygame.USEREVENT + 1)
-        self.step = 0
+    def load_story_dialogue(self) -> DialogueData:
+        """Loads the dialogue for the story."""
+        texts = ["Ah Monday.", "Another day running my shady casino.", "Good morning.", "Wow, you're already here.",
+                 "Don't you think it's a bit early for gambling everything away?", "It's never too early.",
+                 "And besides, ````````I'm feeling lucky.", "And so do other people.",
+                 "There goes the last of my money.", "Why do people keep getting jackpots?", "Told you so.",
+                 "Got my jackpot as well, ````so where's my money?", "Well... ``````", "Do you take I.O.U's?", "No.",
+                 "Then I have another solution.", "What is it?", "What the...", "MY MONEY!"]
+        portrait_seq = [(0, 0), (0, 1), (1, 0), (0, 1), (0, 6), (1, 1), (1, 2), (1, 0), (0, 5), (0, 6), (1, 1), (1, 6),
+                        (0, 7), (0, 0), (1, 3), (0, 2), (1, 3), (1, 6), (1, 4)]
+        portraits = [load_all_sprites("player_icons"), load_all_sprites("dorita_icons")]
+        hooks = [None, self.enter_dorita, None, None, None, None, None, self.enter_transition, None, self.enter_dorita,
+                 None, None, None, None, None, None, self.exit_player, None, None]
+        return DialogueData(texts, portraits, portrait_seq, hooks)
 
-        self.player_y = 257
-        self.enemy_y = self.player_y - self.enemy.image.get_height() + 100
-        self.enemy_extra_y = self.player_y - self.enemy_extra.image.get_height() + 100
+    def enter_player(self):
+        """Player enters the picture."""
+        self.command_queue.add([MoveCommand(self.player_display, (5, 0), (-100, 257), (100, 257),
+                                            self.dialogue_box.toggle_visibility)])
 
-        self.font = fonts[3]
-        self.text = self.font.render("", True, (255, 255, 255))
+    def exit_player(self):
+        """Player runs away."""
+        self.dialogue_box.toggle_visibility()
+        self.command_queue.add([MoveCommand(self.player_display, (10, 0), (100, 257), (1000, 257),
+                                            self.dialogue_box.toggle_visibility)])
 
-    def cleanup(self):
-        self.menu = None
-        self.canvas = None
+    def enter_dorita(self):
+        """Dorita comes in to talk."""
+        self.dialogue_box.toggle_visibility()
+        self.command_queue.add([MoveCommand(self.dorita_display, (3, 0), (900, 227), (580, 227),
+                                            self.dialogue_box.toggle_visibility)])
 
-        self.step = 0
+    def enter_transition(self):
+        """Show a time transition."""
+        self.dialogue_box.toggle_visibility()
+        self.canvas.insert_element(StaticBG([load_static("black")], (0, 0)), 1, 3)
+        self.text_display.set_text(0, "2 HOURS LATER")
+        self.player_display.set_position(pygame.Vector2(-100, 257))
+        self.dorita_display.set_position(pygame.Vector2(900, 227))
+        music_handler.play_sfx(load_sound("one", True))
+        self.command_queue.add([TimerCommand(1.5, self.exit_transition)])
 
-    def startup(self):
-        pygame.mixer.music.stop()
-
-        # Setup Menu
-        self.menu = SimpleMenu(15, 330, 400)
-        self.menu.add_widget(70, 70, Control.sheets["button"].load_some_images(1, 0, 3), True, handle_music, 0,
-                             Button, (730, 530))
-        self.menu.add_widget(600, 200, [load_b("text600x200.png")], True, None, 1, DialogueBox)
-        self.menu.do_dialogue_id(1, 1, self.text_info[0])
-        self.menu.do_dialogue_id(1, 3, self.portraits, self.text_info[1])
-        self.timer.activate(2.5)
-
-        # Setup Canvas
-        self.canvas = Canvas()
-        self.canvas.add_element(StaticBG([load_img(load_s("land0.png"))], (0, 0)), 0)
-        self.canvas.add_element(MovingBackgroundElement([load_img(load_s("cloud1.png"))], (-1, 0), (800, 600)), 0)
-        self.canvas.add_element(StaticBG([load_img(load_s("ground0.png"))], (0, 0)), 0)
-
-        # Setup Player (should be hardcoded as Player dimensions are constant)
-        self.player.direct_move(-100, 257)
-        self.player.command_move(2, 0, 100, 257)
-        self.player.name_display(True)
-        self.player.health_display(False)
-        self.player.display_mode("")
-
-        # Setup enemies
-        self.enemy.direct_move(900, self.enemy_y)
-        self.enemy.name_display(True)
-        self.enemy.health_display(False)
-        self.enemy.display_mode("")
-
-        self.enemy_extra.direct_move(900, self.enemy_y)
-        self.enemy_extra.name_display(True)
-        self.enemy_extra.health_display(False)
-        self.enemy_extra.display_mode("")
-
-    def handle_event(self, event):
-        """Needed a timer this time to finish the movement."""
-        self.menu.handle_event(event)
-
-        # Story sequence works with timer so this is used
-        if event.type == self.timer.event:
-            if self.step == 0:
-                self.menu.do_dialogue_id(1, 0)
-                self.menu.add_widget(70, 70, Control.sheets["button"].load_some_images(2, 0, 3), True,
-                                     self.next_dialogue, 2, Button, (700, 330))
-            elif self.step == 2:
-                self.menu.do_dialogue_id(1, 0)
-                self.menu.add_widget(70, 70, Control.sheets["button"].load_some_images(2, 0, 3), True,
-                                     self.next_dialogue, 2, Button, (700, 330))
-            elif self.step == 8:
-                self.canvas.delete_group(1)
-
-                self.text = self.font.render("", True, (255, 255, 255))
-                self.enemy_extra.direct_move(300, self.enemy_extra_y)
-                self.enemy_extra.command_move(5, 0, 1000, self.enemy_extra_y)
-
-                self.advance()
-                self.timer.activate(2)
-            elif self.step == 9:
-                self.player.command_move(5, 0, 100, 257)
-
-                self.advance()
-                self.timer.activate(1.2)
-            elif self.step == 10:
-                self.menu.do_dialogue_id(1, 0)
-                self.menu.add_widget(70, 70, Control.sheets["button"].load_some_images(2, 0, 3), True,
-                                     self.next_dialogue, 2, Button, (700, 330))
-            elif self.step == 12:
-                self.menu.do_dialogue_id(1, 0)
-                self.menu.add_widget(70, 70, Control.sheets["button"].load_some_images(2, 0, 3), True,
-                                     self.next_dialogue, 2, Button, (700, 330))
-            elif self.step == 19:
-                self.menu.do_dialogue_id(1, 0)
-                self.menu.add_widget(70, 70, Control.sheets["button"].load_some_images(2, 0, 3), True,
-                                     self.next_dialogue, 2, Button, (700, 330))
-            elif self.step == 21:
-                self.to(self.player.current_level)
-
-    def update(self, surface, dt):
-        """Needed for updating timer."""
-        self.canvas.update(surface, dt)
-        State.player.update(surface, dt)
-        self.enemy.update(surface, dt)
-        self.enemy_extra.update(surface, dt)
-        self.menu.update(surface, dt)
-        self.timer.update(dt)
-
-        surface.blit(self.text, (self.center(self.text), 220))
-
-    # Functions
-    def next_dialogue(self):
-        """Button function. Signals to dialogue widget to move to the next script.
-           Also advances the sequence."""
-        self.advance()
-        self.menu.do_dialogue_id(1, 2)
-
-    def advance(self):
-        """Runs the step and then advances the step in the sequence."""
-        self.story_sequence()
-        self.step += 1
-
-    def story_sequence(self):
-        """Controls how the cutscene executes."""
-        if self.step == 1:
-            self.menu.delete_widget(2)
-            self.menu.do_dialogue_id(1, 0)
-
-            self.enemy.command_move(3, 0, 580, self.enemy_y)
-
-            self.timer.activate(2)
-        elif self.step == 7:
-            self.menu.delete_widget(2)
-            self.menu.do_dialogue_id(1, 0)
-
-            self.canvas.add_element(StaticBG([load_img(load_s("black.png"))], (0, 0)), 1)
-            self.text = self.font.render("2 HOURS LATER", True, (255, 255, 255))
-            handle_sound("one.mp3")
-
-            self.player.direct_move(-100, 257)
-            self.enemy.direct_move(900, self.enemy_y)
-
-            self.timer.activate(1.5)
-        elif self.step == 11:
-            self.menu.delete_widget(2)
-            self.menu.do_dialogue_id(1, 0)
-
-            self.enemy.command_move(4, 0, 580, self.enemy_y)
-
-            self.timer.activate(1.5)
-        elif self.step == 18:
-            self.menu.delete_widget(2)
-            self.menu.do_dialogue_id(1, 0)
-
-            self.player.command_move(10, 0, 1000, 257)
-
-            self.timer.activate(1.2)
-        elif self.step == 20:
-            self.menu.delete_widget(2)
-
-            self.enemy.command_move(10, 0, 1000, self.enemy_y)
-
-            self.timer.activate(1.2)
+    def exit_transition(self):
+        """Exit the time transition."""
+        self.canvas.delete_group(1)
+        self.text_display.set_text(0, "")
+        self.aaron_display.set_position(pygame.Vector2(300, 237))
+        self.command_queue.add([MoveCommand(self.aaron_display, (5, 0), (300, 237), (1000, 237), self.enter_player)])
