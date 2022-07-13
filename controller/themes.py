@@ -27,7 +27,7 @@ DIALOGUE_SMALL = {
     "play_sfx": lambda: music_handler.play_sfx(path_sfx("text.mp3")),
     "border_size": 4,
     "padding": 10,
-    "LPL": 40,
-    "line_spacing": 0,
+    "LPL": 37,
+    "line_spacing": 20,
     "lines": 1
 }

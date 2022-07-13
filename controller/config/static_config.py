@@ -27,6 +27,7 @@ static_config = {
     "refresh": "refresh.png",
     "chest": "chest.png",
     "badmc": "badmc.png",
+    "mouse": "mouse.png",
 
     "ground": "ground0.png",
     "bricks": "bricks.png",
@@ -40,5 +41,6 @@ static_config = {
     "shop": "shop.png",
     "enemy_hud": "ehub0.png",
     "menu_hud": "mhub1.png",
-    "player_hud": "phub0.png"
+    "player_hud": "phub0.png",
+    "example_hud": "example_hub.png"
 }
