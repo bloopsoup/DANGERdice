@@ -26,15 +26,21 @@ class Tutorial(State):
     def setup_canvas(self):
         self.damage = 0
         self.canvas.add_element(MovingBackgroundElement([load_static("tall_squares")], (0, 2), (800, 600)), 0)
+        self.canvas.add_element(Button(load_some_sprites("music"), (730, 530), BUTTON_DEFAULT, music_handler.toggle), 0)
+        self.canvas.add_element(self.dialogue_box, 0)
         self.canvas.add_element(self.aaron_display, 0)
-        self.aaron_display.set_position(pygame.Vector2((-200, 100)))
+        self.aaron_display.set_position(pygame.Vector2((-200, 450)))
         self.canvas.add_element(self.damage_display, 0)
         self.damage_display.set_text(0, "")
-        self.canvas.add_element(self.dialogue_box, 0)
 
     def setup_commands(self):
-        self.command_queue.add([MoveCommand(self.aaron_display, (5, 0), (-200, 100), (30, 100),
+        self.command_queue.add([MoveCommand(self.aaron_display, (5, 0), (-200, 450), (30, 450),
                                             self.dialogue_box.toggle_visibility)])
+
+    def startup(self):
+        self.setup_canvas()
+        self.setup_commands()
+        music_handler.change(load_sound("trittle", False))
 
     def load_tutorial_dialogue(self) -> DialogueData:
         """Loads the dialogue for the tutorial"""
@@ -67,6 +73,7 @@ class Tutorial(State):
     def zero_damage(self):
         """Zeroes the damage and updates the display."""
         self.damage = 0
+        self.damage_display.set_color((255, 0, 0))
         self.damage_display.set_text(0, "DMG: {0}".format(self.damage))
 
     def show_icon(self, pos: tuple[float, float], icon: str):

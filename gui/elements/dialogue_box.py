@@ -61,14 +61,13 @@ class DialogueBox(Interactive):
         if not self.active:
             return
 
-        # Draw text box + portrait
         surface.blit(self.images[0], (self.pos.x, self.pos.y))
         self.draw_border(surface)
-        surface.blit(self.d_data.get_portrait(), (self.pos.x + 20, self.pos.y + 45))
+        surface.blit(self.d_data.get_portrait(), (self.pos.x + self.theme["p_padding"][0],
+                                                  self.pos.y + self.theme["p_padding"][1]))
 
-        # Display the text
         for i in range(self.theme["lines"]):
             self.text_surface = self.font.render(
                 self.display[i * self.theme["LPL"]:(i+1) * self.theme["LPL"]], True, (0, 0, 0))
-            surface.blit(self.text_surface, (self.reference.x + self.theme["padding"],
-                                             self.reference.y + (self.theme["line_spacing"] * (i+1))))
+            surface.blit(self.text_surface, (self.reference.x + self.theme["padding"][0],
+                                             self.reference.y + (self.theme["padding"][1] * (i+1))))

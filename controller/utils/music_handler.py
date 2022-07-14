@@ -21,6 +21,7 @@ class MusicHandler:
         pygame.mixer.music.stop()
         pygame.mixer.music.unload()
         pygame.mixer.music.load(path)
+        pygame.mixer.music.set_volume(0.3)
         pygame.mixer.music.play(-1)
         if self.pause:
             pygame.mixer.music.pause()
