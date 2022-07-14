@@ -19,7 +19,7 @@ class Story(State):
         self.aaron_display = Idle(load_all_sprites("aaron"), (0, 0), None, load_idle_animation("aaron"))
         self.dorita_display = Idle(load_all_sprites("dorita"), (0, 0), None, load_idle_animation("dorita"))
         self.dialogue_box = DialogueBox([load_static("text_box")], (100, 350), DIALOGUE_DEFAULT,
-                                        lambda: self.to("player_menu"), load_font("M"), self.load_story_dialogue())
+                                        lambda: self.to("pre_tutorial"), load_font("M"), self.load_story_dialogue())
 
     def setup_canvas(self):
         self.canvas.add_element(StaticBG([load_static("casino")], (0, 0)), 0)
@@ -38,6 +38,11 @@ class Story(State):
     def setup_commands(self):
         self.command_queue.add([MoveCommand(self.player_display, (2, 0), (-100, 257), (100, 257),
                                             lambda: self.dialogue_box.toggle_visibility())])
+
+    def startup(self):
+        self.setup_canvas()
+        self.setup_commands()
+        music_handler.stop()
 
     def load_story_dialogue(self) -> DialogueData:
         """Loads the dialogue for the story."""

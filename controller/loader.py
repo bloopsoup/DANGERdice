@@ -66,10 +66,10 @@ def load_idle_animation(animation: str) -> IndexCycler:
     return IndexCycler(indices, frames)
 
 
-def load_dialogue(dialogue: str) -> DialogueData:
+def load_dialogue(dialogue: str, tier: int) -> DialogueData:
     """Loads dialogue."""
     assert dialogue in dialogue_config, "no dialogue has that name"
-    texts, portrait_seq = random.choice(dialogue_config[dialogue])
+    texts, portrait_seq = dialogue_config[dialogue][tier]
     portraits = [load_all_sprites("player_icons"), load_all_sprites("{0}_icons".format(dialogue))]
     return DialogueData(texts, portraits, portrait_seq)
 

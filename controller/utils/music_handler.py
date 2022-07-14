@@ -26,6 +26,12 @@ class MusicHandler:
         if self.pause:
             pygame.mixer.music.pause()
 
+    def stop(self):
+        """Stops the current song that's playing."""
+        self.current_path = None
+        pygame.mixer.music.stop()
+        pygame.mixer.music.unload()
+
     def toggle(self):
         """Toggles sounds."""
         if self.pause:

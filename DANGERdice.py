@@ -49,17 +49,17 @@ STATES = {
     "save": Save(),
     "loot": Loot(),
     "shop": Shop(),
-    "battle": Battle("aaron", 0),
-    "preamble": Preamble("aaron"),
     "story": Story(),
-    "tutorial": Tutorial()
+    "pre_tutorial": Preamble("aaron", 0, "tutorial"),
+    "tutorial": Tutorial(),
+    "battle": Battle("aaron", 0)
 }
 
 ###############
 #     RUN     #
 ###############
 
-GAME = Control("tutorial", STATES, SURFACE)
+GAME = Control("attributions", STATES, SURFACE)
 GAME.main_loop()
 pygame.quit()
 sys.exit()

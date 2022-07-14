@@ -9,14 +9,14 @@ from gui.commands import AnimationHandler
 class Preamble(State):
     """Sometimes you have a chit-chat before battle."""
 
-    def __init__(self, enemy_name: str):
+    def __init__(self, enemy_name: str, tier: int, destination: str):
         super().__init__()
         self.player_display = Idle(load_all_sprites("player"), (0, 0), None, load_idle_animation("player"))
         self.enemy_display = Idle(load_all_sprites(enemy_name), (0, 0), None, load_idle_animation(enemy_name))
         self.animation_handler = AnimationHandler(self.player_display, (60, 257), self.enemy_display, (
             740 - self.enemy_display.get_width(), 357 - self.enemy_display.get_height()), self.command_queue)
         self.dialogue_box = DialogueBox([load_static("text_box")], (100, 350), DIALOGUE_DEFAULT,
-                                        lambda: self.to("player_menu"), load_font("M"), load_dialogue(enemy_name))
+                                        lambda: self.to(destination), load_font("M"), load_dialogue(enemy_name, tier))
 
     def setup_canvas(self):
         self.canvas.add_element(StaticBG([load_static("hills")], (0, 0)), 0)

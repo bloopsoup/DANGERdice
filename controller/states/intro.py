@@ -12,6 +12,7 @@ class Intro(State):
 
     def __init__(self):
         super().__init__()
+        self.destination = "story"
         self.player_display = Idle(load_all_sprites("player"), (350, 472), None, load_idle_animation("player"))
         self.name_display = PTexts(load_all_sprites("player"), (350, 472), load_font("SS"), 1, [(0, -25)], True)
         self.skip_display = PTexts([load_static("black")], (0, 220), load_font("M"), 1, [(0, 0)], True)
@@ -37,6 +38,10 @@ class Intro(State):
         self.setup_canvas()
         music_handler.change(load_sound("trooper", False))
 
+    def cleanup(self):
+        self.canvas.delete_all()
+        self.destination = "story"
+
     def update_components(self):
         self.name_display.set_text(0, self.player.get_name())
         self.name_display.set_position(self.player_display.get_position())
@@ -46,9 +51,10 @@ class Intro(State):
         self.canvas.delete_group(1)
         self.canvas.delete_group(2)
         self.player.change_name(text)
-        self.command_queue.add([MoveCommand(self.player_display, (5, 0), (350, 472), (900, 472), lambda: self.to("player_menu"))])
+        self.command_queue.add([MoveCommand(self.player_display, (5, 0), (350, 472), (900, 472), lambda: self.to(self.destination))])
 
     def skip(self):
         """Skips the story cutscene and tutorial level."""
         self.canvas.delete_group(2)
         self.skip_display.set_text(0, "Tutorial will be skipped.")
+        self.destination = "player_menu"
