@@ -14,13 +14,13 @@ loaded_static = {}
 
 def load_font(size: str) -> pygame.font.Font:
     """Loads a font."""
-    assert size in fonts_config, "not a valid size"
+    assert size in fonts_config, "{0} is not a valid size".format(size)
     return pygame.font.Font(rp("assets/VT323-Regular.ttf"), fonts_config[size])
 
 
 def load_sound(name: str, sfx: bool):
     """Returns a path to a sound file (sfx or music)."""
-    assert name in sound_config, "not a valid sound"
+    assert name in sound_config, "{0} is not a valid sound".format(name)
     path = sound_config[name]
     path = path_sfx(path) if sfx else path_song(path)
     return path
@@ -28,7 +28,7 @@ def load_sound(name: str, sfx: bool):
 
 def load_static(name: str) -> pygame.Surface:
     """Loads a static image."""
-    assert name in static_config, "not a valid screen"
+    assert name in static_config, "{0} is not a valid screen".format(name)
     if name in loaded_static:
         return loaded_static[name]
     static = pygame.Surface.convert_alpha(pygame.image.load(path_static(static_config[name])))
@@ -38,7 +38,7 @@ def load_static(name: str) -> pygame.Surface:
 
 def load_spritesheet(name: str) -> Spritesheet:
     """Loads in images from a character or a button spritesheet."""
-    assert name in spritesheet_config, "not a valid spritesheet"
+    assert name in spritesheet_config, "{0} is not a valid spritesheet".format(name)
     if name in loaded_spritesheets:
         return loaded_spritesheets[name]
     path, height, width, rows, cols = spritesheet_config[name]
@@ -49,7 +49,7 @@ def load_spritesheet(name: str) -> Spritesheet:
 
 def load_some_sprites(name: str) -> list[pygame.Surface]:
     """Loads some sprites using a NAME preset."""
-    assert name in chunk_config, "not a valid chunk name"
+    assert name in chunk_config, "{0} is not a valid chunk name".format(name)
     sheet, row, col, amount = chunk_config[name]
     return load_spritesheet(sheet).load_some_images(row, col, amount)
 
@@ -61,14 +61,14 @@ def load_all_sprites(name: str) -> list[pygame.Surface]:
 
 def load_idle_animation(animation: str) -> IndexCycler:
     """Loads an idle animation."""
-    assert animation in idle_animation_config, "not a valid animation"
+    assert animation in idle_animation_config, "{0} is not a valid animation".format(animation)
     indices, frames = idle_animation_config[animation]
     return IndexCycler(indices, frames)
 
 
 def load_dialogue(dialogue: str, tier: int) -> DialogueData:
     """Loads dialogue."""
-    assert dialogue in dialogue_config, "no dialogue has that name"
+    assert dialogue in dialogue_config, "no dialogue has that name {0}".format(dialogue)
     texts, portrait_seq = dialogue_config[dialogue][tier]
     portraits = [load_all_sprites("player_icons"), load_all_sprites("{0}_icons".format(dialogue))]
     return DialogueData(texts, portraits, portrait_seq)
@@ -79,9 +79,21 @@ def random_die_name() -> str:
     return random.choice(list(dice_config.keys()))
 
 
+def all_enemy_names() -> list[str]:
+    """Gets a list of enemy names."""
+    enemy_names = list(enemy_config.keys())
+    enemy_names.remove("arca")
+    enemy_names.remove("baduck")
+    enemy_names.remove("migahexx.xml")
+    enemy_names.remove("player")
+    enemy_names.remove("shopkeeper")
+    enemy_names.remove("square")
+    return enemy_names
+
+
 def create_die(die_type: str) -> Die:
     """Creates a die."""
-    assert die_type in dice_config, "not a valid die type"
+    assert die_type in dice_config, "{0} is not a valid die type".format(die_type)
     side, multiple, additional_cost, damage_type, safe = dice_config[die_type]
     return Die(side, multiple, int(130 * 1.5 * (multiple + 0.5)) + additional_cost, damage_type, safe)
 
@@ -93,7 +105,7 @@ def create_dice_set(preference: list[str]) -> DiceSet:
 
 def create_enemy(enemy: str, tier: int) -> Enemy:
     """Creates an enemy."""
-    assert enemy in enemy_config, "not a valid enemy"
+    assert enemy in enemy_config, "{0} is not a valid enemy".format(enemy)
     stats = enemy_config[enemy][tier]
     return Enemy(enemy, stats["level"], stats["level"] * stats["health_factor"],
                  stats["level"] * stats["money_factor"], stats["preference"])
@@ -101,7 +113,7 @@ def create_enemy(enemy: str, tier: int) -> Enemy:
 
 def create_player() -> Player:
     """Creates a player."""
-    player = Player("p0-0")
+    player = Player()
     for _ in range(4):
         player.append_to_preference("basic1")
     for _ in range(13):

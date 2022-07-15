@@ -12,8 +12,9 @@ from gui.commands import TimerCommand, AnimationHandler
 class Battle(State):
     """Battle enemies, get hurt, and earn loot."""
 
-    def __init__(self, enemy_name: str, tier: int):
+    def __init__(self, enemy_name: str, tier: int, destination: str):
         super().__init__()
+        self.destination = destination
         self.active, self.your_turn = False, True
         self.damage_handler = DamageHandler(2)
 
@@ -181,7 +182,7 @@ class Battle(State):
     def end_battle(self):
         """Ends the battle when the player wins."""
         msg = "You won!" if self.enemy.is_dead() else "Ouch."
-        destination = "player_menu" if self.enemy.is_dead() else "game_over"
+        destination = self.destination if self.enemy.is_dead() else "game_over"
         self.reward_display.set_text(0, msg)
         music_handler.play_sfx(load_sound("good", True))
         self.command_queue.add([TimerCommand(2, lambda: self.to(destination))])

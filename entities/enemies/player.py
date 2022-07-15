@@ -6,21 +6,23 @@ class Player(Enemy):
 
     required_exp = [0, 8, 10, 12, 14, 17, 19, 22, 25, 30, 500]
 
-    def __init__(self, starting_stage: str):
+    def __init__(self):
         super().__init__("", 1, 100, 0, [])
-        self.starting_stage = starting_stage
-        self.current_stage = self.starting_stage
-
+        self.starting_stage = [0, 0]
+        self.current_stage = self.starting_stage[:]
         self.inventory = []
         self.exp = 0
 
     def get_stage(self) -> str:
         """Gets the player's current stage."""
-        return self.current_stage
+        return "pre_battle_stage{0}_level{1}".format(self.current_stage[0], self.current_stage[1])
 
-    def set_stage(self, stage: str):
-        """Sets the player's current stage."""
-        self.current_stage = stage
+    def advance_stage(self):
+        """Advances the player's current stage."""
+        self.current_stage[1] += 1
+        if self.current_stage[1] > 3:
+            self.current_stage[0] += 1
+            self.current_stage[1] = 0
 
     def get_inventory(self) -> list[str]:
         """Gets a copy of the player's inventory as a list."""
@@ -53,7 +55,7 @@ class Player(Enemy):
     def reset_player(self):
         """Resets the player to basic stats."""
         self.reset_to_base_stats()
-        self.current_stage = self.starting_stage
+        self.current_stage = self.starting_stage[:]
         self.inventory = []
         self.exp = 0
 

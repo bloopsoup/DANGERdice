@@ -1,4 +1,5 @@
 from .state import State
+from .state_maker import add_battle_states
 from .attributions import Attributions
 from .main_menu import MainMenu
 from .intro import Intro
