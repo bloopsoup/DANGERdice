@@ -34,8 +34,7 @@ class Intro(State):
         self.canvas.add_element(Button(load_some_sprites("confirm"), (700, 130), BUTTON_DEFAULT, i_box.submit_text), 1)
         self.canvas.add_element(Button(load_some_sprites("skip_tutorial"), (300, 220), BUTTON_DEFAULT, self.skip), 2)
 
-    def startup(self):
-        self.setup_canvas()
+    def setup_music(self):
         music_handler.change(load_sound("trooper", False))
 
     def cleanup(self):

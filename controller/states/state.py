@@ -17,6 +17,10 @@ class State:
         self.canvas = Canvas()
         self.command_queue = CommandQueue()
 
+    def setup_state(self):
+        """Sets attributes for a state when entering."""
+        pass
+
     def setup_canvas(self):
         """Sets up the canvas for the state."""
         raise NotImplementedError
@@ -25,14 +29,26 @@ class State:
         """Sets up initial commands to run if needed."""
         pass
 
+    def setup_music(self):
+        """Sets up the music."""
+        pass
+
     def startup(self):
         """Setup when entering a state, such as loading songs or images."""
+        self.setup_state()
         self.setup_canvas()
         self.setup_commands()
+        self.setup_music()
+
+    def reset_state(self):
+        """Resets attributes for a state when leaving."""
+        pass
 
     def cleanup(self):
         """Cleaning up components before leaving the state."""
         self.canvas.delete_all()
+        self.command_queue.clear()
+        self.reset_state()
 
     def handle_event(self, event):
         """Handles events in this state."""

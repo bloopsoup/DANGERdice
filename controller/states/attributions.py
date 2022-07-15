@@ -23,9 +23,7 @@ class Attributions(State):
         self.command_queue.add([TimerCommand(1.2, self.remove_face)])
         self.command_queue.add([TimerCommand(1.2, lambda: self.to("main_menu"))])
 
-    def startup(self):
-        self.setup_canvas()
-        self.setup_commands()
+    def setup_music(self):
         music_handler.play_sfx(load_sound("one", True))
 
     def remove_face(self):

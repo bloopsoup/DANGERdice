@@ -24,22 +24,24 @@ class Tutorial(State):
                                         lambda: self.to("player_menu"), load_font("M"), self.load_tutorial_dialogue())
 
     def setup_canvas(self):
-        self.damage = 0
         self.canvas.add_element(MovingBackgroundElement([load_static("tall_squares")], (0, 2), (800, 600)), 0)
         self.canvas.add_element(Button(load_some_sprites("music"), (730, 530), BUTTON_DEFAULT, music_handler.toggle), 0)
         self.canvas.add_element(self.dialogue_box, 0)
+        self.dialogue_box.reset_scripts()
         self.canvas.add_element(self.aaron_display, 0)
         self.aaron_display.set_position(pygame.Vector2((-200, 450)))
         self.canvas.add_element(self.damage_display, 0)
         self.damage_display.set_text(0, "")
+        self.damage_display.set_color((0, 0, 0))
 
     def setup_commands(self):
         self.command_queue.add([MoveCommand(self.aaron_display, (5, 0), (-200, 450), (30, 450),
                                             self.dialogue_box.toggle_visibility)])
 
-    def startup(self):
-        self.setup_canvas()
-        self.setup_commands()
+    def reset_state(self):
+        self.damage = 0
+
+    def setup_music(self):
         music_handler.change(load_sound("trittle", False))
 
     def load_tutorial_dialogue(self) -> DialogueData:

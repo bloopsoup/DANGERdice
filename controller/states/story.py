@@ -34,14 +34,13 @@ class Story(State):
         self.canvas.add_element(self.dorita_display, 0)
         self.dorita_display.set_position(pygame.Vector2(900, 227))
         self.canvas.add_element(self.dialogue_box, 0)
+        self.dialogue_box.reset_scripts()
 
     def setup_commands(self):
         self.command_queue.add([MoveCommand(self.player_display, (2, 0), (-100, 257), (100, 257),
                                             lambda: self.dialogue_box.toggle_visibility())])
 
-    def startup(self):
-        self.setup_canvas()
-        self.setup_commands()
+    def setup_music(self):
         music_handler.stop()
 
     def load_story_dialogue(self) -> DialogueData:

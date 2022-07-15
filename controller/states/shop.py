@@ -30,9 +30,11 @@ class Shop(State):
         self.canvas.add_element(Button(load_some_sprites("back"), (0, 0), BUTTON_DEFAULT, self.back), 0)
         self.canvas.add_element(Button(load_some_sprites("music"), (730, 530), BUTTON_DEFAULT, music_handler.toggle), 0)
 
-    def startup(self):
-        self.setup_canvas()
+    def setup_music(self):
         music_handler.change(load_sound("note", False))
+
+    def reset_state(self):
+        self.selected_index, self.active = -1, True
 
     def add_dice_to_canvas(self):
         """Adds dice from the shop's inventory to the canvas. If the die was sold, replace it with a gray die."""

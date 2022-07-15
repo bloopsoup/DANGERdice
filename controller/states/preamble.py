@@ -27,6 +27,7 @@ class Preamble(State):
         self.canvas.add_element(self.enemy_display, 0)
         self.enemy_display.set_position(pygame.Vector2(1000, 357 - self.enemy_display.get_height()))
         self.canvas.add_element(self.dialogue_box, 0)
+        self.dialogue_box.reset_scripts()
 
     def setup_commands(self):
         self.animation_handler.to_start(lambda: self.dialogue_box.toggle_visibility())

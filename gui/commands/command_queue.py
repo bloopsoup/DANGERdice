@@ -12,6 +12,10 @@ class CommandQueue:
         assert len(commands), "commands cannot be empty"
         self.queue.append(commands)
 
+    def clear(self):
+        """Clears the command queue."""
+        self.queue.clear()
+
     def finished_commands(self) -> bool:
         """Checks if the current set of commands are done."""
         return all([command.is_done() for command in self.queue[0]])

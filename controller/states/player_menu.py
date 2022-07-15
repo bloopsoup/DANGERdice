@@ -37,8 +37,7 @@ class PlayerMenu(State):
         self.canvas.add_element(Button(load_some_sprites("load_icon"), (70, 530), BUTTON_DEFAULT, self.load), 0)
         self.canvas.add_element(Button(load_some_sprites("music"), (730, 530), BUTTON_DEFAULT, music_handler.toggle), 0)
 
-    def startup(self):
-        self.setup_canvas()
+    def setup_music(self):
         music_handler.change(load_sound("note", False))
 
     def add_dice_to_canvas(self):
@@ -50,7 +49,7 @@ class PlayerMenu(State):
 
     def play(self):
         """Onto battle!"""
-        self.to(self.player.current_level)
+        self.to(self.player.get_stage())
 
     def shop(self):
         """Let's go shopping!"""

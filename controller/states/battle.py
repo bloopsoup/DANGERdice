@@ -19,7 +19,7 @@ class Battle(State):
         self.damage_handler = DamageHandler(2)
 
         self.enemy = create_enemy(enemy_name, tier)
-        self.player_set = create_dice_set(self.player.get_preference())
+        self.player_set = None
         self.enemy_set = create_dice_set(self.enemy.get_preference())
 
         self.player_display = Idle(load_all_sprites("player"), (0, 0), None, load_idle_animation("player"))
@@ -31,6 +31,9 @@ class Battle(State):
         self.stat_display = PTexts([pygame.Surface((1, 1))], (38, 460), load_font("SS"), 4, [(0, 0), (0, 20), (0, 40), (0, 60)], False)
         self.damage_display = PTexts([load_static("black")], (0, 0), load_font("SS"), 2, [(50, 435), (370, 435)], False)
         self.reward_display = PTexts([load_static("black")], (0, 0), load_font("L"), 1, [(0, 100)], True)
+
+    def setup_state(self):
+        self.player_set = create_dice_set(self.player.get_preference())
 
     def setup_canvas(self):
         self.canvas.add_element(StaticBG([load_static("hills")], (0, 0)), 0)
@@ -58,9 +61,11 @@ class Battle(State):
     def setup_commands(self):
         self.animation_handler.to_start(self.enable_hud)
 
-    def startup(self):
-        self.setup_canvas()
-        self.setup_commands()
+    def reset_state(self):
+        self.active, self.your_turn = False, True
+        self.damage_handler.reset()
+        self.enemy.revive()
+        self.enemy.restore_health()
 
     def update_components(self):
         self.update_set_on_canvas()
@@ -185,6 +190,7 @@ class Battle(State):
         destination = self.destination if self.enemy.is_dead() else "game_over"
         self.reward_display.set_text(0, msg)
         music_handler.play_sfx(load_sound("good", True))
+        self.player.advance_stage()
         self.command_queue.add([TimerCommand(2, lambda: self.to(destination))])
 
     def switch_turn(self):

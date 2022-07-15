@@ -30,9 +30,7 @@ class Ending(State):
         self.command_queue.add([TimerCommand(1.5, lambda: self.change_text("HAPPY END"))])
         self.command_queue.add([TimerCommand(1.5, self.return_to_menu)])
 
-    def startup(self):
-        self.setup_canvas()
-        self.setup_commands()
+    def setup_music(self):
         music_handler.play_sfx(load_sound("one", True))
 
     def change_text(self, text: str):

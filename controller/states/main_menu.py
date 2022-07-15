@@ -16,8 +16,7 @@ class MainMenu(State):
         self.canvas.add_element(Button(load_some_sprites("quit"), (150, 440), BUTTON_DEFAULT, self.quit_game), 0)
         self.canvas.add_element(Button(load_some_sprites("music"), (730, 530), BUTTON_DEFAULT, music_handler.toggle), 0)
 
-    def startup(self):
-        self.setup_canvas()
+    def setup_music(self):
         music_handler.change(load_sound("trooper", False))
 
     def intro(self):

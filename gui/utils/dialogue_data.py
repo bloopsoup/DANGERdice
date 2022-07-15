@@ -14,6 +14,10 @@ class DialogueData:
         assert len(self.texts) == len(self.portrait_seq), "texts and portrait_seq should be the same length"
         assert hooks is None or len(self.texts) == len(self.hooks), "texts and hooks should be the same length"
 
+    def reset(self):
+        """Resets to the beginning of the text sequence."""
+        self.seq_idx = 0
+
     def advance(self) -> bool:
         """Advances to the next text and portrait to display. Returns FALSE if there's no more content."""
         self.seq_idx += 1

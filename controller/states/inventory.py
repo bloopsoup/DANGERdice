@@ -27,14 +27,18 @@ class Inventory(State):
         self.canvas.add_element(Button(load_some_sprites("right_arrow"), (625, 530), BUTTON_DEFAULT, self.pg_right), 0)
         self.canvas.add_element(Button(load_some_sprites("left_arrow"), (105, 530), BUTTON_DEFAULT, self.pg_left), 0)
         self.canvas.add_element(self.info_display, 0)
+        self.info_display.set_text(0, "")
         self.canvas.add_element(self.stash_display, 0)
 
         self.add_set_to_canvas()
         self.add_inventory_to_canvas()
 
-    def startup(self):
-        self.setup_canvas()
+    def setup_music(self):
         music_handler.change(load_sound("note", False))
+
+    def reset_state(self):
+        self.page_start = 0
+        self.selected_index, self.in_set = -1, False
 
     def update_components(self):
         self.info_display.set_text(1, "Page {0}".format((self.page_start // self.dice_per_page) + 1))

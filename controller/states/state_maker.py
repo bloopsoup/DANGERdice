@@ -7,8 +7,7 @@ from ..loader import all_enemy_names
 
 def add_battle_state(states: dict[str, State], stage: int, level: int, enemy_name: str):
     """Adds a preamble (by chance) and a battle to the states dictionary."""
-    print("battle_stage{0}_level{1} where you fight {2}".format(stage, level, enemy_name))
-    preamble = Preamble(enemy_name, random.randint(0, 5), "battle_stage{0}_level{1}")
+    preamble = Preamble(enemy_name, random.randint(0, 5), "battle_stage{0}_level{1}".format(stage, level))
     states["pre_battle_stage{0}_level{1}".format(stage, level)] = preamble
     battle = Battle(enemy_name, stage, random.choice(["loot", "player_menu"]))
     states["battle_stage{0}_level{1}".format(stage, level)] = battle

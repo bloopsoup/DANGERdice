@@ -20,8 +20,7 @@ class GameOver(State):
         self.canvas.add_element(Button(load_some_sprites("music"), (730, 530), BUTTON_DEFAULT, music_handler.toggle), 0)
         self.canvas.add_element(self.player_display, 0)
 
-    def startup(self):
-        self.setup_canvas()
+    def setup_music(self):
         music_handler.change(load_sound("menu", False))
 
     def return_menu(self):

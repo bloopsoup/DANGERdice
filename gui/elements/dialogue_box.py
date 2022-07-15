@@ -24,6 +24,10 @@ class DialogueBox(Interactive):
         """Toggles visibility of the dialogue box."""
         self.active = not self.active
 
+    def reset_scripts(self):
+        """Reset the texts and portraits to the beginning."""
+        self.d_data.reset()
+
     def next_script(self) -> bool:
         """Moves to the next text and portrait and calls the current hook. Returns FALSE if there's no more content."""
         self.display = ""
