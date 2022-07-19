@@ -7,7 +7,8 @@ from ..elements import Idle
 class AnimationHandler:
     """Handles animations between sets of Idle elements and adds it to a command_queue."""
 
-    def __init__(self, a: Idle, a_start: tuple[float, float], b, b_start: tuple[float, float], queue: CommandQueue):
+    def __init__(self, a: Idle, a_start: tuple[float, float], b: Idle, b_start: tuple[float, float],
+                 queue: CommandQueue):
         self.a, self.a_start = a, a_start
         self.b, self.b_start = b, b_start
         self.queue = queue

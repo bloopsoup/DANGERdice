@@ -1,10 +1,11 @@
 import pygame
 from .state import State
-from ..utils import music_handler, DamageHandler
+from ..utils import music_handler
 from ..loader import load_static, load_some_sprites, load_all_sprites, load_font, load_sound, load_idle_animation, \
     create_dice_set, create_enemy
 from ..themes import BUTTON_DEFAULT
 from entities.dice import DiceSet
+from entities.enemies import DamageHandler
 from gui.elements import StaticBG, MovingBackgroundElement, PTexts, Idle, Button
 from gui.commands import TimerCommand, AnimationHandler
 
@@ -16,11 +17,11 @@ class Battle(State):
         super().__init__()
         self.destination = destination
         self.active, self.your_turn = False, True
-        self.damage_handler = DamageHandler(2)
 
         self.enemy = create_enemy(enemy_name, tier)
         self.player_set = None
         self.enemy_set = create_dice_set(self.enemy.get_preference())
+        self.damage_handler = DamageHandler([self.player, self.enemy])
 
         self.player_display = Idle(load_all_sprites("player"), (0, 0), None, load_idle_animation("player"))
         self.player_s_display = PTexts(load_all_sprites("player"), (0, 0), load_font("SS"), 3, [(0, -75), (0, -50), (0, -25)], True)
@@ -170,7 +171,9 @@ class Battle(State):
 
     def apply_damage(self):
         """Applies damage to the other player and then apply status damage."""
-        self.damage_handler.apply_damage(self.enemy if self.your_turn else self.player, 1 if self.your_turn else 0)
+        self.damage_handler.apply_damage(1 if self.your_turn else 0)
+        self.damage_handler.apply_benefits(0 if self.your_turn else 1)
+        self.damage_handler.reset()
         self.apply_status_damage()
 
     def apply_status_damage(self):
@@ -178,7 +181,7 @@ class Battle(State):
         self.canvas.delete_group(3)
         status_idx = 0 if self.your_turn else 1
         if self.damage_handler.has_status_damage(status_idx):
-            self.damage_handler.apply_s_damage(self.player if self.your_turn else self.enemy, status_idx)
+            self.damage_handler.apply_s_damage(status_idx)
             music_handler.play_sfx(load_sound("poison", True))
             self.command_queue.add([TimerCommand(1, self.end_turn)])
         else:
