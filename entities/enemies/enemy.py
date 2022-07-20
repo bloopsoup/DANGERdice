@@ -53,7 +53,7 @@ class Enemy:
 
     def add_health(self, amount: int):
         """Increases an enemy's health."""
-        self.health += amount
+        self.health = min(self.health + amount, self.max_health)
 
     def subtract_health(self, amount: int):
         """Decreases an enemy's health."""

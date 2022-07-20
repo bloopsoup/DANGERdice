@@ -4,7 +4,7 @@ class Status:
     def __init__(self):
         self.poison = 0
         self.blessed = 0
-        self.weaken = 0
+        self.weaken = 1
 
     def get_poison(self) -> int:
         """Gets the poison."""
@@ -26,10 +26,10 @@ class Status:
         """Decreases blessed."""
         self.blessed -= amount
 
-    def add_weaken(self, amount: int):
-        """Increases weaken."""
-        self.weaken += amount
+    def get_weaken(self) -> int:
+        """Gets weaken."""
+        return self.weaken
 
-    def subtract_weaken(self, amount: int):
-        """Decreases weaken."""
-        self.weaken -= amount
+    def set_weaken(self, amount: int):
+        """Sets weaken."""
+        self.weaken = amount
