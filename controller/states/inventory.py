@@ -15,8 +15,8 @@ class Inventory(State):
         super().__init__()
         self.page_start = 0
         self.selected_index, self.in_set = -1, False
-        self.info_display = PTexts([load_static("black")], (0, 0), load_font("M"), 2, [(0, 10), (0, 560)], True)
-        self.stash_display = PTexts([load_static("black")], (0, 0), load_font("S"), 2, [(100, 100), (610, 100)], False)
+        self.info_display = PTexts([load_static("black")], (0, 0), load_font("M"), [(0, 10), (0, 560)], True)
+        self.stash_display = PTexts([load_static("black")], (0, 0), load_font("S"), [(100, 100), (610, 100)], False)
 
     def setup_canvas(self):
         self.canvas.add_element(MovingBackgroundElement([load_static("tall_rectangles")], (0, -1), (800, 600)), 0)

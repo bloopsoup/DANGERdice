@@ -10,7 +10,7 @@ class Attributions(State):
 
     def __init__(self):
         super().__init__()
-        self.text_display = PTexts([load_static("black")], (0, 220), load_font("L"), 1, [(0, 0)], True)
+        self.text_display = PTexts([load_static("black")], (0, 220), load_font("L"), [(0, 0)], True)
         self.text_display.set_color((255, 255, 255))
 
     def setup_canvas(self):

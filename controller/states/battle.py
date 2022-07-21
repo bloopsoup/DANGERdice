@@ -24,14 +24,17 @@ class Battle(State):
         self.damage_handler = DamageHandler([self.player, self.enemy])
 
         self.player_display = Idle(load_all_sprites("player"), (0, 0), None, load_idle_animation("player"))
-        self.player_s_display = PTexts(load_all_sprites("player"), (0, 0), load_font("SS"), 4, [(0, -100), (0, -75), (0, -50), (0, -25)], True)
+        self.player_s_display = PTexts(load_all_sprites("player"), (0, 0), load_font("SS"),
+                                       [(0, -100), (0, -75), (0, -50), (0, -25)], True)
         self.enemy_display = Idle(load_all_sprites(enemy_name), (0, 0), None, load_idle_animation(enemy_name))
-        self.enemy_s_display = PTexts(load_all_sprites(enemy_name), (0, 0), load_font("SS"), 4, [(0, -100), (0, -75), (0, -50), (0, -25)], True)
+        self.enemy_s_display = PTexts(load_all_sprites(enemy_name), (0, 0), load_font("SS"),
+                                      [(0, -100), (0, -75), (0, -50), (0, -25)], True)
         self.animation_handler = AnimationHandler(self.player_display, (60, 257), self.enemy_display, (740 - self.enemy_display.get_width(), 357 - self.enemy_display.get_height()), self.command_queue)
 
-        self.stat_display = PTexts([pygame.Surface((1, 1))], (38, 460), load_font("SS"), 4, [(0, 0), (0, 20), (0, 40), (0, 60)], False)
-        self.damage_display = PTexts([load_static("black")], (0, 0), load_font("SS"), 2, [(50, 435), (370, 435)], False)
-        self.reward_display = PTexts([load_static("black")], (0, 0), load_font("L"), 1, [(0, 100)], True)
+        self.stat_display = PTexts([pygame.Surface((1, 1))], (38, 460), load_font("SS"),
+                                   [(0, 0), (0, 20), (0, 40), (0, 60)], False)
+        self.damage_display = PTexts([load_static("black")], (0, 0), load_font("SS"), [(50, 435), (370, 435)], False)
+        self.reward_display = PTexts([load_static("black")], (0, 0), load_font("L"), [(0, 100)], True)
 
     def setup_state(self):
         self.player_set = create_dice_set(self.player.get_preference())

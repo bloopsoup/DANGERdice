@@ -15,7 +15,7 @@ class Tutorial(State):
         super().__init__()
         self.damage = 0
         self.aaron_display = Idle(load_all_sprites("aaron"), (0, 0), None, load_idle_animation("aaron"))
-        self.damage_display = PTexts([load_static("black")], (0, 350), load_font("L"), 1, [(0, 0)], True)
+        self.damage_display = PTexts([load_static("black")], (0, 350), load_font("L"), [(0, 0)], True)
         self.dice_display = [Idle(load_some_sprites("basic1"), (220, 260), None, load_idle_animation("square")),
                              Idle(load_some_sprites("basic2"), (320, 260), None, load_idle_animation("square")),
                              Idle(load_some_sprites("basic3"), (420, 260), None, load_idle_animation("square")),

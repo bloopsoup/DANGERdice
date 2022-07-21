@@ -7,12 +7,12 @@ class PTexts(Displayable):
        images and pos represent an anchor point for relative text positioning (rather than absolute)."""
 
     def __init__(self, images: list[pygame.Surface], pos: tuple[float, float], font: pygame.font.Font,
-                 num_fields: int, offsets: list[tuple[float, float]], h_centered: bool):
-        assert num_fields == len(offsets), "number of fields and offsets should match"
+                 offsets: list[tuple[float, float]], h_centered: bool):
+        assert len(offsets) > 0, "must have at least 1 offset"
         super().__init__(images, pos, {})
         self.font = font
         self.color = (0, 0, 0)
-        self.texts = ["" for _ in range(num_fields)]
+        self.texts = ["" for _ in range(len(offsets))]
         self.offsets = [pygame.Vector2(offset) for offset in offsets]
         self.h_centered = h_centered
 

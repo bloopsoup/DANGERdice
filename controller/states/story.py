@@ -13,7 +13,7 @@ class Story(State):
 
     def __init__(self):
         super().__init__()
-        self.text_display = PTexts([load_static("black")], (0, 220), load_font("L"), 1, [(0, 0)], True)
+        self.text_display = PTexts([load_static("black")], (0, 220), load_font("L"), [(0, 0)], True)
         self.text_display.set_color((255, 255, 255))
         self.player_display = Idle(load_all_sprites("player"), (0, 0), None, load_idle_animation("player"))
         self.aaron_display = Idle(load_all_sprites("aaron"), (0, 0), None, load_idle_animation("aaron"))

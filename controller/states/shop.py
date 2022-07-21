@@ -15,8 +15,8 @@ class Shop(State):
         self.selected_index, self.active = -1, True
         self.inventory = ["basic1", "basic2", "basic3"]
         self.keeper_display = Idle(load_all_sprites("shopkeeper"), (650, 420), None, load_idle_animation("shopkeeper"))
-        self.gold_display = PTexts([load_static("black")], (0, 0), load_font("M"), 1, [(100, 170)], False)
-        self.info_display = PTexts([load_static("black")], (0, 0), load_font("M"), 2, [(0, 476), (0, 544)], True)
+        self.gold_display = PTexts([load_static("black")], (0, 0), load_font("M"), [(100, 170)], False)
+        self.info_display = PTexts([load_static("black")], (0, 0), load_font("M"), [(0, 476), (0, 544)], True)
 
     def setup_canvas(self):
         self.canvas.add_element(MovingBackgroundElement([load_static("tall_rectangles")], (0, -1), (800, 600)), 0)

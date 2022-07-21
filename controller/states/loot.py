@@ -12,7 +12,7 @@ class Loot(State):
     def __init__(self):
         super().__init__()
         self.player_display = Idle(load_all_sprites("player"), (-300, 257), None, load_idle_animation("player"))
-        self.loot_display = PTexts([load_static("black")], (0, 0), load_font("M"), 1, [(0, 100)], True)
+        self.loot_display = PTexts([load_static("black")], (0, 0), load_font("M"), [(0, 100)], True)
 
     def setup_canvas(self):
         self.canvas.add_element(StaticBG([load_static("crate")], (0, 0)), 0)

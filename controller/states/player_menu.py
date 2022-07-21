@@ -12,9 +12,9 @@ class PlayerMenu(State):
     def __init__(self):
         super().__init__()
         self.player_display = Idle(load_all_sprites("player"), (38, 72), None, load_idle_animation("player"))
-        self.stat_display = PTexts([pygame.Surface((1, 1))], (145, 72), load_font("SS"), 4,
+        self.stat_display = PTexts([pygame.Surface((1, 1))], (145, 72), load_font("SS"),
                                    [(0, 0), (0, 20), (0, 40), (0, 60)], False)
-        self.level_display = PTexts([load_static("black")], (0, 210), load_font("M"), 1, [(0, 0)], True)
+        self.level_display = PTexts([load_static("black")], (0, 210), load_font("M"), [(0, 0)], True)
 
     def setup_canvas(self):
         self.canvas.add_element(MovingBackgroundElement([load_static("tall_rectangles_light")], (0, -1), (800, 600)), 0)

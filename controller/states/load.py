@@ -10,7 +10,7 @@ class Load(State):
 
     def __init__(self):
         super().__init__()
-        self.text_display = PTexts([load_static("black")], (0, 0), load_font("M"), 1, [(0, 220)], True)
+        self.text_display = PTexts([load_static("black")], (0, 0), load_font("M"), [(0, 220)], True)
 
     def setup_canvas(self):
         self.canvas.add_element(StaticBG([load_static("yellow")], (0, 0)), 0)
