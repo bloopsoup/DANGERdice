@@ -6,3 +6,4 @@ from .input_text import InputText
 from .moving_background import MovingBackgroundElement
 from .p_texts import PTexts
 from .static_background import StaticBG
+from .tooltip import Tooltip

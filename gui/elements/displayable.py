@@ -50,6 +50,10 @@ class Displayable:
         """Returns the offset to center the text relative to the reference."""
         return pygame.Vector2(self.horizontal_center_offset(text_surface), self.vertical_center_offset(text_surface))
 
+    def is_mouse_over_element(self) -> bool:
+        """Is the mouse over the element?"""
+        return self.reference.collidepoint(pygame.mouse.get_pos())
+
     def draw_border(self, surface: pygame.Surface):
         """Draws the border around the element."""
         if self.theme["border_size"] > 0:

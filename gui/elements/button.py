@@ -22,7 +22,7 @@ class Button(Interactive):
 
     def handle_event(self, event):
         """When button is clicked, play sfx and call on_event."""
-        if self.reference.collidepoint(pygame.mouse.get_pos()):
+        if self.is_mouse_over_element():
             self.hovered = True
             if event.type == pygame.MOUSEBUTTONDOWN and self.on_event is not None:
                 self.clicked = True

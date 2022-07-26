@@ -16,8 +16,8 @@ class Interactive(Displayable):
 
     def handle_event(self, event):
         """Trigger an event by clicking on the interactive element."""
-        if self.reference.collidepoint(pygame.mouse.get_pos()) and event.type == pygame.MOUSEBUTTONDOWN \
-                and self.clickable and self.on_event is not None:
+        if self.is_mouse_over_element() and event.type == pygame.MOUSEBUTTONDOWN and self.clickable \
+                and self.on_event is not None:
             self.on_event()
 
     def draw(self, surface: pygame.Surface):

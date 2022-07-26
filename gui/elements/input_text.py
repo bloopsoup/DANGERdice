@@ -33,7 +33,7 @@ class InputText(Interactive):
         """Clicking toggles the box which allows inputting text. ENTER to submit the text."""
         # Clicking on the input box
         if event.type == pygame.MOUSEBUTTONDOWN:
-            if self.reference.collidepoint(pygame.mouse.get_pos()):
+            if self.is_mouse_over_element():
                 self.active = not self.active
             else:
                 self.active = False
