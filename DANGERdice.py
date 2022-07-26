@@ -3,7 +3,7 @@ import pygame
 import sys
 from controller import Control
 from controller.states import Attributions, MainMenu, Intro, PlayerMenu, Inventory, Ending, GameOver, Load, Save, \
-    Loot, Shop, Preamble, Story, Tutorial, add_battle_states
+    Loot, Shop, Preamble, Story, Tutorial, Test, add_battle_states
 
 
 ###############
@@ -51,7 +51,8 @@ STATES = {
     "shop": Shop(),
     "story": Story(),
     "pre_tutorial": Preamble("aaron", 0, "tutorial"),
-    "tutorial": Tutorial()
+    "tutorial": Tutorial(),
+    "test": Test()
 }
 add_battle_states(STATES, [4, 4, 4, 4, 4, 1])
 
@@ -59,7 +60,7 @@ add_battle_states(STATES, [4, 4, 4, 4, 4, 1])
 #     RUN     #
 ###############
 
-GAME = Control("attributions", STATES, SURFACE)
+GAME = Control("test", STATES, SURFACE)
 GAME.main_loop()
 pygame.quit()
 sys.exit()
