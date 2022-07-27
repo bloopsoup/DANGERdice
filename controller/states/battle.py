@@ -6,7 +6,7 @@ from ..loader import load_static, load_some_sprites, load_all_sprites, load_font
 from ..themes import BUTTON_DEFAULT
 from entities.dice import DiceSet
 from entities.enemies import DamageHandler
-from gui.elements import StaticBG, MovingBackgroundElement, PTexts, Idle, Button
+from gui.elements import StaticBG, MovingBackgroundElement, PTexts, Idle, Button, Tooltip
 from gui.commands import TimerCommand, AnimationHandler
 
 
@@ -24,15 +24,12 @@ class Battle(State):
         self.damage_handler = DamageHandler([self.player, self.enemy])
 
         self.player_display = Idle(load_all_sprites("player"), (0, 0), None, load_idle_animation("player"))
-        self.player_s_display = PTexts(load_all_sprites("player"), (0, 0), load_font("SS"),
-                                       [(0, -100), (0, -75), (0, -50), (0, -25)], True)
+        self.player_s_display = PTexts(load_all_sprites("player"), (0, 0), load_font("SS"), [(0, -50), (0, -25)], True)
         self.enemy_display = Idle(load_all_sprites(enemy_name), (0, 0), None, load_idle_animation(enemy_name))
-        self.enemy_s_display = PTexts(load_all_sprites(enemy_name), (0, 0), load_font("SS"),
-                                      [(0, -100), (0, -75), (0, -50), (0, -25)], True)
+        self.enemy_s_display = PTexts(load_all_sprites(enemy_name), (0, 0), load_font("SS"), [(0, -50), (0, -25)], True)
         self.animation_handler = AnimationHandler(self.player_display, (60, 257), self.enemy_display, (740 - self.enemy_display.get_width(), 357 - self.enemy_display.get_height()), self.command_queue)
 
-        self.stat_display = PTexts([pygame.Surface((1, 1))], (38, 460), load_font("SS"),
-                                   [(0, 0), (0, 20), (0, 40), (0, 60)], False)
+        self.stat_display = PTexts([pygame.Surface((1, 1))], (38, 460), load_font("SS"), [(0, 0), (0, 20), (0, 40), (0, 60)], False)
         self.damage_display = PTexts([load_static("black")], (0, 0), load_font("SS"), [(50, 435), (370, 435)], False)
         self.reward_display = PTexts([load_static("black")], (0, 0), load_font("L"), [(0, 100)], True)
 
@@ -85,12 +82,27 @@ class Battle(State):
 
     def add_player_set_to_canvas(self):
         """Adds a player's or enemy's dice to the canvas."""
+        self.canvas.delete_group(2)
         preference = self.player.get_preference() if self.your_turn else self.enemy.get_preference()
         x_start = 375 if self.your_turn else 40
         for i, die_name in enumerate(preference):
             die_display = Idle(load_some_sprites(die_name), (x_start + (i * 100), 460),
                                lambda x=i: self.roll(x) if self.your_turn else None, load_idle_animation("square"))
             self.canvas.add_element(die_display, 2)
+
+    def add_status_icons_to_canvas(self):
+        """Adds a player's or enemy's status icons to the canvas."""
+        self.canvas.delete_group(4)
+        x_start, status = 40, self.damage_handler.get_status(0 if self.your_turn else 1)
+        if status.get_poison() > 0:
+            poison_icon = StaticBG([load_static("poison")], (x_start, 360))
+            poison_text = "{0} damage ending turn".format(status.get_poison())
+            self.canvas.add_element(Tooltip((x_start + 65, 360), {}, load_font("SS"), poison_text, poison_icon), 4)
+            x_start += 50
+        if status.get_weaken() > 1:
+            weaken_icon = StaticBG([load_static("weakened")], (x_start, 360))
+            weaken_text = "Damage reduced by {0}X".format(status.get_weaken())
+            self.canvas.add_element(Tooltip((x_start + 65, 360), {}, load_font("SS"), weaken_text, weaken_icon), 4)
 
     def switch_hud(self):
         """Switches the HUD for the turn player."""
@@ -100,8 +112,8 @@ class Battle(State):
         if self.your_turn:
             self.canvas.add_element(Button(load_some_sprites("attack"), (580, 370), BUTTON_DEFAULT, self.attack), 1)
 
-        self.canvas.delete_group(2)
         self.add_player_set_to_canvas()
+        self.add_status_icons_to_canvas()
 
         pos = (38, 460) if self.your_turn else (450, 460)
         self.stat_display.set_position(pygame.Vector2(pos))
@@ -120,13 +132,8 @@ class Battle(State):
         """Updates the text to reflect the latest state."""
         self.player_s_display.set_position(self.player_display.get_position())
         self.player_s_display.set_text(1, "{0} HP".format(self.player.get_health()))
-        self.player_s_display.set_text(2, "{0} PSN".format(self.damage_handler.get_status(0).get_poison()))
-        self.player_s_display.set_text(3, "{0}X WEAK".format(self.damage_handler.get_status(0).get_weaken()))
-
         self.enemy_s_display.set_position(self.enemy_display.get_position())
         self.enemy_s_display.set_text(1, "{0} HP".format(self.enemy.get_health()))
-        self.enemy_s_display.set_text(2, "{0} PSN".format(self.damage_handler.get_status(1).get_poison()))
-        self.enemy_s_display.set_text(3, "{0}X WEAK".format(self.damage_handler.get_status(1).get_weaken()))
 
         entity = self.player if self.your_turn else self.enemy
         self.stat_display.set_texts([entity.get_name(), "LVL: {0}".format(entity.get_level()),

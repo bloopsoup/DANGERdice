@@ -28,6 +28,8 @@ static_config = {
     "chest": "chest.png",
     "badmc": "badmc.png",
     "mouse": "mouse.png",
+    "poison": "poison_icon.png",
+    "weakened": "weakened_icon.png",
 
     "ground": "ground0.png",
     "bricks": "bricks.png",

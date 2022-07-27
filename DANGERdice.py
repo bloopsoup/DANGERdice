@@ -60,7 +60,7 @@ add_battle_states(STATES, [4, 4, 4, 4, 4, 1])
 #     RUN     #
 ###############
 
-GAME = Control("test", STATES, SURFACE)
+GAME = Control("attributions", STATES, SURFACE)
 GAME.main_loop()
 pygame.quit()
 sys.exit()
