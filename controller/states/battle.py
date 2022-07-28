@@ -95,14 +95,14 @@ class Battle(State):
         self.canvas.delete_group(4)
         x_start, status = 40, self.damage_handler.get_status(0 if self.your_turn else 1)
         if status.get_poison() > 0:
-            poison_icon = StaticBG([load_static("poison")], (x_start, 360))
+            poison_icon = StaticBG([load_static("poison")], (x_start, 390))
             poison_text = "{0} damage ending turn".format(status.get_poison())
-            self.canvas.add_element(Tooltip((x_start + 65, 360), {}, load_font("SS"), poison_text, poison_icon), 4)
-            x_start += 50
+            self.canvas.add_element(Tooltip((x_start, 365), {}, load_font("SS"), poison_text, poison_icon), 4)
+            x_start += 30
         if status.get_weaken() > 1:
-            weaken_icon = StaticBG([load_static("weakened")], (x_start, 360))
+            weaken_icon = StaticBG([load_static("weakened")], (x_start, 390))
             weaken_text = "Damage reduced by {0}X".format(status.get_weaken())
-            self.canvas.add_element(Tooltip((x_start + 65, 360), {}, load_font("SS"), weaken_text, weaken_icon), 4)
+            self.canvas.add_element(Tooltip((x_start, 365), {}, load_font("SS"), weaken_text, weaken_icon), 4)
 
     def switch_hud(self):
         """Switches the HUD for the turn player."""
