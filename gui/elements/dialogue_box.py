@@ -13,8 +13,7 @@ class DialogueBox(Interactive):
         self.font = font
         self.d_data = d_data
         self.active = False
-        self.display = ""
-        self.letter_idx = 0
+        self.lines = [[""]]
 
     def toggle_visibility(self):
         """Toggles visibility of the dialogue box."""
@@ -26,21 +25,37 @@ class DialogueBox(Interactive):
 
     def next_script(self) -> bool:
         """Moves to the next text and portrait and calls the current hook. Returns FALSE if there's no more content."""
-        self.display = ""
-        self.letter_idx = 0
+        self.lines = [[""]]
         self.d_data.call_hook()
         if not self.d_data.advance():
             self.toggle_visibility()
             return False
         return True
 
+    def line_overflows(self, line: list[str]) -> bool:
+        """Determines whether the line is past its boundaries."""
+        line_s = self.font.render(" ".join(line), True, (0, 0, 0))
+        return line_s.get_width() + self.theme["padding"][0] >= self.reference.width
+
     def add_letter(self):
         """Adds another letter from the script to the display text."""
-        char = self.d_data.get_text()[self.letter_idx]
-        if char != "`":
+        char, line = self.d_data.get_next_letter(), self.lines[-1]
+        if char == "~":
+            return
+        if char == " ":
+            line.append("")
+        elif char != "`":
             self.theme["play_sfx"]()
-            self.display += char
-        self.letter_idx += 1
+            line[-1] += char
+        if self.line_overflows(line):
+            self.lines.append([line.pop()])
+
+    def draw_words(self, surface: pygame.Surface):
+        """Displays the words with automatic wrapping."""
+        for i, line in enumerate(self.lines):
+            line_s = self.font.render(" ".join(line), True, (0, 0, 0))
+            pos = (self.reference.x + self.theme["padding"][0], self.reference.y + self.theme["padding"][1] + line_s.get_height() * i)
+            surface.blit(line_s, pos)
 
     def handle_event(self, event):
         """Clicking on the dialogue box goes to the next script. Calls on_event if there are no more scripts."""
@@ -52,20 +67,13 @@ class DialogueBox(Interactive):
         """Updating itself."""
         if not self.active:
             return
-        if self.letter_idx < len(self.d_data.get_text()):
-            self.dt_runner.dt_update(dt, self.add_letter)
+        self.dt_runner.dt_update(dt, self.add_letter)
 
     def draw(self, surface: pygame.Surface):
         """Displays itself onto surface."""
         if not self.active:
             return
-
         surface.blit(self.images[0], (self.pos.x, self.pos.y))
         self.draw_border(surface)
-        surface.blit(self.d_data.get_portrait(), (self.pos.x + self.theme["p_padding"][0],
-                                                  self.pos.y + self.theme["p_padding"][1]))
-
-        for i in range(self.theme["lines"]):
-            text_surface = self.font.render(self.display[i*self.theme["LPL"]:(i+1)*self.theme["LPL"]], True, (0, 0, 0))
-            surface.blit(text_surface, (self.reference.x + self.theme["padding"][0],
-                                        self.reference.y + (self.theme["padding"][1] * (i+1))))
+        surface.blit(self.d_data.get_portrait(), (self.pos.x + self.theme["p_padding"][0], self.pos.y + self.theme["p_padding"][1]))
+        self.draw_words(surface)
