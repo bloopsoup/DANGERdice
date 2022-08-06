@@ -99,7 +99,12 @@ MIGAHEXX_STATS = [
     {"level": randint(15, 17), "health_factor": 13, "money_factor": 120, "preference": ["basic5", "basic5", "multiplier3"]}
 ]
 
-PLAYER_STATS = [{"level": 1, "health_factor": 100, "money_factor": 100, "preference": ["basic1", "basic1"]}]
+PLAYER_STATS = [{"level": 1, "health_factor": 100, "money_factor": 25, "preference": ["basic1", "basic1"]},
+                {"level": 3, "health_factor": 35, "money_factor": 25, "preference": ["basic1", "basic2"]},
+                {"level": 5, "health_factor": 25, "money_factor": 25, "preference": ["basic2", "basic2"]},
+                {"level": 7, "health_factor": 20, "money_factor": 25, "preference": ["basic2", "basic3"]},
+                {"level": 9, "health_factor": 15, "money_factor": 25, "preference": ["basic3", "basic3"]},
+                {"level": 10, "health_factor": 16, "money_factor": 25, "preference": ["basic4", "basic4"]}]
 
 RIA_STATS = [
     {"level": randint(5, 6), "health_factor": 9, "money_factor": 40, "preference": ["basic1", "basic1", "heal1"]},

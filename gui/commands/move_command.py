@@ -13,6 +13,9 @@ class MoveCommand(Command):
         self.to_pos = pygame.Vector2(destination)
         self.velocity = self.calculate_velocity(pygame.Vector2(start), speed)
 
+    def __repr__(self):
+        return "MoveCommand to {0}".format(self.to_pos)
+
     def calculate_velocity(self, pos: pygame.Vector2, speed: tuple[float, float]) -> pygame.Vector2:
         """With pos -> to_pos, turns the speed into the appropriate velocity."""
         x = -speed[0] if pos.x > self.to_pos.x else speed[0]

@@ -8,6 +8,9 @@ class TimerCommand(Command):
         super().__init__(func)
         self.dt_runner.set_frames(frames)
 
+    def __repr__(self):
+        return "TimerCommand"
+
     def update(self, dt: float):
         """Waiting for time to pass."""
         if self.done:

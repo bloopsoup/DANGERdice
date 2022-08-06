@@ -1,3 +1,4 @@
+from collections import deque
 from .command import Command
 
 
@@ -5,7 +6,7 @@ class CommandQueue:
     """Manager for executing bundles of commands sequentially."""
 
     def __init__(self):
-        self.queue = []
+        self.queue = deque(maxlen=128)
 
     def add(self, commands: list[Command]):
         """Append a set of commands to the queue."""
@@ -28,4 +29,4 @@ class CommandQueue:
             if not command.is_done():
                 command.update(dt)
         if self.finished_commands():
-            self.queue.pop(0)
+            self.queue.popleft()
