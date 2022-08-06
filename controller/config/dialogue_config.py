@@ -120,6 +120,30 @@ BAGGINS_3 = [["You are on my rob list.", "Please reconsider."], [(0, 1), (1, 5)]
 BAGGINS_4 = [["More money", "more problems."], [(1, 0), (1, 3)]]
 BAGGINS_5 = [["It's you, `````the broke guy.", "I should end your rampage."], [(1, 0), (1, 3)]]
 
+SHOPKEEPER_0 = [["When are you going to restock the shop?", "Hmm... `````next Monday.", "You told me that last week."],
+                [(0, 3), (1, 0), (0, 4)]]
+SHOPKEEPER_1 = [["New [4X Basic Die] in stock!", "Get 'em while they're hot!"], [(1, 1), (1, 2)]]
+SHOPKEEPER_2 = [["Ah you...", "You're my best customer!", "No one else has been buying lately."],
+                [(1, 1), (1, 2), (1, 5)]]
+SHOPKEEPER_3 = [["...", "...", "Free dice?", "Hell no."], [(0, 0), (1, 0), (0, 1), (1, 4)]]
+SHOPKEEPER_4 = [["You wouldn't mind if I borrowed some gold, ````right?", "...", "I mind."], [(0, 0), (1, 0), (1, 3)]]
+SHOPKEEPER_5 = [["You've made a mistake", "and now your run is as good as dead!"], [(1, 3), (1, 4)]]
+
+MIGAHEXX_0 = [["[NAME ERROR]", "YOU ARE NOT DEFINED"], [(1, 0), (1, 0)]]
+MIGAHEXX_1 = [["[NAME ERROR]", "ENEMY NOT DEFINED"], [(1, 0), (1, 0)]]
+MIGAHEXX_2 = [["[VALUE ERROR]", "NOTHING OF VALUE DETECTED"], [(1, 0), (1, 0)]]
+MIGAHEXX_3 = [["[VALUE ERROR]", "CANNOT ADD DIE TO ENEMY OBJECT"], [(1, 0), (1, 0)]]
+MIGAHEXX_4 = [["[RUNTIME ERROR]", "YOU SHOULDN'T BE HERE"], [(1, 0), (1, 0)]]
+MIGAHEXX_5 = [["[RUNTIME ERROR]", "DUMP OUT ANOMALIES"], [(1, 0), (1, 0)]]
+
+PLAYER_0 = [["Greetings.", "I already don't like you."], [(0, 1), (1, 3)]]
+PLAYER_1 = [["...", "Why am I an enemy now?"], [(1, 6), (1, 3)]]
+PLAYER_2 = [["Now, it's time for me to beat", "your", "sass."], [(1, 3), (1, 4), (0, 1)]]
+PLAYER_3 = [["I have a proposition for you.", "End your run and let me take your place.", "...", "Wait for your turn."],
+            [(1, 0), (1, 1), (0, 6), (0, 3)]]
+PLAYER_4 = [["I had an inventory before", "but now I can't hold jack!"], [(1, 5), (1, 4)]]
+PLAYER_5 = [["Luck is not all it may seem...", "some stuff is just rigged."], [(1, 0), (1, 3)]]
+
 dialogue_config = {
     "aaron": [AARON_0, AARON_1, AARON_2, AARON_3, AARON_4, AARON_5],
     "arca": [ARCA_0, ARCA_1, ARCA_2, ARCA_3, ARCA_4, ARCA_5],
@@ -131,10 +155,10 @@ dialogue_config = {
     "dorita": [DORITA_0, DORITA_1, DORITA_2, DORITA_3, DORITA_4, DORITA_5],
     "ellie": [ELLIE_0, ELLIE_1, ELLIE_2, ELLIE_3, ELLIE_4, ELLIE_5],
     "kiran": [KIRAN_0, KIRAN_1, KIRAN_2, KIRAN_3, KIRAN_4, KIRAN_5],
-    "migahexx.xml": [],
-    "player": [],
+    "migahexx.xml": [MIGAHEXX_0, MIGAHEXX_1, MIGAHEXX_2, MIGAHEXX_3, MIGAHEXX_4, MIGAHEXX_5],
+    "player": [PLAYER_0, PLAYER_1, PLAYER_2, PLAYER_3, PLAYER_4, PLAYER_5],
     "ria": [RIA_0, RIA_1, RIA_2, RIA_3, RIA_4, RIA_5],
-    "shopkeeper": [],
+    "shopkeeper": [SHOPKEEPER_0, SHOPKEEPER_1, SHOPKEEPER_2, SHOPKEEPER_3, SHOPKEEPER_4, SHOPKEEPER_5],
     "sosh": [SOSH_0, SOSH_1, SOSH_2, SOSH_3, SOSH_4, SOSH_5],
     "square": [SQUARE_0, SQUARE_1, SQUARE_2, SQUARE_3, SQUARE_4, SQUARE_5],
     "wally": [WALLY_0, WALLY_1, WALLY_2, WALLY_3, WALLY_4, WALLY_5],

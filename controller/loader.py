@@ -85,8 +85,6 @@ def all_enemy_names() -> list[str]:
     enemy_names.remove("arca")
     enemy_names.remove("baduck")
     enemy_names.remove("migahexx.xml")
-    enemy_names.remove("player")
-    enemy_names.remove("shopkeeper")
     enemy_names.remove("square")
     return enemy_names
 
