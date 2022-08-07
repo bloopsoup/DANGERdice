@@ -1,5 +1,6 @@
 import sys
 import os
+import json
 
 
 def rp(path: str) -> str:
@@ -31,16 +32,16 @@ def path_sfx(path: str) -> str:
     return rp("assets/sfx/" + path)
 
 
-def save_data(data, file_name):
-    """Saves data in FILE."""
-    file = open(file_name, "w")
-    file.write(str(data))
-    file.close()
+def save_json(data: dict, file_name: str):
+    """Saves data as a JSON file to FILE_NAME."""
+    with open(file_name, "w") as file:
+        json.dump(data, file, indent=4)
 
 
-def load_data(file_name):
-    """Loads data from FILE. If it doesn't exist, return NONE."""
-    if os.path.exists(file_name):
-        file = open(file_name, "r")
-        return eval(file.read())
-    return None
+def load_json(file_name: str) -> dict:
+    """Loads data from JSON file FILE_NAME. If it doesn't exist, return an empty dictionary."""
+    try:
+        with open(file_name, "r") as file:
+            return json.load(file)
+    except FileNotFoundError:
+        return {}

@@ -1,5 +1,5 @@
 from .state import State
-from ..utils import music_handler
+from ..utils import music_handler, load_json
 from ..loader import load_static, load_some_sprites, load_font
 from ..themes import BUTTON_DEFAULT
 from gui.elements import StaticBG, PTexts, Button
@@ -22,4 +22,7 @@ class Load(State):
 
     def load_data(self):
         """Loads player save data. If there is no data, does nothing."""
-        self.to("player_menu")
+        data = load_json("player_data.json")
+        if data:
+            self.player.load_data(data)
+            self.to("player_menu")

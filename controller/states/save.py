@@ -1,5 +1,5 @@
 from .state import State
-from ..utils import music_handler
+from ..utils import music_handler, save_json
 from ..loader import load_static, load_some_sprites, load_font
 from ..themes import BUTTON_DEFAULT
 from gui.elements import StaticBG, PTexts, Button
@@ -22,4 +22,5 @@ class Save(State):
 
     def save_data(self):
         """Saves current player data."""
+        save_json(self.player.save_data(), "player_data.json")
         self.to("player_menu")
