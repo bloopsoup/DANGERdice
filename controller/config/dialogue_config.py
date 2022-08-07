@@ -129,12 +129,12 @@ SHOPKEEPER_3 = [["...", "...", "Free dice?", "Hell no."], [(0, 0), (1, 0), (0, 1
 SHOPKEEPER_4 = [["You wouldn't mind if I borrowed some gold, ````right?", "...", "I mind."], [(0, 0), (1, 0), (1, 3)]]
 SHOPKEEPER_5 = [["You've made a mistake", "and now your run is as good as dead!"], [(1, 3), (1, 4)]]
 
-MIGAHEXX_0 = [["[NAME ERROR]", "YOU ARE NOT DEFINED"], [(1, 0), (1, 0)]]
-MIGAHEXX_1 = [["[NAME ERROR]", "ENEMY NOT DEFINED"], [(1, 0), (1, 0)]]
-MIGAHEXX_2 = [["[VALUE ERROR]", "NOTHING OF VALUE DETECTED"], [(1, 0), (1, 0)]]
-MIGAHEXX_3 = [["[VALUE ERROR]", "CANNOT ADD DIE TO ENEMY OBJECT"], [(1, 0), (1, 0)]]
-MIGAHEXX_4 = [["[RUNTIME ERROR]", "YOU SHOULDN'T BE HERE"], [(1, 0), (1, 0)]]
-MIGAHEXX_5 = [["[RUNTIME ERROR]", "DUMP OUT ANOMALIES"], [(1, 0), (1, 0)]]
+BUGGI_0 = [["[NAME ERROR]", "YOU ARE NOT DEFINED"], [(1, 0), (1, 0)]]
+BUGGI_1 = [["[NAME ERROR]", "ENEMY NOT DEFINED"], [(1, 0), (1, 0)]]
+BUGGI_2 = [["[VALUE ERROR]", "NOTHING OF VALUE DETECTED"], [(1, 0), (1, 0)]]
+BUGGI_3 = [["[VALUE ERROR]", "CANNOT ADD DIE TO ENEMY OBJECT"], [(1, 0), (1, 0)]]
+BUGGI_4 = [["[RUNTIME ERROR]", "YOU SHOULDN'T BE HERE"], [(1, 0), (1, 0)]]
+BUGGI_5 = [["[RUNTIME ERROR]", "DUMP OUT ANOMALIES"], [(1, 0), (1, 0)]]
 
 PLAYER_0 = [["Greetings.", "I already don't like you."], [(0, 1), (1, 3)]]
 PLAYER_1 = [["...", "Why am I an enemy now?"], [(1, 6), (1, 3)]]
@@ -149,13 +149,13 @@ dialogue_config = {
     "arca": [ARCA_0, ARCA_1, ARCA_2, ARCA_3, ARCA_4, ARCA_5],
     "baduck": [BADUCK_0, BADUCK_1, BADUCK_2, BADUCK_3, BADUCK_4, BADUCK_5],
     "baggins": [BAGGINS_0, BAGGINS_1, BAGGINS_2, BAGGINS_3, BAGGINS_4, BAGGINS_5],
+    "buggi": [BUGGI_0, BUGGI_1, BUGGI_2, BUGGI_3, BUGGI_4, BUGGI_5],
     "bursa": [BURSA_0, BURSA_1, BURSA_2, BURSA_3, BURSA_4, BURSA_5],
     "cena": [CENA_0, CENA_1, CENA_2, CENA_3, CENA_4, CENA_5],
     "connor": [CONNOR_0, CONNOR_1, CONNOR_2, CONNOR_3, CONNOR_4, CONNOR_5],
     "dorita": [DORITA_0, DORITA_1, DORITA_2, DORITA_3, DORITA_4, DORITA_5],
     "ellie": [ELLIE_0, ELLIE_1, ELLIE_2, ELLIE_3, ELLIE_4, ELLIE_5],
     "kiran": [KIRAN_0, KIRAN_1, KIRAN_2, KIRAN_3, KIRAN_4, KIRAN_5],
-    "migahexx.xml": [MIGAHEXX_0, MIGAHEXX_1, MIGAHEXX_2, MIGAHEXX_3, MIGAHEXX_4, MIGAHEXX_5],
     "player": [PLAYER_0, PLAYER_1, PLAYER_2, PLAYER_3, PLAYER_4, PLAYER_5],
     "ria": [RIA_0, RIA_1, RIA_2, RIA_3, RIA_4, RIA_5],
     "shopkeeper": [SHOPKEEPER_0, SHOPKEEPER_1, SHOPKEEPER_2, SHOPKEEPER_3, SHOPKEEPER_4, SHOPKEEPER_5],

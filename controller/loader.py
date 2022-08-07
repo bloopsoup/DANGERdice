@@ -82,10 +82,6 @@ def random_die_name() -> str:
 def all_enemy_names() -> list[str]:
     """Gets a list of enemy names."""
     enemy_names = list(enemy_config.keys())
-    enemy_names.remove("arca")
-    enemy_names.remove("baduck")
-    enemy_names.remove("migahexx.xml")
-    enemy_names.remove("square")
     return enemy_names
 
 

@@ -51,7 +51,7 @@ KIRAN_IDLE = [[[1, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 3, 3, 3, 3, 3, 3, 2, 1, 0
                [9, 10, 10, 10, 10, 10, 10, 11, 11, 11, 10, 10, 10, 10, 10, 9, 0, 0, 0],
                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]], 0.05]
 
-MIGAHEXX_IDLE = [[[0, 0, 0, 0, 1, 2, 3, 4, 4, 3, 2, 1, 0, 0, 0, 0],
+BUGGI_IDLE = [[[0, 0, 0, 0, 1, 2, 3, 4, 4, 3, 2, 1, 0, 0, 0, 0],
                   [0, 0, 0, 0, 5, 6, 7, 7, 7, 6, 6, 6, 6, 5, 5, 5, 6, 6, 0, 0, 0],
                   [0, 0, 8, 9, 10, 11, 11, 11, 10, 9, 8, 0, 0, 5, 6, 7, 6, 5, 0],
                   [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]], 0.001]
@@ -101,13 +101,13 @@ idle_animation_config = {
     "arca": ARCA_IDLE,
     "baduck": BADUCK_IDLE,
     "baggins": BAGGINS_IDLE,
+    "buggi": BUGGI_IDLE,
     "bursa": BURSA_IDLE,
     "cena": CENA_IDLE,
     "connor": CONNOR_IDLE,
     "dorita": DORITA_IDLE,
     "ellie": ELLIE_IDLE,
     "kiran": KIRAN_IDLE,
-    "migahexx.xml": MIGAHEXX_IDLE,
     "player": PLAYER_IDLE,
     "ria": RIA_IDLE,
     "shopkeeper": SHOPKEEPER_IDLE,

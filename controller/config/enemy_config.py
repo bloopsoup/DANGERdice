@@ -90,7 +90,7 @@ KIRAN_STATS = [
     {"level": randint(15, 17), "health_factor": 15, "money_factor": 85, "preference": ["basic5", "basic5", "divider3", "multiplier3"]}
 ]
 
-MIGAHEXX_STATS = [
+BUGGI_STATS = [
     {"level": randint(5, 7), "health_factor": 6, "money_factor": 55, "preference": ["basic1", "multiplier1"]},
     {"level": randint(6, 8), "health_factor": 7, "money_factor": 70, "preference": ["basic2", "multiplier2"]},
     {"level": randint(8, 11), "health_factor": 8, "money_factor": 80, "preference": ["basic2", "basic2", "multiplier2"]},
@@ -165,13 +165,13 @@ enemy_config = {
     "arca": ARCA_STATS,
     "baduck": BADUCK_STATS,
     "baggins": BAGGINS_STATS,
+    "buggi": BUGGI_STATS,
     "bursa": BURSA_STATS,
     "cena": CENA_STATS,
     "connor": CONNOR_STATS,
     "dorita": DORITA_STATS,
     "ellie": ELLIE_STATS,
     "kiran": KIRAN_STATS,
-    "migahexx.xml": MIGAHEXX_STATS,
     "player": PLAYER_STATS,
     "ria": RIA_STATS,
     "shopkeeper": SHOPKEEPER_STATS,
