@@ -20,8 +20,8 @@ Dice | Information | Safe?
 Basic **n**X | Builds up damage (DMG) by the value you roll times **n**. | no
 Poison **n**X | Builds up poison damage (PSN) by the value you roll times **n**. | no
 Heal **n**X | Builds up healing (HEAL) for yourself by the value you roll times **n**. Healing restores your health and reduces your poison counter. | yes
-Divider | Makes your attack a weakening attack. The value you roll determines the factor of weakening. Rolling a divider die multiple times will overwrite this factor, so these should be rolled once. | no
-Multiplier | Multiplies your current damage (DMG) by the value you roll. | no
+Divider | Makes your attack a weakening attack. The value you roll determines the factor of weakening. Rolling a divider die multiple times will increase the factor. | yes
+Multiplier | Multiplies your current damage (DMG) by the value you roll. | yes
 
 A **safe** die will never forfeit your turn, no matter what value you roll.
 
@@ -29,13 +29,20 @@ Remember that you must deliberately end your turn in order to apply DMG, PSN, HE
 
 ## On Poison
 
-When you attack with poison damage (PSN), your enemy will be poisoned for that amount of poison damage. This is indicated by the purple number displayed above their character (poison counter). 
+When you attack with poison damage (PSN), your enemy will be poisoned for that amount of poison damage.
 - Players that are poisoned will take damage equal to the poison they have at _the end of their turn_.
 - Their poison counter is decreased by 1 every time they take poison damage until it reaches zero.
 - If you kill the enemy while you're poisoned, you are guaranteed to not die from poison damage after it's applied.
 
 ## On Divider
 
-When you make a weakening attack, your enemy will be weakened on their turn by the weakening factor. This will be indicated by the WEAKENED text displayed above their character. Note that this status only lasts for one turn, even if that turn was ended with a rolled _one_.
+When you make a weakening attack, your enemy will be weakened on their turn by the weakening factor. Note that this status only lasts for one turn, even if that turn was ended with a rolled _one_.
 - When weakened, the actual DMG a player will deal in their attack will be the current DMG they built up divided by the weakening factor.
-- The DMG display will show you the actual DMG the player will do.
+- The DMG display will show you the DMG before it becomes divided.
+
+# Attributions
+
+Media | Author | Source
+----- | ------ | ------
+shatter.mp3 | Mike Koenig (Attribution 3.0) | https://soundbible.com/1761-Glass-Breaking.html#
+catapult.mp3 (renamed to charge.mp3) | BlastwaveFx.com (Attribution 3.0) | https://soundbible.com/653-Catapult.html#
