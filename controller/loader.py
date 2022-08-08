@@ -6,6 +6,7 @@ from .config import dice_config, enemy_config, fonts_config, idle_animation_conf
 from gui.utils import Spritesheet, IndexCycler, DialogueData
 from entities.enemies import Enemy, Player
 from entities.dice import Die, DiceSet
+from entities.shop import ShopInventory
 
 
 loaded_spritesheets = {}
@@ -97,6 +98,13 @@ def create_dice_set(preference: list[str]) -> DiceSet:
     return DiceSet([create_die(die_name) for die_name in preference])
 
 
+def create_shop_inventory() -> ShopInventory:
+    """Creates the inventory for the shop."""
+    return ShopInventory([["basic2", "poison1", "heal1"], ["basic2", "poison2", "heal1"],
+                          ["basic3", "poison2", "heal2"], ["basic3", "poison3", "heal2"],
+                          ["basic4", "divider1", "heal2"], ["basic5", "divider1", "multiplier1"]], 4)
+
+
 def create_enemy(enemy: str, tier: int) -> Enemy:
     """Creates an enemy."""
     assert enemy in enemy_config, "{0} is not a valid enemy".format(enemy)
@@ -109,7 +117,7 @@ def create_player() -> Player:
     """Creates a player."""
     player = Player()
     for _ in range(4):
-        player.append_to_preference("basic1")
+        player.append_to_preference("basic5")
     for _ in range(13):
         player.append_to_inventory("basic1")
     return player

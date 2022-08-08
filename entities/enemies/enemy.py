@@ -85,12 +85,3 @@ class Enemy:
     def revive(self):
         """Revives the enemy."""
         self.dead = False
-
-    def reset_to_base_stats(self):
-        """Resets the enemy to base stats."""
-        self.level = 0
-        self.max_health = 100
-        self.restore_health()
-        self.money = 0
-        self.preference = []
-        self.revive()

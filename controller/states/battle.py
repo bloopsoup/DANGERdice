@@ -207,6 +207,7 @@ class Battle(State):
         self.reward_display.set_text(0, msg)
         music_handler.play_sfx(load_sound("good", True))
         self.player.advance_stage()
+        self.shop_inventory.attempt_restock()
         self.command_queue.add([TimerCommand(2, lambda: self.to(destination))])
 
     def switch_turn(self):

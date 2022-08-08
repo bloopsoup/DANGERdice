@@ -52,14 +52,7 @@ class Player(Enemy):
         self.restore_health()
         return True
 
-    def reset_player(self):
-        """Resets the player to basic stats."""
-        self.reset_to_base_stats()
-        self.current_stage = self.starting_stage[:]
-        self.inventory = []
-        self.exp = 0
-
-    def load_data(self, data: dict):
+    def import_data(self, data: dict):
         """Reads in a dictionary of player data and sets the player's attributes."""
         self.name = data["name"]
         self.level = data["level"]
@@ -71,7 +64,7 @@ class Player(Enemy):
         self.current_stage = data["current_stage"]
         self.exp = data["exp"]
 
-    def save_data(self) -> dict:
+    def export_data(self) -> dict:
         """Returns a dictionary aggregating player data."""
         return {
             "name": self.name,

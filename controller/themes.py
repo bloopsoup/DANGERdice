@@ -18,16 +18,12 @@ DIALOGUE_DEFAULT = {
     "play_sfx": lambda: music_handler.play_sfx(path_sfx("text.mp3")),
     "border_size": 4,
     "padding": (140, 35),
-    "p_padding": (20, 45),
-    "LPL": 27,
-    "lines": 3
+    "p_padding": (20, 45)
 }
 
 DIALOGUE_SMALL = {
     "play_sfx": lambda: music_handler.play_sfx(path_sfx("text.mp3")),
     "border_size": 4,
     "padding": (10, 20),
-    "p_padding": (-110, -10),
-    "LPL": 37,
-    "lines": 1
+    "p_padding": (-110, -10)
 }

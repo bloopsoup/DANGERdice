@@ -13,7 +13,6 @@ class Shop(State):
     def __init__(self):
         super().__init__()
         self.selected_index, self.active = -1, True
-        self.inventory = ["basic1", "basic2", "basic3"]
         self.keeper_display = Idle(load_all_sprites("shopkeeper"), (650, 420), None, load_idle_animation("shopkeeper"))
         self.gold_display = PTexts([load_static("black")], (0, 0), load_font("M"), [(100, 170)], False)
         self.info_display = PTexts([load_static("black")], (0, 0), load_font("M"), [(0, 476), (0, 544)], True)
@@ -38,7 +37,7 @@ class Shop(State):
 
     def add_dice_to_canvas(self):
         """Adds dice from the shop's inventory to the canvas. If the die was sold, replace it with a gray die."""
-        for i, die_name in enumerate(self.inventory):
+        for i, die_name in enumerate(self.shop_inventory.get_inventory()):
             if not len(die_name):
                 die_name = "placeholder_die"
             die_display = Idle(load_some_sprites(die_name), (104 + (i * 253), 290), lambda x=i: self.select(x),
@@ -53,7 +52,7 @@ class Shop(State):
 
     def show_die_info(self):
         """Shows the currently selected die's info."""
-        die = create_die(self.inventory[self.selected_index])
+        die = create_die(self.shop_inventory.get_item(self.selected_index))
         self.info_display.set_texts(["{0} costing {1} gold.".format(die.get_name(), die.get_price()), ""])
 
     def show_die_animated(self, selected: bool):
@@ -63,7 +62,7 @@ class Shop(State):
 
     def select(self, i: int):
         """Select a die. Can't select if HUD is disabled or the die is grayed out."""
-        if not self.active or not len(self.inventory[i]):
+        if not self.active or not len(self.shop_inventory.get_item(i)):
             return
         self.deselect()
         self.selected_index = i
@@ -100,10 +99,10 @@ class Shop(State):
 
     def buy(self):
         """Purchases the selected die."""
-        die_name = self.inventory[self.selected_index]
+        die_name = self.shop_inventory.get_item(self.selected_index)
         die = create_die(die_name)
         if die.get_price() <= self.player.get_money():
-            self.inventory[self.selected_index] = ""
+            self.shop_inventory.consume_item(self.selected_index)
             self.player.subtract_money(die.get_price())
             self.player.append_to_inventory(die_name)
             self.gold_display.set_text(0, "Gold: {0}".format(self.player.get_money()))

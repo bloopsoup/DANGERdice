@@ -22,5 +22,5 @@ class Save(State):
 
     def save_data(self):
         """Saves current player data."""
-        save_json(self.player.save_data(), "player_data.json")
+        save_json({"player": self.player.export_data(), "shop": self.shop_inventory.export_data()}, "game_data.json")
         self.to("player_menu")

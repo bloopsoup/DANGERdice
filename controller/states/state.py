@@ -1,5 +1,5 @@
 import pygame
-from ..loader import create_player
+from ..loader import create_player, create_shop_inventory
 from gui import Canvas
 from gui.commands import CommandQueue
 
@@ -8,6 +8,7 @@ class State:
     """A state abstract class."""
 
     player = create_player()
+    shop_inventory = create_shop_inventory()
 
     def __init__(self):
         self.done = False

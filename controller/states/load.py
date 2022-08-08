@@ -22,7 +22,8 @@ class Load(State):
 
     def load_data(self):
         """Loads player save data. If there is no data, does nothing."""
-        data = load_json("player_data.json")
+        data = load_json("game_data.json")
         if data:
-            self.player.load_data(data)
+            self.player.import_data(data["player"])
+            self.shop_inventory.import_data(data["shop"])
             self.to("player_menu")

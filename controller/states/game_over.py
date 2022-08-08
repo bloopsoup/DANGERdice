@@ -1,6 +1,7 @@
 from .state import State
 from ..utils import music_handler
-from ..loader import load_static, load_sound, load_some_sprites, load_all_sprites, load_idle_animation
+from ..loader import load_static, load_sound, load_some_sprites, load_all_sprites, load_idle_animation, create_player, \
+    create_shop_inventory
 from ..themes import BUTTON_DEFAULT
 from gui.elements import StaticBG, MovingBackgroundElement, Button, Idle
 
@@ -24,5 +25,7 @@ class GameOver(State):
         music_handler.change(load_sound("menu", False))
 
     def return_menu(self):
-        """Goes back to the main menu."""
+        """Goes back to the main menu and resets the stats."""
+        State.player = create_player()
+        State.shop_inventory = create_shop_inventory()
         self.to("main_menu")
