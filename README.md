@@ -39,10 +39,3 @@ When you attack with poison damage (PSN), your enemy will be poisoned for that a
 When you make a weakening attack, your enemy will be weakened on their turn by the weakening factor. Note that this status only lasts for one turn, even if that turn was ended with a rolled _one_.
 - When weakened, the actual DMG a player will deal in their attack will be the current DMG they built up divided by the weakening factor.
 - The DMG display will show you the DMG before it becomes divided.
-
-# Attributions
-
-Media | Author | Source
------ | ------ | ------
-shatter.mp3 | Mike Koenig (Attribution 3.0) | https://soundbible.com/1761-Glass-Breaking.html#
-catapult.mp3 (renamed to charge.mp3) | BlastwaveFx.com (Attribution 3.0) | https://soundbible.com/653-Catapult.html#
