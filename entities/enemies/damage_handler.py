@@ -1,3 +1,4 @@
+from random import randint
 from .enemy import Enemy
 from .status import Status
 
@@ -64,6 +65,19 @@ class DamageHandler:
         """Is there status damage present in the ith tracked entity?"""
         status = self.tracked[i][1]
         return status.get_poison() > 0 or status.get_weaken() > 1
+
+    def reset_bless(self, i: int):
+        """Sets the bless of the ith tracked entity to a random number."""
+        status = self.tracked[i][1]
+        status.set_blessed(randint(1, 3))
+
+    def consume_bless(self, i: int) -> bool:
+        """Returns True if there is bless present in the ith tracked entity and decrements it."""
+        status = self.tracked[i][1]
+        if status.get_blessed() > 0:
+            status.set_blessed(status.get_blessed() - 1)
+            return True
+        return False
 
     def apply_benefits(self, i: int):
         """Applies benefits to the ith tracked entity."""

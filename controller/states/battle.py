@@ -149,7 +149,7 @@ class Battle(State):
         if not self.active:
             return
         dice_set = self.player_set if self.your_turn else self.enemy_set
-        amount, damage_type = dice_set.roll_die(i, False)
+        amount, damage_type = dice_set.roll_die(i, self.damage_handler.consume_bless(0 if self.your_turn else 1))
         self.damage_handler.add_damage(amount, damage_type)
         self.direct_turn_flow(amount, dice_set)
 
@@ -196,6 +196,8 @@ class Battle(State):
         """Applies damage to the turn player before ending the turn."""
         self.canvas.delete_group("notice")
         status_idx = 0 if self.your_turn else 1
+        if status_idx == 0:
+            self.damage_handler.reset_bless(status_idx)
         if self.damage_handler.has_status_damage(status_idx):
             self.damage_handler.apply_s_damage(status_idx)
             music_handler.play_sfx(load_sfx("poison"))
@@ -210,6 +212,9 @@ class Battle(State):
         self.reward_display.set_text(0, msg)
         music_handler.play_sfx(load_sfx("good"))
         self.player.advance_stage()
+        self.player.add_money(self.enemy.get_money())
+        self.player.gain_exp(self.enemy.get_level())
+        self.player.try_level_up()
         self.shop_inventory.attempt_restock()
         self.command_queue.add([TimerCommand(2, lambda: self.to(destination))])
 
