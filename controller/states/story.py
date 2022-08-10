@@ -22,18 +22,18 @@ class Story(State):
                                         lambda: self.to("pre_tutorial"), load_font("M"), self.load_story_dialogue())
 
     def setup_canvas(self):
-        self.canvas.add_element(StaticBG([load_static("casino")], (0, 0)), 0)
-        self.canvas.add_element(MovingBackgroundElement([load_static("thin_clear_clouds")], (-1, 0), (800, 600)), 0)
-        self.canvas.add_element(StaticBG([load_static("ground")], (0, 0)), 0)
-        self.canvas.add_element(self.text_display, 0)
+        self.canvas.add_element(StaticBG([load_static("casino")], (0, 0)), "")
+        self.canvas.add_element(MovingBackgroundElement([load_static("thin_clear_clouds")], (-1, 0), (800, 600)), "")
+        self.canvas.add_element(StaticBG([load_static("ground")], (0, 0)), "")
+        self.canvas.add_element(self.text_display, "")
         self.text_display.set_text(0, "")
-        self.canvas.add_element(self.player_display, 0)
+        self.canvas.add_element(self.player_display, "")
         self.player_display.set_position(pygame.Vector2(-100, 257))
-        self.canvas.add_element(self.aaron_display, 0)
+        self.canvas.add_element(self.aaron_display, "")
         self.aaron_display.set_position(pygame.Vector2(900, 237))
-        self.canvas.add_element(self.dorita_display, 0)
+        self.canvas.add_element(self.dorita_display, "")
         self.dorita_display.set_position(pygame.Vector2(900, 227))
-        self.canvas.add_element(self.dialogue_box, 0)
+        self.canvas.add_element(self.dialogue_box, "")
         self.dialogue_box.reset_scripts()
 
     def setup_commands(self):
@@ -78,7 +78,7 @@ class Story(State):
     def enter_transition(self):
         """Show a time transition."""
         self.dialogue_box.toggle_visibility()
-        self.canvas.insert_element(StaticBG([load_static("black")], (0, 0)), 1, 3)
+        self.canvas.insert_element(StaticBG([load_static("black")], (0, 0)), "black_screen", 3)
         self.text_display.set_text(0, "2 HOURS LATER")
         self.player_display.set_position(pygame.Vector2(-100, 257))
         self.dorita_display.set_position(pygame.Vector2(900, 227))
@@ -87,7 +87,7 @@ class Story(State):
 
     def exit_transition(self):
         """Exit the time transition."""
-        self.canvas.delete_group(1)
+        self.canvas.delete_group("black_screen")
         self.text_display.set_text(0, "")
         self.aaron_display.set_position(pygame.Vector2(300, 237))
         self.command_queue.add([MoveCommand(self.aaron_display, (5, 0), (300, 237), (1000, 237), self.enter_player)])

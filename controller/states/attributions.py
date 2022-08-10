@@ -14,10 +14,10 @@ class Attributions(State):
         self.text_display.set_color((255, 255, 255))
 
     def setup_canvas(self):
-        self.canvas.add_element(StaticBG([load_static("black")], (0, 0)), 0)
-        self.canvas.add_element(self.text_display, 0)
+        self.canvas.add_element(StaticBG([load_static("black")], (0, 0)), "")
+        self.canvas.add_element(self.text_display, "")
         self.text_display.set_text(0, "A BMB GAME")
-        self.canvas.add_element(StaticBG([load_static("badmc")], (350, 280)), 1)
+        self.canvas.add_element(StaticBG([load_static("badmc")], (350, 280)), "logo")
 
     def setup_commands(self):
         self.command_queue.add([TimerCommand(1.2, self.remove_face)])
@@ -29,5 +29,5 @@ class Attributions(State):
     def remove_face(self):
         """Removes the face, changes the text, and then plays a sound."""
         self.text_display.set_text(0, "Inspired by TinyDiceDungeons")
-        self.canvas.delete_group(1)
+        self.canvas.delete_group("logo")
         music_handler.play_sfx(load_sfx("one"))

@@ -13,11 +13,11 @@ class Save(State):
         self.text_display = PTexts([load_static("black")], (0, 0), load_font("M"), [(0, 220)], True)
 
     def setup_canvas(self):
-        self.canvas.add_element(StaticBG([load_static("yellow")], (0, 0)), 0)
-        self.canvas.add_element(Button(load_some_sprites("confirm"), (320, 280), BUTTON_DEFAULT, self.save_data), 0)
-        self.canvas.add_element(Button(load_some_sprites("cancel"), (410, 280), BUTTON_DEFAULT, self.back), 0)
-        self.canvas.add_element(Button(load_some_sprites("music"), (730, 530), BUTTON_DEFAULT, music_handler.toggle), 0)
-        self.canvas.add_element(self.text_display, 0)
+        self.canvas.add_element(StaticBG([load_static("yellow")], (0, 0)), "")
+        self.canvas.add_element(Button(load_some_sprites("confirm"), (320, 280), BUTTON_DEFAULT, self.save_data), "")
+        self.canvas.add_element(Button(load_some_sprites("cancel"), (410, 280), BUTTON_DEFAULT, self.back), "")
+        self.canvas.add_element(Button(load_some_sprites("music"), (730, 530), BUTTON_DEFAULT, music_handler.toggle), "")
+        self.canvas.add_element(self.text_display, "")
         self.text_display.set_text(0, "Save current data?")
 
     def save_data(self):

@@ -17,10 +17,10 @@ class Ending(State):
         self.text_display.set_color((255, 255, 255))
 
     def setup_canvas(self):
-        self.canvas.add_element(StaticBG([load_static("black")], (0, 0)), 0)
-        self.canvas.add_element(self.text_display, 0)
+        self.canvas.add_element(StaticBG([load_static("black")], (0, 0)), "")
+        self.canvas.add_element(self.text_display, "")
         self.text_display.set_text(0, "AND AFTER THAT FIGHT")
-        self.canvas.add_element(self.player_display, 0)
+        self.canvas.add_element(self.player_display, "")
         self.player_display.set_position(pygame.Vector2(-100, 472))
 
     def setup_commands(self):

@@ -1,8 +1,8 @@
 import pygame
 from .state import State
 from ..utils import music_handler
-from ..loader import load_static, load_some_sprites, load_all_sprites, load_font, load_sfx, load_song, \
-    random_battle_song, load_idle_animation, create_dice_set, create_enemy
+from ..loader import load_static, load_some_sprites, load_all_sprites, load_font, load_sfx, random_battle_song, \
+    load_idle_animation, create_dice_set, create_enemy
 from ..themes import BUTTON_DEFAULT
 from entities.dice import DiceSet
 from entities.enemies import DamageHandler
@@ -37,26 +37,26 @@ class Battle(State):
         self.player_set = create_dice_set(self.player.get_preference())
 
     def setup_canvas(self):
-        self.canvas.add_element(StaticBG([load_static("hills")], (0, 0)), 0)
-        self.canvas.add_element(MovingBackgroundElement([load_static("thick_clouds")], (-1, 0), (800, 600)), 0)
-        self.canvas.add_element(StaticBG([load_static("player_hud")], (0, 0)), 1)
+        self.canvas.add_element(StaticBG([load_static("hills")], (0, 0)), "")
+        self.canvas.add_element(MovingBackgroundElement([load_static("thick_clouds")], (-1, 0), (800, 600)), "")
+        self.canvas.add_element(StaticBG([load_static("player_hud")], (0, 0)), "hud")
 
-        self.canvas.add_element(self.player_display, 0)
+        self.canvas.add_element(self.player_display, "")
         self.player_display.set_position(pygame.Vector2(-300, 257))
-        self.canvas.add_element(self.player_s_display, 0)
+        self.canvas.add_element(self.player_s_display, "")
         self.player_s_display.set_text(0, self.player.get_name())
-        self.canvas.add_element(self.enemy_display, 0)
+        self.canvas.add_element(self.enemy_display, "")
         self.enemy_display.set_position(pygame.Vector2(1000, 357 - self.enemy_display.get_height()))
-        self.canvas.add_element(self.enemy_s_display, 0)
+        self.canvas.add_element(self.enemy_s_display, "")
         self.enemy_s_display.set_text(0, self.enemy.get_name())
-        self.canvas.add_element(self.stat_display, 0)
-        self.canvas.add_element(self.damage_display, 0)
+        self.canvas.add_element(self.stat_display, "")
+        self.canvas.add_element(self.damage_display, "")
         self.damage_display.set_texts(["", str(self.damage_handler)])
-        self.canvas.add_element(self.reward_display, 0)
+        self.canvas.add_element(self.reward_display, "")
         self.reward_display.set_text(0, "")
 
-        self.canvas.add_element(Button(load_some_sprites("music"), (730, 0), BUTTON_DEFAULT, music_handler.toggle), 0)
-        self.canvas.add_element(Button(load_some_sprites("attack"), (580, 370), BUTTON_DEFAULT, self.attack), 1)
+        self.canvas.add_element(Button(load_some_sprites("music"), (730, 0), BUTTON_DEFAULT, music_handler.toggle), "")
+        self.canvas.add_element(Button(load_some_sprites("attack"), (580, 370), BUTTON_DEFAULT, self.attack), "hud")
         self.add_player_set_to_canvas()
 
     def setup_commands(self):
@@ -85,35 +85,35 @@ class Battle(State):
 
     def add_player_set_to_canvas(self):
         """Adds a player's or enemy's dice to the canvas."""
-        self.canvas.delete_group(2)
+        self.canvas.delete_group("dice")
         preference = self.player.get_preference() if self.your_turn else self.enemy.get_preference()
         x_start = 375 if self.your_turn else 40
         for i, die_name in enumerate(preference):
             die_display = Idle(load_some_sprites(die_name), (x_start + (i * 100), 460),
                                lambda x=i: self.roll(x) if self.your_turn else None, load_idle_animation("square"))
-            self.canvas.add_element(die_display, 2)
+            self.canvas.add_element(die_display, "dice")
 
     def add_status_icons_to_canvas(self):
         """Adds a player's or enemy's status icons to the canvas."""
-        self.canvas.delete_group(4)
+        self.canvas.delete_group("status")
         x_start, status = 40, self.damage_handler.get_status(0 if self.your_turn else 1)
         if status.get_poison() > 0:
             poison_icon = StaticBG([load_static("poison")], (x_start, 390))
             poison_text = "{0} damage ending turn".format(status.get_poison())
-            self.canvas.add_element(Tooltip((x_start, 365), {}, load_font("SS"), poison_text, poison_icon), 4)
+            self.canvas.add_element(Tooltip((x_start, 365), {}, load_font("SS"), poison_text, poison_icon), "status")
             x_start += 30
         if status.get_weaken() > 1:
             weaken_icon = StaticBG([load_static("weakened")], (x_start, 390))
             weaken_text = "Damage reduced by {0}X".format(status.get_weaken())
-            self.canvas.add_element(Tooltip((x_start, 365), {}, load_font("SS"), weaken_text, weaken_icon), 4)
+            self.canvas.add_element(Tooltip((x_start, 365), {}, load_font("SS"), weaken_text, weaken_icon), "status")
 
     def switch_hud(self):
         """Switches the HUD for the turn player."""
-        self.canvas.delete_group(1)
+        self.canvas.delete_group("hud")
         hud = "player_hud" if self.your_turn else "enemy_hud"
-        self.canvas.insert_element(StaticBG([load_static(hud)], (0, 0)), 1, 2)
+        self.canvas.insert_element(StaticBG([load_static(hud)], (0, 0)), "hud", 2)
         if self.your_turn:
-            self.canvas.add_element(Button(load_some_sprites("attack"), (580, 370), BUTTON_DEFAULT, self.attack), 1)
+            self.canvas.add_element(Button(load_some_sprites("attack"), (580, 370), BUTTON_DEFAULT, self.attack), "hud")
 
         self.add_player_set_to_canvas()
         self.add_status_icons_to_canvas()
@@ -126,7 +126,7 @@ class Battle(State):
     def update_set_on_canvas(self):
         """Updates the dice to stop animating when rolled."""
         dice_set = self.player_set if self.your_turn else self.enemy_set
-        for die_display, die in zip(self.canvas.get_group(2), dice_set.get_dice()):
+        for die_display, die in zip(self.canvas.get_group("dice"), dice_set.get_dice()):
             die_display.set_idle(not die.is_rolled())
             if die.is_rolled():
                 die_display.set_image(die.get_rolled())
@@ -155,7 +155,7 @@ class Battle(State):
 
     def reset_rolls(self, dice_set: DiceSet):
         """Reset the rolls and removes the REFRESH display."""
-        self.canvas.delete_group(3)
+        self.canvas.delete_group("notice")
         dice_set.reset_dice()
         self.enable_hud()
 
@@ -172,7 +172,7 @@ class Battle(State):
     def popup_notice(self, notice: str, func):
         """Pops up a notice for a short time and runs func after."""
         self.disable_hud()
-        self.canvas.add_element(StaticBG([load_static(notice)], (0, 210)), 3)
+        self.canvas.add_element(StaticBG([load_static(notice)], (0, 210)), "notice")
         self.command_queue.add([TimerCommand(0.5, func)])
 
     def attack(self):
@@ -194,7 +194,7 @@ class Battle(State):
 
     def apply_status_damage(self):
         """Applies damage to the turn player before ending the turn."""
-        self.canvas.delete_group(3)
+        self.canvas.delete_group("notice")
         status_idx = 0 if self.your_turn else 1
         if self.damage_handler.has_status_damage(status_idx):
             self.damage_handler.apply_s_damage(status_idx)

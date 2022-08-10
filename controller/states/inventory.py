@@ -19,16 +19,16 @@ class Inventory(State):
         self.stash_display = PTexts([load_static("black")], (0, 0), load_font("S"), [(100, 100), (610, 100)], False)
 
     def setup_canvas(self):
-        self.canvas.add_element(MovingBackgroundElement([load_static("tall_rectangles")], (0, -1), (800, 600)), 0)
-        self.canvas.add_element(StaticBG([load_static("inventory_layout")], (0, 0)), 0)
+        self.canvas.add_element(MovingBackgroundElement([load_static("tall_rectangles")], (0, -1), (800, 600)), "")
+        self.canvas.add_element(StaticBG([load_static("inventory_layout")], (0, 0)), "")
 
-        self.canvas.add_element(Button(load_some_sprites("back"), (0, 0), BUTTON_DEFAULT, self.back), 0)
-        self.canvas.add_element(Button(load_some_sprites("music"), (730, 530), BUTTON_DEFAULT, music_handler.toggle), 0)
-        self.canvas.add_element(Button(load_some_sprites("right_arrow"), (625, 530), BUTTON_DEFAULT, self.pg_right), 0)
-        self.canvas.add_element(Button(load_some_sprites("left_arrow"), (105, 530), BUTTON_DEFAULT, self.pg_left), 0)
-        self.canvas.add_element(self.info_display, 0)
+        self.canvas.add_element(Button(load_some_sprites("back"), (0, 0), BUTTON_DEFAULT, self.back), "")
+        self.canvas.add_element(Button(load_some_sprites("music"), (730, 530), BUTTON_DEFAULT, music_handler.toggle), "")
+        self.canvas.add_element(Button(load_some_sprites("right_arrow"), (625, 530), BUTTON_DEFAULT, self.pg_right), "")
+        self.canvas.add_element(Button(load_some_sprites("left_arrow"), (105, 530), BUTTON_DEFAULT, self.pg_left), "")
+        self.canvas.add_element(self.info_display, "")
         self.info_display.set_text(0, "")
-        self.canvas.add_element(self.stash_display, 0)
+        self.canvas.add_element(self.stash_display, "")
 
         self.add_set_to_canvas()
         self.add_inventory_to_canvas()
@@ -51,13 +51,13 @@ class Inventory(State):
             die_display = Idle(load_some_sprites(die_name), (208 + (i * 100), 75), lambda x=i: self.select(x, True),
                                load_idle_animation("square"))
             die_display.set_idle(False)
-            self.canvas.add_element(die_display, 1)
+            self.canvas.add_element(die_display, "dice_set")
 
     def add_set_buttons_to_canvas(self):
         """Make the unequip button appear."""
         if self.selected_index != 0:
-            self.canvas.add_element(Button(load_some_sprites("unequip"), (105, 200), BUTTON_DEFAULT, self.unequip), 3)
-        self.canvas.add_element(Button(load_some_sprites("cancel"), (105, 280), BUTTON_DEFAULT, self.deselect), 3)
+            self.canvas.add_element(Button(load_some_sprites("unequip"), (105, 200), BUTTON_DEFAULT, self.unequip), "buttons")
+        self.canvas.add_element(Button(load_some_sprites("cancel"), (105, 280), BUTTON_DEFAULT, self.deselect), "buttons")
 
     def add_inventory_to_canvas(self):
         """Adds inventory dice to the canvas."""
@@ -69,22 +69,22 @@ class Inventory(State):
                 die_display = Idle(load_some_sprites(inventory[i]), (205 + (100 * col), 270 + (100 * row)),
                                    lambda x=i: self.select(x, False), load_idle_animation("square"))
                 die_display.set_idle(False)
-                self.canvas.add_element(die_display, 2)
+                self.canvas.add_element(die_display, "dice_inventory")
                 i += 1
 
     def add_inventory_buttons_to_canvas(self):
         """Make the inventory die buttons appear."""
         if len(self.player.get_preference()) < self.dice_per_set:
-            self.canvas.add_element(Button(load_some_sprites("equip"), (105, 280), BUTTON_DEFAULT, self.equip), 3)
-        self.canvas.add_element(Button(load_some_sprites("sell"), (105, 200), BUTTON_DEFAULT, self.sell), 3)
-        self.canvas.add_element(Button(load_some_sprites("cancel"), (105, 360), BUTTON_DEFAULT, self.deselect), 3)
+            self.canvas.add_element(Button(load_some_sprites("equip"), (105, 280), BUTTON_DEFAULT, self.equip), "buttons")
+        self.canvas.add_element(Button(load_some_sprites("sell"), (105, 200), BUTTON_DEFAULT, self.sell), "buttons")
+        self.canvas.add_element(Button(load_some_sprites("cancel"), (105, 360), BUTTON_DEFAULT, self.deselect), "buttons")
 
     def refresh_display(self):
         """Refreshes the inventory display to reflect inventory changes."""
         self.deselect()
-        self.canvas.delete_group(1)
+        self.canvas.delete_group("dice_set")
         self.add_set_to_canvas()
-        self.canvas.delete_group(2)
+        self.canvas.delete_group("dice_inventory")
         self.add_inventory_to_canvas()
 
     def show_die_info(self):
@@ -97,7 +97,7 @@ class Inventory(State):
         """Toggles the selected die's animation."""
         if self.selected_index == -1:
             return
-        dice_display = self.canvas.get_group(1) if self.in_set else self.canvas.get_group(2)
+        dice_display = self.canvas.get_group("dice_set") if self.in_set else self.canvas.get_group("dice_inventory")
         dice_display[self.selected_index % self.dice_per_page].set_idle(selected)
 
     def select(self, index: int, in_set: bool):
@@ -110,7 +110,7 @@ class Inventory(State):
 
     def deselect(self):
         """Deselects a die and deletes die-related buttons."""
-        self.canvas.delete_group(3)
+        self.canvas.delete_group("buttons")
         self.info_display.set_text(0, "")
         self.show_die_animated(False)
         self.selected_index, self.in_set = -1, False

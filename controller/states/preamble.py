@@ -20,14 +20,14 @@ class Preamble(State):
                                         lambda: self.to(destination), load_font("M"), load_dialogue(enemy_name, tier))
 
     def setup_canvas(self):
-        self.canvas.add_element(StaticBG([load_static("hills")], (0, 0)), 0)
-        self.canvas.add_element(MovingBackgroundElement([load_static("thick_clouds")], (-1, 0), (800, 600)), 0)
-        self.canvas.add_element(StaticBG([load_static("ground")], (0, 0)), 0)
-        self.canvas.add_element(self.player_display, 0)
+        self.canvas.add_element(StaticBG([load_static("hills")], (0, 0)), "")
+        self.canvas.add_element(MovingBackgroundElement([load_static("thick_clouds")], (-1, 0), (800, 600)), "")
+        self.canvas.add_element(StaticBG([load_static("ground")], (0, 0)), "")
+        self.canvas.add_element(self.player_display, "")
         self.player_display.set_position(pygame.Vector2(-300, 257))
-        self.canvas.add_element(self.enemy_display, 0)
+        self.canvas.add_element(self.enemy_display, "")
         self.enemy_display.set_position(pygame.Vector2(1000, 357 - self.enemy_display.get_height()))
-        self.canvas.add_element(self.dialogue_box, 0)
+        self.canvas.add_element(self.dialogue_box, "")
         self.dialogue_box.reset_scripts()
 
     def setup_commands(self):

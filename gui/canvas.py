@@ -8,23 +8,23 @@ class Canvas:
         # A list of tuples (elements, group_ID)
         self.element_queue = []
 
-    def add_element(self, element, group_ID: int):
+    def add_element(self, element, group_ID: str):
         """Adds (element, group_ID) to the queue."""
         self.element_queue.append((element, group_ID))
 
-    def insert_element(self, element, group_ID: int, i: int):
+    def insert_element(self, element, group_ID: str, i: int):
         """Inserts (element, group_ID) to the queue at the ith spot."""
         self.element_queue.insert(i, (element, group_ID))
 
-    def group_exists(self, group_ID: int) -> bool:
+    def group_exists(self, group_ID: str) -> bool:
         """Checks if tuple(s) with group_ID exists."""
         return any([data[1] == group_ID for data in self.element_queue])
 
-    def get_group(self, group_ID: int) -> list:
+    def get_group(self, group_ID: str) -> list:
         """Returns a list of elements with group_ID."""
         return [data[0] for data in self.element_queue if data[1] == group_ID]
 
-    def delete_group(self, group_ID: int):
+    def delete_group(self, group_ID: str):
         """Deletes all tuple(s) with group_ID."""
         self.element_queue = [data for data in self.element_queue if data[1] != group_ID]
 

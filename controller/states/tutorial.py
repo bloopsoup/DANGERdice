@@ -25,13 +25,13 @@ class Tutorial(State):
                                         lambda: self.to("player_menu"), load_font("M"), self.load_tutorial_dialogue())
 
     def setup_canvas(self):
-        self.canvas.add_element(MovingBackgroundElement([load_static("tall_squares")], (0, 2), (800, 600)), 0)
-        self.canvas.add_element(Button(load_some_sprites("music"), (730, 530), BUTTON_DEFAULT, music_handler.toggle), 0)
-        self.canvas.add_element(self.dialogue_box, 0)
+        self.canvas.add_element(MovingBackgroundElement([load_static("tall_squares")], (0, 2), (800, 600)), "")
+        self.canvas.add_element(Button(load_some_sprites("music"), (730, 530), BUTTON_DEFAULT, music_handler.toggle), "")
+        self.canvas.add_element(self.dialogue_box, "")
         self.dialogue_box.reset_scripts()
-        self.canvas.add_element(self.aaron_display, 0)
+        self.canvas.add_element(self.aaron_display, "")
         self.aaron_display.set_position(pygame.Vector2((-200, 450)))
-        self.canvas.add_element(self.damage_display, 0)
+        self.canvas.add_element(self.damage_display, "")
         self.damage_display.set_text(0, "")
         self.damage_display.set_color((0, 0, 0))
 
@@ -81,28 +81,28 @@ class Tutorial(State):
 
     def show_icon(self, pos: tuple[float, float], icon: str):
         """Shows a small icon in group 2."""
-        self.canvas.delete_group(2)
-        self.canvas.add_element(StaticBG([load_static(icon)], pos), 2)
+        self.canvas.delete_group("icon")
+        self.canvas.add_element(StaticBG([load_static(icon)], pos), "icon")
 
     def show_hud_element(self, example: bool):
         """Shows a hud element in group 1."""
         music_handler.play_sfx(load_sfx("good"))
         element = StaticBG([load_static("example_hud")], (0, 0)) if example else \
             Button(load_some_sprites("attack"), (305, 290), BUTTON_DEFAULT, lambda: "o")
-        self.canvas.add_element(element, 1)
+        self.canvas.add_element(element, "hud")
 
     def hide_hud_element(self):
         """Hides the hud element and the icon."""
         music_handler.play_sfx(load_sfx("one"))
-        self.canvas.delete_group(1)
-        self.canvas.delete_group(2)
+        self.canvas.delete_group("hud")
+        self.canvas.delete_group("icon")
 
     def show_dice(self):
         """Shows the die displays."""
         music_handler.play_sfx(load_sfx("roll"))
         self.damage_display.set_text(0, "DMG: {0}".format(self.damage))
         for die_display in self.dice_display:
-            self.canvas.add_element(die_display, 1)
+            self.canvas.add_element(die_display, "hud")
 
     def click_dice(self, i: int, side: int):
         """Simulates clicking the ith dice and rolls it on side."""
@@ -119,7 +119,7 @@ class Tutorial(State):
 
     def reset_dice(self):
         """Resets the dice displays to be rolling."""
-        self.canvas.delete_group(2)
+        self.canvas.delete_group("icon")
         music_handler.play_sfx(load_sfx("good"))
         for die_display in self.dice_display:
             die_display.set_idle(True)

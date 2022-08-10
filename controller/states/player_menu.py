@@ -17,25 +17,25 @@ class PlayerMenu(State):
         self.level_display = PTexts([load_static("black")], (0, 210), load_font("M"), [(0, 0)], True)
 
     def setup_canvas(self):
-        self.canvas.add_element(MovingBackgroundElement([load_static("tall_rectangles_light")], (0, -1), (800, 600)), 0)
-        self.canvas.add_element(StaticBG([load_static("menu_hud")], (0, 0)), 0)
+        self.canvas.add_element(MovingBackgroundElement([load_static("tall_rectangles_light")], (0, -1), (800, 600)), "")
+        self.canvas.add_element(StaticBG([load_static("menu_hud")], (0, 0)), "")
 
-        self.canvas.add_element(self.player_display, 0)
+        self.canvas.add_element(self.player_display, "")
         self.player_display.set_position(pygame.Vector2(38, 72))
-        self.canvas.add_element(self.stat_display, 0)
+        self.canvas.add_element(self.stat_display, "")
         self.stat_display.set_texts([self.player.get_name(), "LVL: {0}".format(self.player.get_level()),
                                      "HP: {0} / {1}".format(self.player.get_health(), self.player.get_max_health()),
                                      "Gold: {0}".format(self.player.get_money())])
-        self.canvas.add_element(self.level_display, 0)
+        self.canvas.add_element(self.level_display, "")
         self.level_display.set_text(0, "Next Level: {0}".format(self.player.get_stage()))
         self.add_dice_to_canvas()
 
-        self.canvas.add_element(Button(load_some_sprites("play"), (150, 250), BUTTON_DEFAULT, self.play), 0)
-        self.canvas.add_element(Button(load_some_sprites("inventory"), (150, 335), BUTTON_DEFAULT, self.inventory), 0)
-        self.canvas.add_element(Button(load_some_sprites("shop"), (150, 420), BUTTON_DEFAULT, self.shop), 0)
-        self.canvas.add_element(Button(load_some_sprites("save_icon"), (0, 530), BUTTON_DEFAULT, self.save), 0)
-        self.canvas.add_element(Button(load_some_sprites("load_icon"), (70, 530), BUTTON_DEFAULT, self.load), 0)
-        self.canvas.add_element(Button(load_some_sprites("music"), (730, 530), BUTTON_DEFAULT, music_handler.toggle), 0)
+        self.canvas.add_element(Button(load_some_sprites("play"), (150, 250), BUTTON_DEFAULT, self.play), "")
+        self.canvas.add_element(Button(load_some_sprites("inventory"), (150, 335), BUTTON_DEFAULT, self.inventory), "")
+        self.canvas.add_element(Button(load_some_sprites("shop"), (150, 420), BUTTON_DEFAULT, self.shop), "")
+        self.canvas.add_element(Button(load_some_sprites("save_icon"), (0, 530), BUTTON_DEFAULT, self.save), "")
+        self.canvas.add_element(Button(load_some_sprites("load_icon"), (70, 530), BUTTON_DEFAULT, self.load), "")
+        self.canvas.add_element(Button(load_some_sprites("music"), (730, 530), BUTTON_DEFAULT, music_handler.toggle), "")
 
     def setup_music(self):
         music_handler.change(load_song("note"))
@@ -45,7 +45,7 @@ class PlayerMenu(State):
         for i, die_name in enumerate(self.player.get_preference()):
             die_display = Idle(load_some_sprites(die_name), (376 + (i * 100), 79), None, load_idle_animation("square"))
             die_display.set_idle(False)
-            self.canvas.add_element(die_display, 0)
+            self.canvas.add_element(die_display, "")
 
     def play(self):
         """Onto battle!"""

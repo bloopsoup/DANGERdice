@@ -18,16 +18,16 @@ class Shop(State):
         self.info_display = PTexts([load_static("black")], (0, 0), load_font("M"), [(0, 476), (0, 544)], True)
 
     def setup_canvas(self):
-        self.canvas.add_element(MovingBackgroundElement([load_static("tall_rectangles")], (0, -1), (800, 600)), 0)
-        self.canvas.add_element(StaticBG([load_static("shop")], (0, 0)), 0)
-        self.canvas.add_element(self.gold_display, 0)
+        self.canvas.add_element(MovingBackgroundElement([load_static("tall_rectangles")], (0, -1), (800, 600)), "")
+        self.canvas.add_element(StaticBG([load_static("shop")], (0, 0)), "")
+        self.canvas.add_element(self.gold_display, "")
         self.gold_display.set_text(0, "Gold: {0}".format(self.player.get_money()))
-        self.canvas.add_element(self.info_display, 0)
+        self.canvas.add_element(self.info_display, "")
         self.info_display.set_texts(["", "Click on a Die you wish to purchase."])
-        self.canvas.add_element(self.keeper_display, 0)
+        self.canvas.add_element(self.keeper_display, "")
         self.add_dice_to_canvas()
-        self.canvas.add_element(Button(load_some_sprites("back"), (0, 0), BUTTON_DEFAULT, self.back), 0)
-        self.canvas.add_element(Button(load_some_sprites("music"), (730, 530), BUTTON_DEFAULT, music_handler.toggle), 0)
+        self.canvas.add_element(Button(load_some_sprites("back"), (0, 0), BUTTON_DEFAULT, self.back), "")
+        self.canvas.add_element(Button(load_some_sprites("music"), (730, 530), BUTTON_DEFAULT, music_handler.toggle), "")
 
     def setup_music(self):
         music_handler.change(load_song("note"))
@@ -43,12 +43,12 @@ class Shop(State):
             die_display = Idle(load_some_sprites(die_name), (104 + (i * 253), 290), lambda x=i: self.select(x),
                                load_idle_animation("square"))
             die_display.set_idle(False)
-            self.canvas.add_element(die_display, 1)
+            self.canvas.add_element(die_display, "dice")
 
     def add_shop_buttons_to_canvas(self):
         """Make the buttons for buying/canceling appear."""
-        self.canvas.add_element(Button(load_some_sprites("confirm"), (320, 525), BUTTON_DEFAULT, self.buy), 2)
-        self.canvas.add_element(Button(load_some_sprites("cancel"), (410, 525), BUTTON_DEFAULT, self.deselect), 2)
+        self.canvas.add_element(Button(load_some_sprites("confirm"), (320, 525), BUTTON_DEFAULT, self.buy), "buttons")
+        self.canvas.add_element(Button(load_some_sprites("cancel"), (410, 525), BUTTON_DEFAULT, self.deselect), "buttons")
 
     def show_die_info(self):
         """Shows the currently selected die's info."""
@@ -58,7 +58,7 @@ class Shop(State):
     def show_die_animated(self, selected: bool):
         """Toggles the selected die's animation."""
         if self.selected_index != -1:
-            self.canvas.get_group(1)[self.selected_index].set_idle(selected)
+            self.canvas.get_group("dice")[self.selected_index].set_idle(selected)
 
     def select(self, i: int):
         """Select a die. Can't select if HUD is disabled or the die is grayed out."""
@@ -72,7 +72,7 @@ class Shop(State):
 
     def deselect(self):
         """Deselects the current die."""
-        self.canvas.delete_group(2)
+        self.canvas.delete_group("buttons")
         self.info_display.set_texts(["", "Click on a Die you wish to purchase."])
         self.show_die_animated(False)
         self.selected_index = -1
@@ -82,19 +82,19 @@ class Shop(State):
         self.active = False
         self.deselect()
         self.info_display.set_text(1, "")
-        self.canvas.delete_group(1)
+        self.canvas.delete_group("dice")
         self.add_dice_to_canvas()
 
     def activate(self):
         """Reactivates the shop HUD."""
         self.active = True
         self.info_display.set_text(1, "Click on a Die you wish to purchase.")
-        self.canvas.delete_group(3)
+        self.canvas.delete_group("notice")
 
     def popup_notice(self, sold: bool):
         """Pops up a notice for a short time and handles timing issues."""
         self.deactivate()
-        self.canvas.add_element(StaticBG([load_static("bought" if sold else "broke")], (0, 130) if sold else (0, 0)), 3)
+        self.canvas.add_element(StaticBG([load_static("bought" if sold else "broke")], (0, 130) if sold else (0, 0)), "notice")
         self.command_queue.add([TimerCommand(0.5, self.activate)])
 
     def buy(self):

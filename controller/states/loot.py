@@ -15,11 +15,11 @@ class Loot(State):
         self.loot_display = PTexts([load_static("black")], (0, 0), load_font("M"), [(0, 100)], True)
 
     def setup_canvas(self):
-        self.canvas.add_element(StaticBG([load_static("crate")], (0, 0)), 0)
-        self.canvas.add_element(StaticBG([load_static("ground")], (0, 0)), 0)
-        self.canvas.add_element(self.player_display, 0)
+        self.canvas.add_element(StaticBG([load_static("crate")], (0, 0)), "")
+        self.canvas.add_element(StaticBG([load_static("ground")], (0, 0)), "")
+        self.canvas.add_element(self.player_display, "")
         self.player_display.set_position(pygame.Vector2(-300, 257))
-        self.canvas.add_element(self.loot_display, 0)
+        self.canvas.add_element(self.loot_display, "")
         self.loot_display.set_text(0, "")
 
     def setup_commands(self):
