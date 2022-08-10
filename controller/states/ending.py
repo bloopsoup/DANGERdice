@@ -1,7 +1,7 @@
 import pygame
 from .state import State
 from ..utils import music_handler
-from ..loader import load_static, load_font, load_sound, load_all_sprites, load_idle_animation, create_player, \
+from ..loader import load_static, load_font, load_sfx, load_all_sprites, load_idle_animation, create_player, \
     create_shop_inventory
 from gui.elements import StaticBG, PTexts, Idle
 from gui.commands import TimerCommand, MoveCommand
@@ -32,12 +32,12 @@ class Ending(State):
         self.command_queue.add([TimerCommand(1.5, self.return_to_menu)])
 
     def setup_music(self):
-        music_handler.play_sfx(load_sound("one", True))
+        music_handler.play_sfx(load_sfx("one"))
 
     def change_text(self, text: str):
         """Changes the display text while playing a sound."""
         self.text_display.set_text(0, text)
-        music_handler.play_sfx(load_sound("one", True))
+        music_handler.play_sfx(load_sfx("one"))
 
     def return_to_menu(self):
         """Goes back to the main menu and resets the stats."""

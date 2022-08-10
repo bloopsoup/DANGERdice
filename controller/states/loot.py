@@ -1,7 +1,7 @@
 import pygame
 from .state import State
 from ..utils import music_handler
-from ..loader import load_static, load_all_sprites, load_font, load_sound, load_idle_animation, random_die_name
+from ..loader import load_static, load_all_sprites, load_font, load_sfx, load_idle_animation, random_die_name
 from gui.elements import StaticBG, PTexts, Idle
 from gui.commands import TimerCommand, MoveCommand
 
@@ -27,9 +27,12 @@ class Loot(State):
                                 TimerCommand(1.5, self.give_loot)])
         self.command_queue.add([TimerCommand(2, lambda: self.to("player_menu"))])
 
+    def setup_music(self):
+        music_handler.stop()
+
     def give_loot(self):
         """Gives the player loot."""
         die_name = random_die_name()
         self.player.append_to_inventory(die_name)
         self.loot_display.set_text(0, "You got {0}!".format(die_name))
-        music_handler.play_sfx(load_sound("good", True))
+        music_handler.play_sfx(load_sfx("good"))

@@ -1,7 +1,7 @@
 import pygame
 from .state import State
 from ..utils import music_handler
-from ..loader import load_static, load_all_sprites, load_font, load_sound, load_idle_animation
+from ..loader import load_static, load_all_sprites, load_font, load_sfx, load_idle_animation
 from ..themes import DIALOGUE_DEFAULT
 from gui.elements import StaticBG, MovingBackgroundElement, PTexts, Idle, DialogueBox
 from gui.commands import TimerCommand, MoveCommand
@@ -82,7 +82,7 @@ class Story(State):
         self.text_display.set_text(0, "2 HOURS LATER")
         self.player_display.set_position(pygame.Vector2(-100, 257))
         self.dorita_display.set_position(pygame.Vector2(900, 227))
-        music_handler.play_sfx(load_sound("one", True))
+        music_handler.play_sfx(load_sfx("one"))
         self.command_queue.add([TimerCommand(1.5, self.exit_transition)])
 
     def exit_transition(self):

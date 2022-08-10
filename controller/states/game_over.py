@@ -1,6 +1,6 @@
 from .state import State
 from ..utils import music_handler
-from ..loader import load_static, load_sound, load_some_sprites, load_all_sprites, load_idle_animation, create_player, \
+from ..loader import load_static, load_song, load_some_sprites, load_all_sprites, load_idle_animation, create_player, \
     create_shop_inventory
 from ..themes import BUTTON_DEFAULT
 from gui.elements import StaticBG, MovingBackgroundElement, Button, Idle
@@ -22,7 +22,7 @@ class GameOver(State):
         self.canvas.add_element(self.player_display, 0)
 
     def setup_music(self):
-        music_handler.change(load_sound("menu", False))
+        music_handler.change(load_song("menu"))
 
     def return_menu(self):
         """Goes back to the main menu and resets the stats."""

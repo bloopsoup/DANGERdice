@@ -1,7 +1,8 @@
 import pygame
 from .state import State
 from ..utils import music_handler
-from ..loader import load_static, load_some_sprites, load_all_sprites, load_idle_animation, load_sound, load_font
+from ..loader import load_static, load_some_sprites, load_all_sprites, load_idle_animation, load_sfx, load_song, \
+    load_font
 from ..themes import BUTTON_DEFAULT, DIALOGUE_SMALL
 from gui.elements import StaticBG, MovingBackgroundElement, PTexts, Button, Idle, DialogueBox
 from gui.commands import MoveCommand
@@ -42,7 +43,7 @@ class Tutorial(State):
         self.damage = 0
 
     def setup_music(self):
-        music_handler.change(load_sound("trittle", False))
+        music_handler.change(load_song("trittle"))
 
     def load_tutorial_dialogue(self) -> DialogueData:
         """Loads the dialogue for the tutorial"""
@@ -85,20 +86,20 @@ class Tutorial(State):
 
     def show_hud_element(self, example: bool):
         """Shows a hud element in group 1."""
-        music_handler.play_sfx(load_sound("good", True))
+        music_handler.play_sfx(load_sfx("good"))
         element = StaticBG([load_static("example_hud")], (0, 0)) if example else \
             Button(load_some_sprites("attack"), (305, 290), BUTTON_DEFAULT, lambda: "o")
         self.canvas.add_element(element, 1)
 
     def hide_hud_element(self):
         """Hides the hud element and the icon."""
-        music_handler.play_sfx(load_sound("one", True))
+        music_handler.play_sfx(load_sfx("one"))
         self.canvas.delete_group(1)
         self.canvas.delete_group(2)
 
     def show_dice(self):
         """Shows the die displays."""
-        music_handler.play_sfx(load_sound("roll", True))
+        music_handler.play_sfx(load_sfx("roll"))
         self.damage_display.set_text(0, "DMG: {0}".format(self.damage))
         for die_display in self.dice_display:
             self.canvas.add_element(die_display, 1)
@@ -106,10 +107,10 @@ class Tutorial(State):
     def click_dice(self, i: int, side: int):
         """Simulates clicking the ith dice and rolls it on side."""
         if side != 0:
-            music_handler.play_sfx(load_sound("roll", True))
+            music_handler.play_sfx(load_sfx("roll"))
             self.update_damage(side + 1)
         else:
-            music_handler.play_sfx(load_sound("one", True))
+            music_handler.play_sfx(load_sfx("one"))
             self.zero_damage()
         self.dice_display[i].set_idle(False)
         self.dice_display[i].set_image(side)
@@ -119,6 +120,6 @@ class Tutorial(State):
     def reset_dice(self):
         """Resets the dice displays to be rolling."""
         self.canvas.delete_group(2)
-        music_handler.play_sfx(load_sound("good", True))
+        music_handler.play_sfx(load_sfx("good"))
         for die_display in self.dice_display:
             die_display.set_idle(True)

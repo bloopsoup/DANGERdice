@@ -1,5 +1,6 @@
 import pygame
 from .state import State
+from ..utils import music_handler
 from ..loader import load_static, load_all_sprites, load_font, load_idle_animation, load_dialogue
 from ..themes import DIALOGUE_DEFAULT
 from gui.elements import StaticBG, MovingBackgroundElement, Idle, DialogueBox
@@ -31,3 +32,6 @@ class Preamble(State):
 
     def setup_commands(self):
         self.animation_handler.to_start(lambda: self.dialogue_box.toggle_visibility())
+
+    def setup_music(self):
+        music_handler.stop()

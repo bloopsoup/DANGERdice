@@ -1,7 +1,7 @@
 import pygame
 from .state import State
 from ..utils import music_handler
-from ..loader import load_static, load_some_sprites, load_all_sprites, load_font, load_sound, load_idle_animation
+from ..loader import load_static, load_some_sprites, load_all_sprites, load_font, load_song, load_idle_animation
 from ..themes import BUTTON_DEFAULT, INPUT_DEFAULT
 from gui.elements import StaticBG, MovingBackgroundElement, PTexts, Idle, Button, InputText
 from gui.commands import MoveCommand
@@ -35,7 +35,7 @@ class Intro(State):
         self.canvas.add_element(Button(load_some_sprites("skip_tutorial"), (300, 220), BUTTON_DEFAULT, self.skip), 2)
 
     def setup_music(self):
-        music_handler.change(load_sound("trooper", False))
+        music_handler.change(load_song("trooper"))
 
     def cleanup(self):
         self.canvas.delete_all()

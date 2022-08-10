@@ -2,7 +2,7 @@ import random
 import pygame
 from .utils import rp, path_sheet, path_static, path_sfx, path_song
 from .config import dice_config, enemy_config, fonts_config, idle_animation_config, static_config, spritesheet_config, \
-    chunk_config, sound_config, dialogue_config
+    chunk_config, song_config, sfx_config, dialogue_config
 from gui.utils import Spritesheet, IndexCycler, DialogueData
 from entities.enemies import Enemy, Player
 from entities.dice import Die, DiceSet
@@ -19,12 +19,16 @@ def load_font(size: str) -> pygame.font.Font:
     return pygame.font.Font(rp("assets/VT323-Regular.ttf"), fonts_config[size])
 
 
-def load_sound(name: str, sfx: bool):
-    """Returns a path to a sound file (sfx or music)."""
-    assert name in sound_config, "{0} is not a valid sound".format(name)
-    path = sound_config[name]
-    path = path_sfx(path) if sfx else path_song(path)
-    return path
+def load_song(name: str) -> str:
+    """Returns a path to a song file."""
+    assert name in song_config, "{0} is not a valid song".format(name)
+    return path_song(song_config[name])
+
+
+def load_sfx(name: str) -> str:
+    """Returns a path to a SFX file."""
+    assert name in sfx_config, "{0} is not a valid SFX".format(name)
+    return path_sfx(sfx_config[name])
 
 
 def load_static(name: str) -> pygame.Surface:
@@ -78,6 +82,13 @@ def load_dialogue(dialogue: str, tier: int) -> DialogueData:
 def random_die_name() -> str:
     """Gets a random die name."""
     return random.choice(list(dice_config.keys()))
+
+
+def random_battle_song() -> str:
+    """Returns a random battle song path."""
+    battle_songs = ["calm", "doma", "huh", "jong", "menu", "ones", "somedrums", "Something", "stomp", "stomp2",
+                    "trittle", "zins"]
+    return load_song(random.choice(battle_songs))
 
 
 def all_enemy_names() -> list[str]:

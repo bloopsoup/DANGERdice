@@ -27,3 +27,5 @@ class Load(State):
             self.player.import_data(data["player"])
             self.shop_inventory.import_data(data["shop"])
             self.to("player_menu")
+        else:
+            self.text_display.set_text(0, "No save data detected")

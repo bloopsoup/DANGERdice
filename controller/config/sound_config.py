@@ -1,4 +1,4 @@
-sound_config = {
+song_config = {
     "calm": "calm.mp3",
     "doma": "doma.mp3",
     "huh": "huh.mp3",
@@ -12,7 +12,10 @@ sound_config = {
     "stomp2": "stomp2.mp3",
     "trittle": "trittle.mp3",
     "trooper": "trooper.mp3",
-    "zins": "zins.mp3",
+    "zins": "zins.mp3"
+}
+
+sfx_config = {
     "charge": "charge.mp3",
     "click": "click.mp3",
     "good": "good.mp3",

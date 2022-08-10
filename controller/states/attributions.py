@@ -1,6 +1,6 @@
 from .state import State
 from ..utils import music_handler
-from ..loader import load_static, load_font, load_sound
+from ..loader import load_static, load_font, load_sfx
 from gui.elements import StaticBG, PTexts
 from gui.commands import TimerCommand
 
@@ -24,10 +24,10 @@ class Attributions(State):
         self.command_queue.add([TimerCommand(1.2, lambda: self.to("main_menu"))])
 
     def setup_music(self):
-        music_handler.play_sfx(load_sound("one", True))
+        music_handler.play_sfx(load_sfx("one"))
 
     def remove_face(self):
         """Removes the face, changes the text, and then plays a sound."""
         self.text_display.set_text(0, "Inspired by TinyDiceDungeons")
         self.canvas.delete_group(1)
-        music_handler.play_sfx(load_sound("one", True))
+        music_handler.play_sfx(load_sfx("one"))

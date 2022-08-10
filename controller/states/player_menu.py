@@ -1,7 +1,7 @@
 import pygame
 from .state import State
 from ..utils import music_handler
-from ..loader import load_static, load_some_sprites, load_all_sprites, load_font, load_sound, load_idle_animation
+from ..loader import load_static, load_some_sprites, load_all_sprites, load_font, load_song, load_idle_animation
 from ..themes import BUTTON_DEFAULT
 from gui.elements import StaticBG, MovingBackgroundElement, PTexts, Idle, Button
 
@@ -38,7 +38,7 @@ class PlayerMenu(State):
         self.canvas.add_element(Button(load_some_sprites("music"), (730, 530), BUTTON_DEFAULT, music_handler.toggle), 0)
 
     def setup_music(self):
-        music_handler.change(load_sound("note", False))
+        music_handler.change(load_song("note"))
 
     def add_dice_to_canvas(self):
         """Adds dice to the canvas."""

@@ -1,8 +1,8 @@
 import pygame
 from .state import State
 from ..utils import music_handler
-from ..loader import load_static, load_some_sprites, load_all_sprites, load_font, load_sound, load_idle_animation, \
-    create_dice_set, create_enemy
+from ..loader import load_static, load_some_sprites, load_all_sprites, load_font, load_sfx, load_song, \
+    random_battle_song, load_idle_animation, create_dice_set, create_enemy
 from ..themes import BUTTON_DEFAULT
 from entities.dice import DiceSet
 from entities.enemies import DamageHandler
@@ -61,6 +61,9 @@ class Battle(State):
 
     def setup_commands(self):
         self.animation_handler.to_start(self.enable_hud)
+
+    def setup_music(self):
+        music_handler.change(random_battle_song())
 
     def reset_state(self):
         self.active, self.your_turn = False, True
@@ -177,8 +180,8 @@ class Battle(State):
         if not self.active or not self.damage_handler.has_damage():
             return
         self.disable_hud()
-        hooks = [lambda: music_handler.play_sfx(load_sound("charge", True)),
-                 lambda: music_handler.play_sfx(load_sound("shatter", True)), self.apply_damage]
+        hooks = [lambda: music_handler.play_sfx(load_sfx("charge")),
+                 lambda: music_handler.play_sfx(load_sfx("shatter")), self.apply_damage]
         self.animation_handler.rush(self.your_turn, hooks)
 
     def apply_damage(self):
@@ -195,7 +198,7 @@ class Battle(State):
         status_idx = 0 if self.your_turn else 1
         if self.damage_handler.has_status_damage(status_idx):
             self.damage_handler.apply_s_damage(status_idx)
-            music_handler.play_sfx(load_sound("poison", True))
+            music_handler.play_sfx(load_sfx("poison"))
             self.command_queue.add([TimerCommand(1, self.end_turn)])
         else:
             self.end_turn()
@@ -205,7 +208,7 @@ class Battle(State):
         msg = "You won!" if self.enemy.is_dead() else "Ouch."
         destination = self.destination if self.enemy.is_dead() else "game_over"
         self.reward_display.set_text(0, msg)
-        music_handler.play_sfx(load_sound("good", True))
+        music_handler.play_sfx(load_sfx("good"))
         self.player.advance_stage()
         self.shop_inventory.attempt_restock()
         self.command_queue.add([TimerCommand(2, lambda: self.to(destination))])
@@ -224,12 +227,12 @@ class Battle(State):
         """Determines what to do after rolling a die. Either you end your turn prematurely,
            reset the dice (which queues another AI action), or continue your turn normally."""
         if result != -1:
-            music_handler.play_sfx(load_sound("roll", True))
+            music_handler.play_sfx(load_sfx("roll"))
         if result == 0:
-            music_handler.play_sfx(load_sound("one", True))
+            music_handler.play_sfx(load_sfx("one"))
             self.popup_notice("rolled_one", self.apply_status_damage)
         elif dice_set.needs_reset():
-            music_handler.play_sfx(load_sound("good", True))
+            music_handler.play_sfx(load_sfx("good"))
             self.popup_notice("refresh", lambda: self.reset_rolls(dice_set))
             self.queue_ai_action()
         else:

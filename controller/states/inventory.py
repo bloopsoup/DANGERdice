@@ -1,6 +1,6 @@
 from .state import State
 from ..utils import music_handler
-from ..loader import load_static, load_some_sprites, load_font, load_sound, load_idle_animation, create_die
+from ..loader import load_static, load_some_sprites, load_font, load_song, load_idle_animation, create_die
 from ..themes import BUTTON_DEFAULT
 from gui.elements import StaticBG, MovingBackgroundElement, PTexts, Idle, Button
 
@@ -34,7 +34,7 @@ class Inventory(State):
         self.add_inventory_to_canvas()
 
     def setup_music(self):
-        music_handler.change(load_sound("note", False))
+        music_handler.change(load_song("note"))
 
     def reset_state(self):
         self.page_start = 0

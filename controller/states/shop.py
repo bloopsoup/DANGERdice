@@ -1,7 +1,7 @@
 from .state import State
 from ..utils import music_handler
-from ..loader import load_static, load_some_sprites, load_all_sprites, load_font, load_sound, load_idle_animation, \
-    create_die
+from ..loader import load_static, load_some_sprites, load_all_sprites, load_font, load_sfx, load_song, \
+    load_idle_animation, create_die
 from ..themes import BUTTON_DEFAULT
 from gui.elements import StaticBG, MovingBackgroundElement, PTexts, Idle, Button
 from gui.commands import TimerCommand
@@ -30,7 +30,7 @@ class Shop(State):
         self.canvas.add_element(Button(load_some_sprites("music"), (730, 530), BUTTON_DEFAULT, music_handler.toggle), 0)
 
     def setup_music(self):
-        music_handler.change(load_sound("note", False))
+        music_handler.change(load_song("note"))
 
     def reset_state(self):
         self.selected_index, self.active = -1, True
@@ -106,8 +106,8 @@ class Shop(State):
             self.player.subtract_money(die.get_price())
             self.player.append_to_inventory(die_name)
             self.gold_display.set_text(0, "Gold: {0}".format(self.player.get_money()))
-            music_handler.play_sfx(load_sound("roll", True))
+            music_handler.play_sfx(load_sfx("roll"))
             self.popup_notice(True)
         else:
-            music_handler.play_sfx(load_sound("one", True))
+            music_handler.play_sfx(load_sfx("one"))
             self.popup_notice(False)

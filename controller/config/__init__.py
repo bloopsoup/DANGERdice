@@ -4,5 +4,5 @@ from .enemy_config import enemy_config
 from .fonts_config import fonts_config
 from .idle_animation_config import idle_animation_config
 from .static_config import static_config
-from .sound_config import sound_config
+from .sound_config import song_config, sfx_config
 from .spritesheet_config import spritesheet_config, chunk_config

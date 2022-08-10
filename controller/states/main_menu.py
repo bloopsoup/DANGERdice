@@ -1,6 +1,6 @@
 from .state import State
 from ..utils import music_handler
-from ..loader import load_static, load_some_sprites, load_sound
+from ..loader import load_static, load_some_sprites, load_song
 from ..themes import BUTTON_DEFAULT
 from gui.elements import MovingBackgroundElement, StaticBG, Button
 
@@ -17,7 +17,7 @@ class MainMenu(State):
         self.canvas.add_element(Button(load_some_sprites("music"), (730, 530), BUTTON_DEFAULT, music_handler.toggle), 0)
 
     def setup_music(self):
-        music_handler.change(load_sound("trooper", False))
+        music_handler.change(load_song("trooper"))
 
     def intro(self):
         """Go to the intro sequence."""
