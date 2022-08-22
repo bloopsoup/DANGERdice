@@ -1,6 +1,10 @@
 from pyglet.window import key, mouse
 from core.enums import Key, MouseButton
 
+###############
+#  CONSTANTS  #
+###############
+
 font_presets = {
     "SS": ("VT323-Regular", 25),
     "S": ("VT323-Regular", 30),

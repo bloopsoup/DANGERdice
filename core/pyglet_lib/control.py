@@ -5,7 +5,7 @@ from constants import translate_keys, translate_mouse
 
 
 class Control(pyglet.window.Window):
-    """Sets up pyglet settings."""
+    """Manages the game loop for pyglet."""
 
     def __init__(self, state_manager: StateManager):
         super().__init__(800, 600, "DANGERdice")
