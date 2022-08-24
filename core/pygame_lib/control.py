@@ -18,12 +18,10 @@ class Control:
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-            elif event.type == pygame.KEYDOWN:
-                if event.key in translate_keys:
-                    self.state_manager.pass_event(Event(EventType.KEY_DOWN, key=translate_keys[event.key]))
-            elif event.type == pygame.KEYUP:
-                if event.key in translate_keys:
-                    self.state_manager.pass_event(Event(EventType.KEY_UP, key=translate_keys[event.key]))
+            elif event.type == pygame.KEYDOWN and event.key in translate_keys:
+                self.state_manager.pass_event(Event(EventType.KEY_DOWN, key=translate_keys[event.key]))
+            elif event.type == pygame.KEYUP and event.key in translate_keys:
+                self.state_manager.pass_event(Event(EventType.KEY_UP, key=translate_keys[event.key]))
             elif event.type == pygame.TEXTINPUT:
                 self.state_manager.pass_event(Event(EventType.TEXT_INPUT, text=event.text))
             elif event.type == pygame.MOUSEBUTTONDOWN:

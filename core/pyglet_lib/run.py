@@ -2,6 +2,11 @@ import pyglet
 from control import Control
 from core.state import State, StateManager
 
+"""
+Initialization for pyglet begins when the Control object is instantiated which sets up the caption, icons, and clock.
+This file handles adding file paths to pyglet and initiating and running the Control object.
+"""
+
 
 def load_fonts():
     """Loads the fonts for pyglet."""
