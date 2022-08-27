@@ -16,11 +16,15 @@ pygame.key.set_repeat(500, 100)
 
 surface = pygame.display.set_mode((800, 600))
 
-font_presets = {
+loaded_fonts = {
     "SS": pygame.font.Font("../../assets/VT323-Regular.ttf", 25),
     "S": pygame.font.Font("../../assets/VT323-Regular.ttf", 30),
     "M": pygame.font.Font("../../assets/VT323-Regular.ttf", 40),
     "L": pygame.font.Font("../../assets/VT323-Regular.ttf", 50)
+}
+
+loaded_sounds = {
+
 }
 
 translate_keys = {

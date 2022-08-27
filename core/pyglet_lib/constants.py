@@ -5,11 +5,15 @@ from core.enums import Key, MouseButton
 #  CONSTANTS  #
 ###############
 
-font_presets = {
+loaded_fonts = {
     "SS": ("VT323-Regular", 25),
     "S": ("VT323-Regular", 30),
     "M": ("VT323-Regular", 40),
     "L": ("VT323-Regular", 50)
+}
+
+loaded_sounds = {
+
 }
 
 translate_keys = {

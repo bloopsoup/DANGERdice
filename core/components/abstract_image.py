@@ -4,9 +4,13 @@ from .rectangle import Rectangle
 class AbstractImage:
     """An abstract image class. Implement with library specific components."""
 
-    def __init__(self, path: str):
-        self.path, self.image = path, None
+    def __init__(self, image):
+        self.image = image
         self.width, self.height = 0, 0
+
+    def get_image(self):
+        """Gets the underlying image itself."""
+        return self.image
 
     def get_width(self) -> int:
         """Gets the width of the image."""

@@ -1,9 +1,9 @@
 class AbstractLabel:
     """An abstract label class. Implement with library-specific functions."""
 
-    def __init__(self, text: str, preset: str, color: tuple[int, int, int]):
+    def __init__(self, text: str, font: str, color: tuple[int, int, int]):
         self.text, self.rendered_text = text, None
-        self.preset, self.color = preset, color
+        self.font, self.color = font, color
         self.width, self.height = 0, 0
 
     def get_width(self) -> int:

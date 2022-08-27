@@ -3,9 +3,8 @@ from core.components import AbstractImage
 
 
 class Image(AbstractImage):
-    def __init__(self, path: str):
-        super().__init__(path)
-        self.image = pyglet.image.load(path)
+    def __init__(self, image: pyglet.image):
+        super().__init__(image)
         self.width, self.height = self.image.width, self.image.height
 
     def blit(self, pos: tuple[int, int]):
