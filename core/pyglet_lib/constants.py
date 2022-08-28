@@ -1,5 +1,12 @@
+from pyglet import font
 from pyglet.window import key, mouse
 from core.enums import Key, MouseButton
+
+###############
+#    SETUP    #
+###############
+
+font.add_file('../../assets/VT323-Regular.ttf')
 
 ###############
 #  CONSTANTS  #
