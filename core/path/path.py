@@ -12,6 +12,11 @@ def path_relative(path: str) -> str:
     return os.path.join(base_path, path)
 
 
+def path_asset(path: str) -> str:
+    """Returns an asset path."""
+    return path_relative("assets/" + path)
+
+
 def path_sheet(path: str) -> str:
     """Returns a spritesheet picture path."""
     return path_relative("assets/sheets/" + path)

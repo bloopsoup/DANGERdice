@@ -1,6 +1,6 @@
 import pygame
-from constants import surface
-from core.components import AbstractImage
+from .constants import surface
+from ..components import AbstractImage
 
 
 class Image(AbstractImage):

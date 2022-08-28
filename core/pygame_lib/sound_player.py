@@ -1,6 +1,6 @@
 import pygame
-from constants import loaded_sounds
-from core.components import AbstractSoundPlayer
+from .constants import loaded_sounds
+from ..components import AbstractSoundPlayer
 
 
 class SoundPlayer(AbstractSoundPlayer):

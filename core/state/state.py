@@ -1,3 +1,5 @@
+from gui import Canvas
+from gui.commands import CommandQueue
 from .event import Event
 
 
@@ -7,6 +9,7 @@ class State:
     def __init__(self):
         self.done, self.quit = False, False
         self.next, self.previous = None, None
+        self.canvas, self.command_queue = Canvas(), CommandQueue()
 
     def setup_state(self):
         """Sets attributes for a state when entering."""
@@ -37,11 +40,13 @@ class State:
 
     def cleanup(self):
         """Cleaning up components before leaving the state."""
+        self.canvas.delete_all()
+        self.command_queue.clear()
         self.reset_state()
 
     def handle_event(self, event: Event):
         """Handles events in this state."""
-        print(event.get_type())
+        self.canvas.handle_event(event)
 
     def update_components(self):
         """Update dynamic components based on external information.."""
@@ -49,11 +54,13 @@ class State:
 
     def update(self, dt: float):
         """Update objects pertaining to this state."""
+        self.command_queue.update(dt)
         self.update_components()
+        self.canvas.update(dt)
 
     def draw(self):
         """Draws objects pertaining to this state."""
-        pass
+        self.canvas.draw(None)
 
     def to(self, to: str):
         """Goes to the target state."""

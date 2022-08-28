@@ -1,4 +1,7 @@
-from .path import path_static, path_sheet, path_song, path_sfx
+from .path import path_asset, path_static, path_sheet, path_song, path_sfx
+
+ICON_PATH = path_asset("icon.png")
+FONT_PATH = path_asset("VT323-Regular.ttf")
 
 static_config = {
     "tall_squares": path_static("back1.png"),
@@ -138,7 +141,7 @@ chunk_config = {
     "multiplier3": ["dice3", 5, 0, 6]
 }
 
-song_config = {
+sound_config = {
     "calm": path_song("calm.mp3"),
     "doma": path_song("doma.mp3"),
     "huh": path_song("huh.mp3"),
@@ -152,10 +155,8 @@ song_config = {
     "stomp2": path_song("stomp2.mp3"),
     "trittle": path_song("trittle.mp3"),
     "trooper": path_song("trooper.mp3"),
-    "zins": path_song("zins.mp3")
-}
+    "zins": path_song("zins.mp3"),
 
-sfx_config = {
     "charge": path_sfx("charge.mp3"),
     "click": path_sfx("click.mp3"),
     "good": path_sfx("good.mp3"),

@@ -1,5 +1,5 @@
-from constants import loaded_fonts, surface
-from core.components import AbstractLabel
+from .constants import loaded_fonts, surface
+from ..components import AbstractLabel
 
 
 class Label(AbstractLabel):

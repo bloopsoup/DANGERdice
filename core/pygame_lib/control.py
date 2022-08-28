@@ -1,8 +1,8 @@
 import sys
 import pygame
-from core.enums import EventType
-from core.state import Event, StateManager
-from constants import translate_keys
+from ..enums import EventType
+from ..state import Event, StateManager
+from .constants import translate_keys
 
 
 class Control:

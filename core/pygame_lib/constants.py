@@ -1,31 +1,30 @@
 import pygame
-from core.enums import Key, MouseButton
+from ..enums import Key, MouseButton
+from ..path import FONT_PATH, ICON_PATH, sound_config, static_config, spritesheet_config
 
 ###############
 #    SETUP    #
 ###############
 
 pygame.init()
-pygame.display.set_icon(pygame.image.load("../../assets/icon.png"))
+pygame.display.set_icon(pygame.image.load(ICON_PATH))
 pygame.display.set_caption("DANGERdice")
 pygame.key.set_repeat(500, 100)
+surface = pygame.display.set_mode((800, 600))
 
 ###############
 #  CONSTANTS  #
 ###############
 
-surface = pygame.display.set_mode((800, 600))
-
 loaded_fonts = {
-    "SS": pygame.font.Font("../../assets/VT323-Regular.ttf", 25),
-    "S": pygame.font.Font("../../assets/VT323-Regular.ttf", 30),
-    "M": pygame.font.Font("../../assets/VT323-Regular.ttf", 40),
-    "L": pygame.font.Font("../../assets/VT323-Regular.ttf", 50)
+    "SS": pygame.font.Font(FONT_PATH, 25),
+    "S": pygame.font.Font(FONT_PATH, 30),
+    "M": pygame.font.Font(FONT_PATH, 40),
+    "L": pygame.font.Font(FONT_PATH, 50)
 }
-
-loaded_sounds = {
-
-}
+loaded_static = {key: pygame.image.load(static_config[key]).convert_alpha() for key in static_config}
+loaded_sheets = {key: pygame.image.load(spritesheet_config[key][0]).convert_alpha() for key in spritesheet_config}
+loaded_sounds = sound_config
 
 translate_keys = {
     pygame.K_a: Key.A, pygame.K_b: Key.B, pygame.K_c: Key.C, pygame.K_d: Key.D, pygame.K_e: Key.E, pygame.K_f: Key.F,
