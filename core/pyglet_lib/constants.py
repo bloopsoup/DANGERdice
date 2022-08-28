@@ -1,6 +1,6 @@
 from pyglet import font
 from pyglet.window import key, mouse
-from core.enums import Key, MouseButton
+from ..enums import Key, MouseButton
 
 ###############
 #    SETUP    #

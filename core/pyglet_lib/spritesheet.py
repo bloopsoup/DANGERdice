@@ -1,6 +1,6 @@
 import pyglet
 from .image import Image
-from core.components import AbstractImage, AbstractSpritesheet
+from ..components import AbstractImage, AbstractSpritesheet
 
 
 class Spritesheet(AbstractSpritesheet):

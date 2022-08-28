@@ -1,5 +1,5 @@
 import pyglet
-from core.components import AbstractImage
+from ..components import AbstractImage
 
 
 class Image(AbstractImage):

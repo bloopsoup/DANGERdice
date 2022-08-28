@@ -1,11 +1,11 @@
 import sys
 import pygame
 from ..enums import EventType
-from ..state import Event, StateManager
+from ..control import Event, StateManager
 from .constants import translate_keys
 
 
-class Control:
+class App:
     """Manages the game loop for pygame."""
 
     def __init__(self, state_manager: StateManager):

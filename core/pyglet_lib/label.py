@@ -1,6 +1,6 @@
 import pyglet
-from constants import loaded_fonts
-from core.components import AbstractLabel
+from .constants import loaded_fonts
+from ..components import AbstractLabel
 
 
 class Label(AbstractLabel):

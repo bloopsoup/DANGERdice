@@ -23,7 +23,8 @@ loaded_fonts = {
     "L": pygame.font.Font(FONT_PATH, 50)
 }
 loaded_static = {key: pygame.image.load(static_config[key]).convert_alpha() for key in static_config}
-loaded_sheets = {key: pygame.image.load(spritesheet_config[key][0]).convert_alpha() for key in spritesheet_config}
+loaded_sheets = {key: [pygame.image.load(spritesheet_config[key][0]).convert_alpha()] + spritesheet_config[key][1:]
+                 for key in spritesheet_config}
 loaded_sounds = sound_config
 
 translate_keys = {

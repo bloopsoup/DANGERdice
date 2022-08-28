@@ -1,10 +1,10 @@
 import pyglet
-from core.enums import EventType
-from core.state import Event, StateManager
-from constants import translate_keys, translate_mouse
+from .constants import translate_keys, translate_mouse
+from ..enums import EventType
+from ..control import Event, StateManager
 
 
-class Control(pyglet.window.Window):
+class App(pyglet.window.Window):
     """Manages the game loop for pyglet."""
 
     def __init__(self, state_manager: StateManager):
