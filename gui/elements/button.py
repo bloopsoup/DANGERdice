@@ -1,15 +1,13 @@
-import pygame
 from .interactive import Interactive
+from core import AbstractImage, Event, EventType
 
 
 class Button(Interactive):
-    """A button that runs a function on click."""
+    """A button that runs a function on click. Uses three images: [inactive, hovered, clicked]."""
 
-    def __init__(self, images: list[pygame.Surface], pos: tuple[float, float], theme: dict, on_event):
-        # Uses three images: [inactive, hovered, clicked]
+    def __init__(self, images: list[AbstractImage], pos: tuple[int, int], theme: dict, on_event):
         super().__init__(images, pos, theme, on_event)
-        self.clicked = False
-        self.hovered = False
+        self.clicked, self.hovered = False, False
 
     def current_picture_index(self) -> int:
         """Determines image index to use to reflect the state of the widget."""
@@ -20,11 +18,13 @@ class Button(Interactive):
         else:
             return 0
 
-    def handle_event(self, event):
+    def handle_event(self, event: Event):
         """When button is clicked, play sfx and call on_event."""
-        if self.is_mouse_over_element():
+        if not event.is_mouse_event():
+            return
+        if self.is_mouse_over_element(event):
             self.hovered = True
-            if event.type == pygame.MOUSEBUTTONDOWN and self.on_event is not None:
+            if event.get_type() == EventType.MOUSE_DOWN and self.on_event:
                 self.clicked = True
                 self.theme["play_sfx"]()
                 self.on_event()
@@ -33,7 +33,7 @@ class Button(Interactive):
         else:
             self.hovered = False
 
-    def draw(self, surface: pygame.Surface):
-        """Displays itself onto surface."""
-        surface.blit(self.images[self.current_picture_index()], (self.pos.x, self.pos.y))
-        self.draw_border(surface)
+    def draw(self):
+        """Displays itself."""
+        self.images[self.current_picture_index()].blit(self.get_position())
+        self.draw_border()

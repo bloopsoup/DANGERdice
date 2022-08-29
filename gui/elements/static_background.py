@@ -1,13 +1,13 @@
-import pygame
 from .displayable import Displayable
+from core import AbstractImage
 
 
 class StaticBG(Displayable):
     """A static background."""
 
-    def __init__(self, images: list[pygame.Surface], pos: tuple[float, float]):
+    def __init__(self, images: list[AbstractImage], pos: tuple[int, int]):
         super().__init__(images, pos, {})
 
-    def draw(self, surface: pygame.Surface):
-        """Displays itself onto surface."""
-        surface.blit(self.images[0], (self.pos.x, self.pos.y))
+    def draw(self):
+        """Displays itself."""
+        self.images[0].blit(self.get_position())

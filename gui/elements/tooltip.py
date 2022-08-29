@@ -1,14 +1,13 @@
-import pygame
 from .displayable import Displayable
 from .interactive import Interactive
+from core import AbstractImage, Label, Event
 
 
 class Tooltip(Interactive):
     """A wrapper around a displayable element which displays text when you mouse over it."""
 
-    def __init__(self, pos: tuple[float, float], theme: dict, font: pygame.font.Font, text: str, element: Displayable):
-        super().__init__([pygame.Surface((1, 1))], pos, theme, None)
-        self.font = font
+    def __init__(self, pos: tuple[int, int], theme: dict, text: str, element: Displayable):
+        super().__init__([AbstractImage(None)], pos, theme, None)
         self.text = text
         self.element = element
         self.hovered = False
@@ -17,17 +16,18 @@ class Tooltip(Interactive):
         """Sets the tooltip's text."""
         self.text = text
 
-    def handle_event(self, event: pygame.event.Event):
+    def handle_event(self, event: Event):
         """When hovering over the element and process events for the contained element."""
         self.element.handle_event(event)
-        self.hovered = self.element.is_mouse_over_element()
+        if event.is_mouse_event():
+            self.hovered = self.element.is_mouse_over_element(event)
 
     def update(self, dt: float):
         """Update the contained element and the tooltip's position."""
         self.element.update(dt)
 
-    def draw(self, surface: pygame.Surface):
-        """Displays the tooltip and the contained element to the surface."""
-        self.element.draw(surface)
+    def draw(self):
+        """Displays the tooltip and the contained element."""
+        self.element.draw()
         if self.hovered:
-            surface.blit(self.font.render(self.text, True, (0, 0, 0)), (self.pos.x, self.pos.y))
+            Label(self.text, self.theme["font"], (0, 0, 0)).blit(self.get_position())

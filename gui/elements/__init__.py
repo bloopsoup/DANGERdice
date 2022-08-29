@@ -1,5 +1,6 @@
 from .button import Button
 from .dialogue_box import DialogueBox
+from .displayable import Displayable
 from .effect import Effect
 from .idle import Idle
 from .input_text import InputText

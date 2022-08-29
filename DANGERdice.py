@@ -1,4 +1,4 @@
 from core import run
-from core.control import State
+from game.states import GameState
 
-run("attributions", {"attributions": State()})
+run("attributions", {"attributions": GameState()})

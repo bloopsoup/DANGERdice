@@ -1,3 +1,6 @@
+from .rectangle import Rectangle
+
+
 class AbstractLabel:
     """An abstract label class. Implement with library-specific functions."""
 
@@ -13,6 +16,10 @@ class AbstractLabel:
     def get_height(self) -> int:
         """Gets the height of the image."""
         return self.height
+
+    def get_rectangle(self) -> Rectangle:
+        """Gets the rectangle representation of the label."""
+        return Rectangle((0, 0), self.width, self.height)
 
     def blit(self, pos: tuple[int, int]):
         """Draws text on screen at position."""

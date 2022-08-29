@@ -1,12 +1,12 @@
-import pygame
 from .displayable import Displayable
 from ..utils import IndexCycler
+from core import AbstractImage
 
 
 class Effect(Displayable):
     """An effect which is meant to be shown when activated and automatically disables itself once finished."""
 
-    def __init__(self, images: list[pygame.Surface], pos: tuple[float, float], effect_handler: IndexCycler):
+    def __init__(self, images: list[AbstractImage], pos: tuple[int, int], effect_handler: IndexCycler):
         super().__init__(images, pos, {})
         self.image = self.images[0]
         self.active = False
@@ -32,8 +32,8 @@ class Effect(Displayable):
         if result != -1:
             self.image = self.images[result]
 
-    def draw(self, surface: pygame.Surface):
-        """Displays itself onto surface."""
+    def draw(self):
+        """Displays itself."""
         if not self.active:
             return
-        surface.blit(self.image, (self.pos.x, self.pos.y))
+        self.image.blit(self.get_position())

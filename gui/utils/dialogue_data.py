@@ -1,10 +1,10 @@
-import pygame
+from core import AbstractImage
 
 
 class DialogueData:
     """Dialogue related data."""
 
-    def __init__(self, texts: list[str], portraits: list[list[pygame.Surface]], portrait_seq: list[tuple[int, int]],
+    def __init__(self, texts: list[str], portraits: list[list[AbstractImage]], portrait_seq: list[tuple[int, int]],
                  hooks: list = None):
         assert len(texts) == len(portrait_seq), "texts and portrait_seq should be the same length"
         assert hooks is None or len(texts) == len(hooks), "texts and hooks should be the same length"
@@ -36,7 +36,7 @@ class DialogueData:
             self.letter_idx += 1
         return char
 
-    def get_portrait(self) -> pygame.Surface:
+    def get_portrait(self) -> AbstractImage:
         """Returns the current portrait."""
         portraits, portrait_index = self.portrait_seq[self.seq_idx]
         return self.portraits[portraits][portrait_index]

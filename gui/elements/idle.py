@@ -1,16 +1,15 @@
-import pygame
 from .interactive import Interactive
 from ..utils import IndexCycler
+from core import AbstractImage
 
 
 class Idle(Interactive):
     """An element with an idle animation. Can call a function when the element is clicked."""
 
-    def __init__(self, images: list[pygame.Surface], pos: tuple[float, float], on_event, idle_handler: IndexCycler):
+    def __init__(self, images: list[AbstractImage], pos: tuple[int, int], on_event, idle_handler: IndexCycler):
         super().__init__(images, pos, {}, on_event)
         self.image = self.images[0]
-        self.idle = True
-        self.idle_handler = idle_handler
+        self.idle_handler, self.idle = idle_handler, True
 
     def set_image(self, i: int):
         """Set the image of the Idle element to the ith image."""
@@ -32,6 +31,6 @@ class Idle(Interactive):
         """Updating itself."""
         self.idle_animate(dt)
 
-    def draw(self, surface: pygame.Surface):
-        """Displays itself onto surface."""
-        surface.blit(self.image, (self.pos.x, self.pos.y))
+    def draw(self):
+        """Displays itself."""
+        self.image.blit(self.get_position())

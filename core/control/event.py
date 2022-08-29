@@ -5,7 +5,7 @@ class Event:
     """An event class for GUI components."""
 
     def __init__(self, event_type: EventType, key: Key = None, text: str = None, mouse_button: MouseButton = None,
-                 pos: tuple[float, float] = None):
+                 pos: tuple[int, int] = None):
         self.event_type = event_type
         self.key, self.text = key, text
         self.mouse_button, self.pos = mouse_button, pos
@@ -41,7 +41,7 @@ class Event:
         assert self.is_mouse_press_event(), "must be a mouse event"
         return self.mouse_button
 
-    def get_mouse_position(self) -> tuple[float, float]:
+    def get_mouse_position(self) -> tuple[int, int]:
         """Gets the event's mouse position (must be a mouse event)."""
         assert self.is_mouse_event(), "must be a mouse event"
         return self.pos
