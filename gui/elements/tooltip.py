@@ -30,4 +30,4 @@ class Tooltip(Interactive):
         """Displays the tooltip and the contained element."""
         self.element.draw()
         if self.hovered:
-            Label(self.text, self.theme["font"], (0, 0, 0)).blit(self.get_position())
+            Label(self.text, self.theme["font"], self.theme["color"]).blit(self.get_position())

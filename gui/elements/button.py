@@ -1,5 +1,5 @@
 from .interactive import Interactive
-from core import AbstractImage, Event, EventType
+from core import AbstractImage, Event, EventType, SOUND_PLAYER
 
 
 class Button(Interactive):
@@ -25,8 +25,8 @@ class Button(Interactive):
         if self.is_mouse_over_element(event):
             self.hovered = True
             if event.get_type() == EventType.MOUSE_DOWN and self.on_event:
+                SOUND_PLAYER.play_sfx(self.theme["sfx"])
                 self.clicked = True
-                self.theme["play_sfx"]()
                 self.on_event()
             else:
                 self.clicked = False

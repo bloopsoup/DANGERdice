@@ -1,5 +1,5 @@
 from .interactive import Interactive
-from core import AbstractImage, Label, Event, EventType, Key
+from core import AbstractImage, Label, Event, EventType, Key, SOUND_PLAYER
 
 
 class InputText(Interactive):
@@ -36,7 +36,7 @@ class InputText(Interactive):
         # ENTER/BACKSPACE
         if self.active and event.get_type() == EventType.KEY_DOWN:
             if event.get_key() == Key.ENTER:
-                self.theme["play_sfx"]()
+                SOUND_PLAYER.play_sfx(self.theme["sfx"])
                 self.submit_text()
             elif event.get_key() == Key.BACKSPACE:
                 self.text = self.text[:-1]

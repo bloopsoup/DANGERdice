@@ -1,6 +1,6 @@
 from .interactive import Interactive
 from ..utils import DialogueData
-from core import AbstractImage, Label, Event, EventType
+from core import AbstractImage, Label, Event, EventType, SOUND_PLAYER
 
 
 class DialogueBox(Interactive):
@@ -43,7 +43,7 @@ class DialogueBox(Interactive):
         if char == " ":
             line.append("")
         elif char != "`":
-            self.theme["play_sfx"]()
+            SOUND_PLAYER.play_sfx(self.theme["sfx"])
             line[-1] += char
         if self.line_overflows(line):
             self.lines.append([line.pop()])

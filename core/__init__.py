@@ -14,6 +14,12 @@ else:
     raise ImportError
 
 ###############
+#  CONSTANTS  #
+###############
+
+SOUND_PLAYER = SoundPlayer()
+
+###############
 #   LOADERS   #
 ###############
 
