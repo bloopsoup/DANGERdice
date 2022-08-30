@@ -1,7 +1,7 @@
 import random
 import pygame
 from .utils import rp, path_sheet, path_static, path_sfx, path_song
-from .config import dice_config, enemy_config, fonts_config, idle_animation_config, static_config, spritesheet_config, \
+from game.config import dice_config, enemy_config, fonts_config, idle_animation_config, static_config, spritesheet_config, \
     chunk_config, song_config, sfx_config, dialogue_config
 from gui.utils import Spritesheet, IndexCycler, DialogueData
 from entities.enemies import Enemy, Player
