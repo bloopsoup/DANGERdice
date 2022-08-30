@@ -1,3 +1,4 @@
+from ..config import create_player, create_shop_inventory
 from core import Event, State
 from gui import Canvas
 from gui.commands import CommandQueue
@@ -5,6 +6,9 @@ from gui.commands import CommandQueue
 
 class GameState(State):
     """A game state."""
+
+    player = create_player()
+    shop_inventory = create_shop_inventory()
 
     def __init__(self):
         super().__init__()

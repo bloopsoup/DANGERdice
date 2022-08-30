@@ -1,9 +1,12 @@
 from core import run
-from game.states import Attributions, MainMenu
+from game.states import Attributions, Intro, MainMenu, Story, Tutorial
 
 states = {
     "attributions": Attributions(),
-    "main_menu": MainMenu()
+    "intro": Intro(),
+    "main_menu": MainMenu(),
+    "story": Story(),
+    "tutorial": Tutorial()
 }
 
 run("attributions", states)

@@ -8,7 +8,7 @@ class InputText(Interactive):
     def __init__(self, images: list[AbstractImage], pos: tuple[int, int], theme: dict, on_event):
         super().__init__(images, pos, theme, on_event)
         self.active = False
-        self.text, self.text_surface = "", Label(self.text, self.theme["font"], (0, 0, 0))
+        self.text, self.text_surface = "", Label("", self.theme["font"], (0, 0, 0))
 
     def current_picture_index(self) -> int:
         """Determines image index to use to reflect the state of the widget."""

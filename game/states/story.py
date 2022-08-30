@@ -1,38 +1,35 @@
-import pygame
-from .state import State
-from ..utils import music_handler
-from ..loader import load_static, load_all_sprites, load_font, load_sfx, load_idle_animation
-from ..themes import DIALOGUE_DEFAULT
+from .game_state import GameState
+from ..config import load_idle_animation, DIALOGUE_DEFAULT, TEXT_WHITE_LARGE
+from core import get_image, get_all_sprites, SOUND_PLAYER
 from gui.elements import StaticBG, MovingBackgroundElement, PTexts, Idle, DialogueBox
 from gui.commands import TimerCommand, MoveCommand
 from gui.utils import DialogueData
 
 
-class Story(State):
+class Story(GameState):
     """Today is not your lucky day."""
 
     def __init__(self):
         super().__init__()
-        self.text_display = PTexts([load_static("black")], (0, 220), load_font("L"), [(0, 0)], True)
-        self.text_display.set_color((255, 255, 255))
-        self.player_display = Idle(load_all_sprites("player"), (0, 0), None, load_idle_animation("player"))
-        self.aaron_display = Idle(load_all_sprites("aaron"), (0, 0), None, load_idle_animation("aaron"))
-        self.dorita_display = Idle(load_all_sprites("dorita"), (0, 0), None, load_idle_animation("dorita"))
-        self.dialogue_box = DialogueBox([load_static("text_box")], (100, 350), DIALOGUE_DEFAULT,
-                                        lambda: self.to("pre_tutorial"), load_font("M"), self.load_story_dialogue())
+        self.text_display = PTexts([get_image("black")], (0, 220), TEXT_WHITE_LARGE, [(0, 0)], True)
+        self.player_display = Idle(get_all_sprites("player"), (0, 0), None, load_idle_animation("player"))
+        self.aaron_display = Idle(get_all_sprites("aaron"), (0, 0), None, load_idle_animation("aaron"))
+        self.dorita_display = Idle(get_all_sprites("dorita"), (0, 0), None, load_idle_animation("dorita"))
+        self.dialogue_box = DialogueBox([get_image("text_box")], (100, 350), DIALOGUE_DEFAULT,
+                                        lambda: self.to("pre_tutorial"), self.load_story_dialogue())
 
     def setup_canvas(self):
-        self.canvas.add_element(StaticBG([load_static("casino")], (0, 0)), "")
-        self.canvas.add_element(MovingBackgroundElement([load_static("thin_clear_clouds")], (-1, 0), (800, 600)), "")
-        self.canvas.add_element(StaticBG([load_static("ground")], (0, 0)), "")
+        self.canvas.add_element(StaticBG([get_image("casino")], (0, 0)), "")
+        self.canvas.add_element(MovingBackgroundElement([get_image("thin_clear_clouds")], (-1, 0), (800, 600)), "")
+        self.canvas.add_element(StaticBG([get_image("ground")], (0, 0)), "")
         self.canvas.add_element(self.text_display, "")
         self.text_display.set_text(0, "")
         self.canvas.add_element(self.player_display, "")
-        self.player_display.set_position(pygame.Vector2(-100, 257))
+        self.player_display.set_position((-100, 257))
         self.canvas.add_element(self.aaron_display, "")
-        self.aaron_display.set_position(pygame.Vector2(900, 237))
+        self.aaron_display.set_position((900, 237))
         self.canvas.add_element(self.dorita_display, "")
-        self.dorita_display.set_position(pygame.Vector2(900, 227))
+        self.dorita_display.set_position((900, 227))
         self.canvas.add_element(self.dialogue_box, "")
         self.dialogue_box.reset_scripts()
 
@@ -41,7 +38,7 @@ class Story(State):
                                             lambda: self.dialogue_box.toggle_visibility())])
 
     def setup_music(self):
-        music_handler.stop()
+        SOUND_PLAYER.stop_music()
 
     def load_story_dialogue(self) -> DialogueData:
         """Loads the dialogue for the story."""
@@ -53,7 +50,7 @@ class Story(State):
                  "Then I have another solution.", "What is it?", "What the...", "MY MONEY!"]
         portrait_seq = [(0, 0), (0, 1), (1, 0), (0, 1), (0, 6), (1, 1), (1, 2), (1, 0), (0, 5), (0, 6), (1, 1), (1, 6),
                         (0, 7), (0, 0), (1, 3), (0, 2), (1, 3), (1, 6), (1, 4)]
-        portraits = [load_all_sprites("player_icons"), load_all_sprites("dorita_icons")]
+        portraits = [get_all_sprites("player_icons"), get_all_sprites("dorita_icons")]
         hooks = [None, self.enter_dorita, None, None, None, None, None, self.enter_transition, None, self.enter_dorita,
                  None, None, None, None, None, None, self.exit_player, None, None]
         return DialogueData(texts, portraits, portrait_seq, hooks)
@@ -78,16 +75,16 @@ class Story(State):
     def enter_transition(self):
         """Show a time transition."""
         self.dialogue_box.toggle_visibility()
-        self.canvas.insert_element(StaticBG([load_static("black")], (0, 0)), "black_screen", 3)
+        self.canvas.insert_element(StaticBG([get_image("black")], (0, 0)), "black_screen", 3)
         self.text_display.set_text(0, "2 HOURS LATER")
-        self.player_display.set_position(pygame.Vector2(-100, 257))
-        self.dorita_display.set_position(pygame.Vector2(900, 227))
-        music_handler.play_sfx(load_sfx("one"))
+        self.player_display.set_position((-100, 257))
+        self.dorita_display.set_position((900, 227))
+        SOUND_PLAYER.play_sfx("one")
         self.command_queue.add([TimerCommand(1.5, self.exit_transition)])
 
     def exit_transition(self):
         """Exit the time transition."""
         self.canvas.delete_group("black_screen")
         self.text_display.set_text(0, "")
-        self.aaron_display.set_position(pygame.Vector2(300, 237))
+        self.aaron_display.set_position((300, 237))
         self.command_queue.add([MoveCommand(self.aaron_display, (5, 0), (300, 237), (1000, 237), self.enter_player)])
