@@ -7,7 +7,7 @@ class PTexts(Displayable):
        images and pos represent an anchor point for relative text positioning (rather than absolute)."""
 
     def __init__(self, images: list[AbstractImage], pos: tuple[int, int], theme: dict,
-                 offsets: list[tuple[float, float]], h_centered: bool):
+                 offsets: list[tuple[int, int]], h_centered: bool):
         assert len(offsets) > 0, "must have at least 1 offset"
         super().__init__(images, pos, theme)
         self.texts = ["" for _ in range(len(offsets))]
