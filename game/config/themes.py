@@ -35,4 +35,9 @@ TEXT_DEFAULT = {
     "color": (0, 0, 0)
 }
 
+TEXT_WHITE_LARGE = {
+    "font": "L",
+    "color": (255, 255, 255)
+}
+
 

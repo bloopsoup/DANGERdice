@@ -1,4 +1,9 @@
 from core import run
-from game.states import GameState
+from game.states import Attributions, MainMenu
 
-run("attributions", {"attributions": GameState()})
+states = {
+    "attributions": Attributions(),
+    "main_menu": MainMenu()
+}
+
+run("attributions", states)
