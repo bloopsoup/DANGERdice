@@ -1,7 +1,7 @@
 from .components import AbstractImage, AbstractSpritesheet, Rectangle
 from .control import Event, State
 from .enums import EventType, Key, MouseButton
-from .path import chunk_config
+from .path import save_json, load_json, chunk_config
 
 ###############
 #    SETUP    #

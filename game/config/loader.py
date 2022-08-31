@@ -22,6 +22,13 @@ def load_dialogue(dialogue: str, tier: int) -> DialogueData:
     return DialogueData(texts, portraits, portrait_seq)
 
 
+def random_battle_song() -> str:
+    """Returns a random battle song path."""
+    battle_songs = ["calm", "doma", "huh", "jong", "menu", "ones", "somedrums", "Something", "stomp", "stomp2",
+                    "trittle", "zins"]
+    return random.choice(battle_songs)
+
+
 def random_die_name() -> str:
     """Gets a random die name."""
     return random.choice(list(dice_config.keys()))

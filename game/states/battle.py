@@ -1,16 +1,14 @@
-import pygame
-from .state import State
-from ..utils import music_handler
-from ..loader import load_static, load_some_sprites, load_all_sprites, load_font, load_sfx, random_battle_song, \
-    load_idle_animation, create_dice_set, create_enemy
-from ..themes import BUTTON_DEFAULT
+from .game_state import GameState
+from ..config import load_idle_animation, create_dice_set, create_enemy, random_battle_song, \
+    BUTTON_DEFAULT, TEXT_DEFAULT, TEXT_LARGE
+from core import get_image, get_sprites, get_all_sprites, AbstractImage, SOUND_PLAYER
 from entities.dice import DiceSet
 from entities.enemies import DamageHandler
 from gui.elements import StaticBG, MovingBackgroundElement, PTexts, Idle, Button, Tooltip
 from gui.commands import TimerCommand, AnimationHandler
 
 
-class Battle(State):
+class Battle(GameState):
     """Battle enemies, get hurt, and earn loot."""
 
     def __init__(self, enemy_name: str, tier: int, destination: str):
@@ -23,30 +21,30 @@ class Battle(State):
         self.enemy_set = create_dice_set(self.enemy.get_preference())
         self.damage_handler = DamageHandler([self.player, self.enemy])
 
-        self.player_display = Idle(load_all_sprites("player"), (0, 0), None, load_idle_animation("player"))
-        self.player_s_display = PTexts(load_all_sprites("player"), (0, 0), load_font("SS"), [(0, -50), (0, -25)], True)
-        self.enemy_display = Idle(load_all_sprites(enemy_name), (0, 0), None, load_idle_animation(enemy_name))
-        self.enemy_s_display = PTexts(load_all_sprites(enemy_name), (0, 0), load_font("SS"), [(0, -50), (0, -25)], True)
+        self.player_display = Idle(get_all_sprites("player"), (0, 0), None, load_idle_animation("player"))
+        self.player_s_display = PTexts(get_all_sprites("player"), (0, 0), TEXT_DEFAULT, [(0, -50), (0, -25)], True)
+        self.enemy_display = Idle(get_all_sprites(enemy_name), (0, 0), None, load_idle_animation(enemy_name))
+        self.enemy_s_display = PTexts(get_all_sprites(enemy_name), (0, 0), TEXT_DEFAULT, [(0, -50), (0, -25)], True)
         self.animation_handler = AnimationHandler(self.player_display, (60, 257), self.enemy_display, (740 - self.enemy_display.get_width(), 357 - self.enemy_display.get_height()), self.command_queue)
 
-        self.stat_display = PTexts([pygame.Surface((1, 1))], (38, 460), load_font("SS"), [(0, 0), (0, 20), (0, 40), (0, 60)], False)
-        self.damage_display = PTexts([load_static("black")], (0, 0), load_font("SS"), [(50, 435), (370, 435)], False)
-        self.reward_display = PTexts([load_static("black")], (0, 0), load_font("L"), [(0, 100)], True)
+        self.stat_display = PTexts([AbstractImage(None)], (38, 460), TEXT_DEFAULT, [(0, 0), (0, 20), (0, 40), (0, 60)], False)
+        self.damage_display = PTexts([get_image("black")], (0, 0), TEXT_DEFAULT, [(50, 435), (370, 435)], False)
+        self.reward_display = PTexts([get_image("black")], (0, 0), TEXT_LARGE, [(0, 100)], True)
 
     def setup_state(self):
         self.player_set = create_dice_set(self.player.get_preference())
 
     def setup_canvas(self):
-        self.canvas.add_element(StaticBG([load_static("hills")], (0, 0)), "")
-        self.canvas.add_element(MovingBackgroundElement([load_static("thick_clouds")], (-1, 0), (800, 600)), "")
-        self.canvas.add_element(StaticBG([load_static("player_hud")], (0, 0)), "hud")
+        self.canvas.add_element(StaticBG([get_image("hills")], (0, 0)), "")
+        self.canvas.add_element(MovingBackgroundElement([get_image("thick_clouds")], (-1, 0), (800, 600)), "")
+        self.canvas.add_element(StaticBG([get_image("player_hud")], (0, 0)), "hud")
 
         self.canvas.add_element(self.player_display, "")
-        self.player_display.set_position(pygame.Vector2(-300, 257))
+        self.player_display.set_position((-300, 257))
         self.canvas.add_element(self.player_s_display, "")
         self.player_s_display.set_text(0, self.player.get_name())
         self.canvas.add_element(self.enemy_display, "")
-        self.enemy_display.set_position(pygame.Vector2(1000, 357 - self.enemy_display.get_height()))
+        self.enemy_display.set_position((1000, 357 - self.enemy_display.get_height()))
         self.canvas.add_element(self.enemy_s_display, "")
         self.enemy_s_display.set_text(0, self.enemy.get_name())
         self.canvas.add_element(self.stat_display, "")
@@ -55,15 +53,15 @@ class Battle(State):
         self.canvas.add_element(self.reward_display, "")
         self.reward_display.set_text(0, "")
 
-        self.canvas.add_element(Button(load_some_sprites("music"), (730, 0), BUTTON_DEFAULT, music_handler.toggle), "")
-        self.canvas.add_element(Button(load_some_sprites("attack"), (580, 370), BUTTON_DEFAULT, self.attack), "hud")
+        self.canvas.add_element(Button(get_sprites("music"), (730, 0), BUTTON_DEFAULT, SOUND_PLAYER.toggle_mute), "")
+        self.canvas.add_element(Button(get_sprites("attack"), (580, 370), BUTTON_DEFAULT, self.attack), "hud")
         self.add_player_set_to_canvas()
 
     def setup_commands(self):
         self.animation_handler.to_start(self.enable_hud)
 
     def setup_music(self):
-        music_handler.change(random_battle_song())
+        SOUND_PLAYER.change_music(random_battle_song())
 
     def reset_state(self):
         self.active, self.your_turn = False, True
@@ -89,7 +87,7 @@ class Battle(State):
         preference = self.player.get_preference() if self.your_turn else self.enemy.get_preference()
         x_start = 375 if self.your_turn else 40
         for i, die_name in enumerate(preference):
-            die_display = Idle(load_some_sprites(die_name), (x_start + (i * 100), 460),
+            die_display = Idle(get_sprites(die_name), (x_start + (i * 100), 460),
                                lambda x=i: self.roll(x) if self.your_turn else None, load_idle_animation("square"))
             self.canvas.add_element(die_display, "dice")
 
@@ -98,28 +96,28 @@ class Battle(State):
         self.canvas.delete_group("status")
         x_start, status = 40, self.damage_handler.get_status(0 if self.your_turn else 1)
         if status.get_poison() > 0:
-            poison_icon = StaticBG([load_static("poison")], (x_start, 390))
-            poison_text = "{0} damage ending turn".format(status.get_poison())
-            self.canvas.add_element(Tooltip((x_start, 365), {}, load_font("SS"), poison_text, poison_icon), "status")
+            poison_icon = StaticBG([get_image("poison")], (x_start, 390))
+            poison_text = f"{status.get_poison()} damage ending turn"
+            self.canvas.add_element(Tooltip((x_start, 365), TEXT_DEFAULT, poison_text, poison_icon), "status")
             x_start += 30
         if status.get_weaken() > 1:
-            weaken_icon = StaticBG([load_static("weakened")], (x_start, 390))
-            weaken_text = "Damage reduced by {0}X".format(status.get_weaken())
-            self.canvas.add_element(Tooltip((x_start, 365), {}, load_font("SS"), weaken_text, weaken_icon), "status")
+            weaken_icon = StaticBG([get_image("weakened")], (x_start, 390))
+            weaken_text = f"Damage reduced by {status.get_weaken()}X"
+            self.canvas.add_element(Tooltip((x_start, 365), TEXT_DEFAULT, weaken_text, weaken_icon), "status")
 
     def switch_hud(self):
         """Switches the HUD for the turn player."""
         self.canvas.delete_group("hud")
         hud = "player_hud" if self.your_turn else "enemy_hud"
-        self.canvas.insert_element(StaticBG([load_static(hud)], (0, 0)), "hud", 2)
+        self.canvas.insert_element(StaticBG([get_image(hud)], (0, 0)), "hud", 2)
         if self.your_turn:
-            self.canvas.add_element(Button(load_some_sprites("attack"), (580, 370), BUTTON_DEFAULT, self.attack), "hud")
+            self.canvas.add_element(Button(get_sprites("attack"), (580, 370), BUTTON_DEFAULT, self.attack), "hud")
 
         self.add_player_set_to_canvas()
         self.add_status_icons_to_canvas()
 
         pos = (38, 460) if self.your_turn else (450, 460)
-        self.stat_display.set_position(pygame.Vector2(pos))
+        self.stat_display.set_position(pos)
         new_texts = ["", str(self.damage_handler)] if self.your_turn else [str(self.damage_handler), ""]
         self.damage_display.set_texts(new_texts)
 
@@ -134,14 +132,14 @@ class Battle(State):
     def update_text_on_canvas(self):
         """Updates the text to reflect the latest state."""
         self.player_s_display.set_position(self.player_display.get_position())
-        self.player_s_display.set_text(1, "{0} HP".format(self.player.get_health()))
+        self.player_s_display.set_text(1, f"{self.player.get_health()} HP")
         self.enemy_s_display.set_position(self.enemy_display.get_position())
-        self.enemy_s_display.set_text(1, "{0} HP".format(self.enemy.get_health()))
+        self.enemy_s_display.set_text(1, f"{self.enemy.get_health()} HP")
 
         entity = self.player if self.your_turn else self.enemy
-        self.stat_display.set_texts([entity.get_name(), "LVL: {0}".format(entity.get_level()),
-                                     "HP: {0} / {1}".format(entity.get_health(), entity.get_max_health()),
-                                     "Gold: {0}".format(entity.get_money())])
+        self.stat_display.set_texts([entity.get_name(), f"LVL: {entity.get_level()}",
+                                     f"HP: {entity.get_health()} / {entity.get_max_health()}",
+                                     f"Gold: {entity.get_money()}"])
         self.damage_display.set_text(1 if self.your_turn else 0, str(self.damage_handler))
 
     def roll(self, i: int):
@@ -172,7 +170,7 @@ class Battle(State):
     def popup_notice(self, notice: str, func):
         """Pops up a notice for a short time and runs func after."""
         self.disable_hud()
-        self.canvas.add_element(StaticBG([load_static(notice)], (0, 210)), "notice")
+        self.canvas.add_element(StaticBG([get_image(notice)], (0, 210)), "notice")
         self.command_queue.add([TimerCommand(0.5, func)])
 
     def attack(self):
@@ -180,8 +178,8 @@ class Battle(State):
         if not self.active or not self.damage_handler.has_damage():
             return
         self.disable_hud()
-        hooks = [lambda: music_handler.play_sfx(load_sfx("charge")),
-                 lambda: music_handler.play_sfx(load_sfx("shatter")), self.apply_damage]
+        hooks = [lambda: SOUND_PLAYER.play_sfx("charge"),
+                 lambda: SOUND_PLAYER.play_sfx("shatter"), self.apply_damage]
         self.animation_handler.rush(self.your_turn, hooks)
 
     def apply_damage(self):
@@ -200,7 +198,7 @@ class Battle(State):
             self.damage_handler.reset_bless(status_idx)
         if self.damage_handler.has_status_damage(status_idx):
             self.damage_handler.apply_s_damage(status_idx)
-            music_handler.play_sfx(load_sfx("poison"))
+            SOUND_PLAYER.play_sfx("poison")
             self.command_queue.add([TimerCommand(1, self.end_turn)])
         else:
             self.end_turn()
@@ -210,7 +208,7 @@ class Battle(State):
         msg = "You won!" if self.enemy.is_dead() else "Ouch."
         destination = self.destination if self.enemy.is_dead() else "game_over"
         self.reward_display.set_text(0, msg)
-        music_handler.play_sfx(load_sfx("good"))
+        SOUND_PLAYER.play_sfx("good")
         self.player.advance_stage()
         self.player.add_money(self.enemy.get_money())
         self.player.gain_exp(self.enemy.get_level())
@@ -232,12 +230,12 @@ class Battle(State):
         """Determines what to do after rolling a die. Either you end your turn prematurely,
            reset the dice (which queues another AI action), or continue your turn normally."""
         if result != -1:
-            music_handler.play_sfx(load_sfx("roll"))
+            SOUND_PLAYER.play_sfx("roll")
         if result == 0:
-            music_handler.play_sfx(load_sfx("one"))
+            SOUND_PLAYER.play_sfx("one")
             self.popup_notice("rolled_one", self.apply_status_damage)
         elif dice_set.needs_reset():
-            music_handler.play_sfx(load_sfx("good"))
+            SOUND_PLAYER.play_sfx("good")
             self.popup_notice("refresh", lambda: self.reset_rolls(dice_set))
             self.queue_ai_action()
         else:

@@ -35,6 +35,11 @@ TEXT_DEFAULT = {
     "color": (0, 0, 0)
 }
 
+TEXT_SMALL = {
+    "font": "S",
+    "color": (0, 0, 0)
+}
+
 TEXT_MEDIUM = {
     "font": "M",
     "color": (0, 0, 0)

@@ -1,36 +1,34 @@
-from .state import State
-from ..utils import music_handler
-from ..loader import load_static, load_some_sprites, load_all_sprites, load_font, load_sfx, load_song, \
-    load_idle_animation, create_die
-from ..themes import BUTTON_DEFAULT
+from .game_state import GameState
+from ..config import create_die, load_idle_animation, BUTTON_DEFAULT, TEXT_MEDIUM
+from core import get_image, get_sprites, get_all_sprites, SOUND_PLAYER
 from gui.elements import StaticBG, MovingBackgroundElement, PTexts, Idle, Button
 from gui.commands import TimerCommand
 
 
-class Shop(State):
+class Shop(GameState):
     """Where the player can purchase dice."""
 
     def __init__(self):
         super().__init__()
         self.selected_index, self.active = -1, True
-        self.keeper_display = Idle(load_all_sprites("shopkeeper"), (650, 420), None, load_idle_animation("shopkeeper"))
-        self.gold_display = PTexts([load_static("black")], (0, 0), load_font("M"), [(100, 170)], False)
-        self.info_display = PTexts([load_static("black")], (0, 0), load_font("M"), [(0, 476), (0, 544)], True)
+        self.keeper_display = Idle(get_all_sprites("shopkeeper"), (650, 420), None, load_idle_animation("shopkeeper"))
+        self.gold_display = PTexts([get_image("black")], (0, 0), TEXT_MEDIUM, [(100, 170)], False)
+        self.info_display = PTexts([get_image("black")], (0, 0), TEXT_MEDIUM, [(0, 476), (0, 544)], True)
 
     def setup_canvas(self):
-        self.canvas.add_element(MovingBackgroundElement([load_static("tall_rectangles")], (0, -1), (800, 600)), "")
-        self.canvas.add_element(StaticBG([load_static("shop")], (0, 0)), "")
+        self.canvas.add_element(MovingBackgroundElement([get_image("tall_rectangles")], (0, -1), (800, 600)), "")
+        self.canvas.add_element(StaticBG([get_image("shop")], (0, 0)), "")
         self.canvas.add_element(self.gold_display, "")
         self.gold_display.set_text(0, "Gold: {0}".format(self.player.get_money()))
         self.canvas.add_element(self.info_display, "")
         self.info_display.set_texts(["", "Click on a Die you wish to purchase."])
         self.canvas.add_element(self.keeper_display, "")
         self.add_dice_to_canvas()
-        self.canvas.add_element(Button(load_some_sprites("back"), (0, 0), BUTTON_DEFAULT, self.back), "")
-        self.canvas.add_element(Button(load_some_sprites("music"), (730, 530), BUTTON_DEFAULT, music_handler.toggle), "")
+        self.canvas.add_element(Button(get_sprites("back"), (0, 0), BUTTON_DEFAULT, self.back), "")
+        self.canvas.add_element(Button(get_sprites("music"), (730, 530), BUTTON_DEFAULT, SOUND_PLAYER.toggle_mute), "")
 
     def setup_music(self):
-        music_handler.change(load_song("note"))
+        SOUND_PLAYER.change_music("note")
 
     def reset_state(self):
         self.selected_index, self.active = -1, True
@@ -40,15 +38,15 @@ class Shop(State):
         for i, die_name in enumerate(self.shop_inventory.get_inventory()):
             if not len(die_name):
                 die_name = "placeholder_die"
-            die_display = Idle(load_some_sprites(die_name), (104 + (i * 253), 290), lambda x=i: self.select(x),
+            die_display = Idle(get_sprites(die_name), (104 + (i * 253), 290), lambda x=i: self.select(x),
                                load_idle_animation("square"))
             die_display.set_idle(False)
             self.canvas.add_element(die_display, "dice")
 
     def add_shop_buttons_to_canvas(self):
         """Make the buttons for buying/canceling appear."""
-        self.canvas.add_element(Button(load_some_sprites("confirm"), (320, 525), BUTTON_DEFAULT, self.buy), "buttons")
-        self.canvas.add_element(Button(load_some_sprites("cancel"), (410, 525), BUTTON_DEFAULT, self.deselect), "buttons")
+        self.canvas.add_element(Button(get_sprites("confirm"), (320, 525), BUTTON_DEFAULT, self.buy), "buttons")
+        self.canvas.add_element(Button(get_sprites("cancel"), (410, 525), BUTTON_DEFAULT, self.deselect), "buttons")
 
     def show_die_info(self):
         """Shows the currently selected die's info."""
@@ -94,7 +92,7 @@ class Shop(State):
     def popup_notice(self, sold: bool):
         """Pops up a notice for a short time and handles timing issues."""
         self.deactivate()
-        self.canvas.add_element(StaticBG([load_static("bought" if sold else "broke")], (0, 130) if sold else (0, 0)), "notice")
+        self.canvas.add_element(StaticBG([get_image("bought" if sold else "broke")], (0, 130) if sold else (0, 0)), "notice")
         self.command_queue.add([TimerCommand(0.5, self.activate)])
 
     def buy(self):
@@ -106,8 +104,8 @@ class Shop(State):
             self.player.subtract_money(die.get_price())
             self.player.append_to_inventory(die_name)
             self.gold_display.set_text(0, "Gold: {0}".format(self.player.get_money()))
-            music_handler.play_sfx(load_sfx("roll"))
+            SOUND_PLAYER.play_sfx("roll")
             self.popup_notice(True)
         else:
-            music_handler.play_sfx(load_sfx("one"))
+            SOUND_PLAYER.play_sfx("one")
             self.popup_notice(False)

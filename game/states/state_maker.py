@@ -1,8 +1,8 @@
 import random
-from .state import State
 from .preamble import Preamble
 from .battle import Battle
-from ..loader import all_enemy_names
+from ..config import all_enemy_names
+from core import State
 
 
 def add_battle_state(states: dict[str, State], stage: int, level: int, enemy_name: str):

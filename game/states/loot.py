@@ -1,24 +1,23 @@
-import pygame
-from .state import State
-from ..utils import music_handler
-from ..loader import load_static, load_all_sprites, load_font, load_sfx, load_idle_animation, random_die_name
+from .game_state import GameState
+from ..config import load_idle_animation, random_die_name, TEXT_MEDIUM
+from core import get_image, get_all_sprites, SOUND_PLAYER
 from gui.elements import StaticBG, PTexts, Idle
 from gui.commands import TimerCommand, MoveCommand
 
 
-class Loot(State):
+class Loot(GameState):
     """A screen that can show up if the player has won a die from the previous battle."""
 
     def __init__(self):
         super().__init__()
-        self.player_display = Idle(load_all_sprites("player"), (-300, 257), None, load_idle_animation("player"))
-        self.loot_display = PTexts([load_static("black")], (0, 0), load_font("M"), [(0, 100)], True)
+        self.player_display = Idle(get_all_sprites("player"), (-300, 257), None, load_idle_animation("player"))
+        self.loot_display = PTexts([get_image("black")], (0, 0), TEXT_MEDIUM, [(0, 100)], True)
 
     def setup_canvas(self):
-        self.canvas.add_element(StaticBG([load_static("crate")], (0, 0)), "")
-        self.canvas.add_element(StaticBG([load_static("ground")], (0, 0)), "")
+        self.canvas.add_element(StaticBG([get_image("crate")], (0, 0)), "")
+        self.canvas.add_element(StaticBG([get_image("ground")], (0, 0)), "")
         self.canvas.add_element(self.player_display, "")
-        self.player_display.set_position(pygame.Vector2(-300, 257))
+        self.player_display.set_position((-300, 257))
         self.canvas.add_element(self.loot_display, "")
         self.loot_display.set_text(0, "")
 
@@ -28,11 +27,11 @@ class Loot(State):
         self.command_queue.add([TimerCommand(2, lambda: self.to("player_menu"))])
 
     def setup_music(self):
-        music_handler.stop()
+        SOUND_PLAYER.stop_music()
 
     def give_loot(self):
         """Gives the player loot."""
         die_name = random_die_name()
         self.player.append_to_inventory(die_name)
-        self.loot_display.set_text(0, "You got {0}!".format(die_name))
-        music_handler.play_sfx(load_sfx("good"))
+        self.loot_display.set_text(0, f"You got {die_name}!")
+        SOUND_PLAYER.play_sfx("good")
