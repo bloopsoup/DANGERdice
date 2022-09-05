@@ -1,5 +1,4 @@
 from .game_state import GameState
-from ..persistent_data import PERSISTENT_DATA
 from ..config import load_idle_animation, BUTTON_DEFAULT, TEXT_DEFAULT, TEXT_MEDIUM
 from core import get_image, get_sprites, get_all_sprites, AbstractImage, SOUND_PLAYER
 from gui.elements import StaticBG, MovingBackgroundElement, PTexts, Idle, Button
@@ -10,7 +9,6 @@ class PlayerMenu(GameState):
 
     def __init__(self):
         super().__init__()
-        self.player = PERSISTENT_DATA.get_player()
         self.player_display = Idle(get_all_sprites("player"), (38, 72), None, load_idle_animation("player"))
         self.stat_display = PTexts([AbstractImage(None)], (145, 72), TEXT_DEFAULT, [(0, 0), (0, 20), (0, 40), (0, 60)], False)
         self.level_display = PTexts([get_image("black")], (0, 210), TEXT_MEDIUM, [(0, 0)], True)
@@ -26,10 +24,10 @@ class PlayerMenu(GameState):
                                      f"HP: {self.player.get_health()} / {self.player.get_max_health()}",
                                      f"Gold: {self.player.get_money()}"])
         self.canvas.add_element(self.level_display, "")
-        self.level_display.set_text(0, f"Next Level: {self.player.get_stage()}")
+        self.level_display.set_text(0, f"Next Level: {self.level_manager.get_level()['name']}")
         self.add_dice_to_canvas()
 
-        self.canvas.add_element(Button(get_sprites("play"), (150, 250), BUTTON_DEFAULT, lambda: self.to(self.player.get_stage())), "")
+        self.canvas.add_element(Button(get_sprites("play"), (150, 250), BUTTON_DEFAULT, lambda: self.to("preamble")), "")
         self.canvas.add_element(Button(get_sprites("inventory"), (150, 335), BUTTON_DEFAULT, lambda: self.to("inventory")), "")
         self.canvas.add_element(Button(get_sprites("shop"), (150, 420), BUTTON_DEFAULT, lambda: self.to("shop")), "")
         self.canvas.add_element(Button(get_sprites("save_icon"), (0, 530), BUTTON_DEFAULT, lambda: self.to("save")), "")

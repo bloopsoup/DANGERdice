@@ -1,5 +1,4 @@
 from .game_state import GameState
-from ..persistent_data import PERSISTENT_DATA
 from ..config import BUTTON_DEFAULT, TEXT_MEDIUM
 from core import get_image, get_sprites, save_json, SOUND_PLAYER
 from gui.elements import StaticBG, PTexts, Button
@@ -22,5 +21,5 @@ class Save(GameState):
 
     def save_data(self):
         """Saves current player data."""
-        save_json(PERSISTENT_DATA.export_data(), "game_data.json")
+        save_json(self.persistent_data.export_data(), "game_data.json")
         self.to("player_menu")

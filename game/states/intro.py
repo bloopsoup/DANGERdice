@@ -1,5 +1,4 @@
 from .game_state import GameState
-from ..persistent_data import PERSISTENT_DATA
 from ..config import load_idle_animation, BUTTON_DEFAULT, INPUT_DEFAULT, TEXT_DEFAULT, TEXT_MEDIUM
 from core import get_image, get_sprites, get_all_sprites, SOUND_PLAYER
 from gui.elements import StaticBG, MovingBackgroundElement, PTexts, Idle, Button, InputText
@@ -12,7 +11,6 @@ class Intro(GameState):
     def __init__(self):
         super().__init__()
         self.destination = "story"
-        self.player = PERSISTENT_DATA.get_player()
         self.player_display = Idle(get_all_sprites("player"), (350, 472), None, load_idle_animation("player"))
         self.name_display = PTexts(get_all_sprites("player"), (350, 472), TEXT_DEFAULT, [(0, -25)], True)
         self.skip_display = PTexts([get_image("black")], (0, 220), TEXT_MEDIUM, [(0, 0)], True)

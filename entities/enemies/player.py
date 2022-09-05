@@ -8,21 +8,8 @@ class Player(Enemy):
 
     def __init__(self):
         super().__init__("", 1, 100, 0, [])
-        self.starting_stage = [0, 0]
-        self.current_stage = self.starting_stage[:]
         self.inventory = []
         self.exp = 0
-
-    def get_stage(self) -> str:
-        """Gets the player's current stage."""
-        return "pre_battle_stage{0}_level{1}".format(self.current_stage[0], self.current_stage[1])
-
-    def advance_stage(self):
-        """Advances the player's current stage."""
-        self.current_stage[1] += 1
-        if self.current_stage[1] > 3:
-            self.current_stage[0] += 1
-            self.current_stage[1] = 0
 
     def get_inventory(self) -> list[str]:
         """Gets a copy of the player's inventory as a list."""
@@ -61,7 +48,6 @@ class Player(Enemy):
         self.money = 0
         self.preference = []
         self.inventory = []
-        self.current_stage = self.starting_stage[:]
         self.exp = 0
 
     def import_data(self, data: dict):
@@ -73,7 +59,6 @@ class Player(Enemy):
         self.money = data["money"]
         self.preference = data["preference"]
         self.inventory = data["inventory"]
-        self.current_stage = data["current_stage"]
         self.exp = data["exp"]
 
     def export_data(self) -> dict:
@@ -86,6 +71,5 @@ class Player(Enemy):
             "money": self.money,
             "preference": self.preference,
             "inventory": self.inventory,
-            "current_stage": self.current_stage,
             "exp": self.exp
         }

@@ -1,5 +1,4 @@
 from .game_state import GameState
-from ..persistent_data import PERSISTENT_DATA
 from ..config import load_idle_animation, TEXT_WHITE_LARGE
 from core import get_image, get_all_sprites, SOUND_PLAYER
 from gui.elements import StaticBG, PTexts, Idle
@@ -39,5 +38,5 @@ class Ending(GameState):
 
     def return_to_menu(self):
         """Goes back to the main menu and resets the stats."""
-        PERSISTENT_DATA.reset_data()
+        self.persistent_data.reset_data()
         self.to("main_menu")

@@ -1,5 +1,4 @@
 from .game_state import GameState
-from ..persistent_data import PERSISTENT_DATA
 from ..config import load_idle_animation, create_dice_set, create_enemy, BUTTON_DEFAULT, TEXT_DEFAULT, TEXT_LARGE
 from core import get_image, get_sprites, get_all_sprites, AbstractImage, SOUND_PLAYER
 from entities.dice import DiceSet
@@ -11,28 +10,32 @@ from gui.commands import TimerCommand, AnimationHandler
 class Battle(GameState):
     """Battle enemies, get hurt, and earn loot."""
 
-    def __init__(self, enemy_name: str, tier: int, destination: str):
+    def __init__(self):
         super().__init__()
-        self.destination = destination
         self.active, self.your_turn = False, True
-
-        self.enemy, self.enemy_set = create_enemy(enemy_name, tier), create_dice_set(self.enemy.get_preference())
-        self.player, self.player_set = PERSISTENT_DATA.get_player(), None
-        self.shop_inventory = PERSISTENT_DATA.get_shop_inventory()
-        self.damage_handler = DamageHandler([self.player, self.enemy])
-
         self.player_display = Idle(get_all_sprites("player"), (0, 0), None, load_idle_animation("player"))
         self.player_s_display = PTexts(get_all_sprites("player"), (0, 0), TEXT_DEFAULT, [(0, -50), (0, -25)], True)
-        self.enemy_display = Idle(get_all_sprites(enemy_name), (0, 0), None, load_idle_animation(enemy_name))
-        self.enemy_s_display = PTexts(get_all_sprites(enemy_name), (0, 0), TEXT_DEFAULT, [(0, -50), (0, -25)], True)
-        self.animation_handler = AnimationHandler(self.player_display, (60, 257), self.enemy_display, (740 - self.enemy_display.get_width(), 357 - self.enemy_display.get_height()), self.command_queue)
-
         self.stat_display = PTexts([AbstractImage(None)], (38, 460), TEXT_DEFAULT, [(0, 0), (0, 20), (0, 40), (0, 60)], False)
         self.damage_display = PTexts([get_image("black")], (0, 0), TEXT_DEFAULT, [(50, 435), (370, 435)], False)
         self.reward_display = PTexts([get_image("black")], (0, 0), TEXT_LARGE, [(0, 100)], True)
 
+        self.player_set = None
+        self.enemy, self.enemy_set = None, None
+        self.damage_handler = None
+        self.destination = None
+        self.enemy_display, self.enemy_s_display = None, None
+        self.animation_handler = None
+
     def setup_state(self):
+        l_data = self.level_manager.get_level()
         self.player_set = create_dice_set(self.player.get_preference())
+        self.enemy, self.enemy_set = create_enemy(l_data["enemy"], l_data["tier"]), create_dice_set(self.enemy.get_preference())
+        self.damage_handler = DamageHandler([self.player, self.enemy])
+        self.destination = l_data["dest"]
+        self.enemy_display = Idle(get_all_sprites(l_data["enemy"]), (0, 0), None, load_idle_animation(l_data["enemy"]))
+        self.enemy_s_display = PTexts(get_all_sprites(l_data["enemy"]), (0, 0), TEXT_DEFAULT, [(0, -50), (0, -25)], True)
+        self.animation_handler = AnimationHandler(self.player_display, (60, 257), self.enemy_display, (
+            740 - self.enemy_display.get_width(), 357 - self.enemy_display.get_height()), self.command_queue)
 
     def setup_canvas(self):
         self.canvas.add_element(StaticBG([get_image("hills")], (0, 0)), "")
@@ -65,9 +68,6 @@ class Battle(GameState):
 
     def reset_state(self):
         self.active, self.your_turn = False, True
-        self.damage_handler.reset()
-        self.enemy.revive()
-        self.enemy.restore_health()
 
     def update_components(self):
         self.update_set_on_canvas()
@@ -209,7 +209,7 @@ class Battle(GameState):
         destination = self.destination if self.enemy.is_dead() else "game_over"
         self.reward_display.set_text(0, msg)
         SOUND_PLAYER.play_sfx("good")
-        self.player.advance_stage()
+        self.level_manager.next_level()
         self.player.add_money(self.enemy.get_money())
         self.player.gain_exp(self.enemy.get_level())
         self.player.try_level_up()

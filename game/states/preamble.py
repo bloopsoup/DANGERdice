@@ -8,15 +8,19 @@ from gui.commands import AnimationHandler
 class Preamble(GameState):
     """Sometimes you have a chit-chat before battle."""
 
-    def __init__(self, enemy_name: str, tier: int, destination: str):
+    def __init__(self):
         super().__init__()
         self.player_display = Idle(get_all_sprites("player"), (0, 0), None, load_idle_animation("player"))
-        self.enemy_display = Idle(get_all_sprites(enemy_name), (0, 0), None, load_idle_animation(enemy_name))
+        self.enemy_display, self.animation_handler, self.dialogue_box = None, None, None
+
+    def setup_state(self):
+        l_data = self.level_manager.get_level()
+        self.enemy_display = Idle(get_all_sprites(l_data["enemy"]), (0, 0), None, load_idle_animation(l_data["enemy"]))
         self.animation_handler = AnimationHandler(self.player_display, (60, 257), self.enemy_display,
                                                   (740 - self.enemy_display.get_width(),
                                                    357 - self.enemy_display.get_height()), self.command_queue)
         self.dialogue_box = DialogueBox([get_image("text_box")], (100, 350), DIALOGUE_DEFAULT,
-                                        lambda: self.to(destination), load_dialogue(enemy_name, tier))
+                                        lambda: self.to("battle"), load_dialogue(l_data["enemy"], l_data["tier"]))
 
     def setup_canvas(self):
         self.canvas.add_element(StaticBG([get_image("hills")], (0, 0)), "")

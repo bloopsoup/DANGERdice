@@ -1,5 +1,4 @@
 from .game_state import GameState
-from ..persistent_data import PERSISTENT_DATA
 from ..config import load_idle_animation, create_random_die, TEXT_MEDIUM
 from core import get_image, get_all_sprites, SOUND_PLAYER
 from gui.elements import StaticBG, PTexts, Idle
@@ -11,7 +10,6 @@ class Loot(GameState):
 
     def __init__(self):
         super().__init__()
-        self.player = PERSISTENT_DATA.get_player()
         self.player_display = Idle(get_all_sprites("player"), (-300, 257), None, load_idle_animation("player"))
         self.loot_display = PTexts([get_image("black")], (0, 0), TEXT_MEDIUM, [(0, 100)], True)
 

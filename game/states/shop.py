@@ -1,5 +1,4 @@
 from .game_state import GameState
-from ..persistent_data import PERSISTENT_DATA
 from ..config import create_die, load_idle_animation, BUTTON_DEFAULT, TEXT_MEDIUM
 from core import get_image, get_sprites, get_all_sprites, SOUND_PLAYER
 from gui.elements import StaticBG, MovingBackgroundElement, PTexts, Idle, Button
@@ -11,7 +10,6 @@ class Shop(GameState):
 
     def __init__(self):
         super().__init__()
-        self.player, self.shop_inventory = PERSISTENT_DATA.get_player(), PERSISTENT_DATA.get_shop_inventory()
         self.selected_index, self.active = -1, True
         self.keeper_display = Idle(get_all_sprites("shopkeeper"), (650, 420), None, load_idle_animation("shopkeeper"))
         self.gold_display = PTexts([get_image("black")], (0, 0), TEXT_MEDIUM, [(100, 170)], False)

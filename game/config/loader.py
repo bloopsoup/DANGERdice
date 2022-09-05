@@ -4,6 +4,7 @@ from core import get_all_sprites
 from gui.utils import IndexCycler, DialogueData
 from entities.enemies import Enemy, Player
 from entities.dice import Die, DiceSet
+from entities.level import LevelManager
 from entities.shop import ShopInventory
 
 
@@ -20,12 +21,6 @@ def load_dialogue(dialogue: str, tier: int) -> DialogueData:
     texts, portrait_seq = dialogue_config[dialogue][tier]
     portraits = [get_all_sprites("player_icons"), get_all_sprites(f"{dialogue}_icons")]
     return DialogueData(texts, portraits, portrait_seq)
-
-
-def all_enemy_names() -> list[str]:
-    """Gets a list of enemy names."""
-    enemy_names = list(enemy_config.keys())
-    return enemy_names
 
 
 def create_die(die_type: str) -> Die:
@@ -50,6 +45,11 @@ def create_shop_inventory() -> ShopInventory:
     return ShopInventory([["basic2", "poison1", "heal1"], ["basic2", "poison2", "heal1"],
                           ["basic3", "poison2", "heal2"], ["basic3", "poison3", "heal2"],
                           ["basic4", "divider1", "heal2"], ["basic5", "divider1", "multiplier1"]], 4)
+
+
+def create_level_manager() -> LevelManager:
+    """Creates a level manager."""
+    return LevelManager([1, 1, 1, 1, 1, 1], list(enemy_config.keys()), ["loot", "player_menu"], "ending")
 
 
 def create_enemy(enemy: str, tier: int) -> Enemy:

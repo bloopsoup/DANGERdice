@@ -1,3 +1,4 @@
+from ..persistent_data import PERSISTENT_DATA
 from core import Event, State
 from gui import Canvas
 from gui.commands import CommandQueue
@@ -9,6 +10,10 @@ class GameState(State):
     def __init__(self):
         super().__init__()
         self.canvas, self.command_queue = Canvas(), CommandQueue()
+        self.persistent_data = PERSISTENT_DATA
+        self.player = PERSISTENT_DATA.get_player()
+        self.shop_inventory = PERSISTENT_DATA.get_shop_inventory()
+        self.level_manager = PERSISTENT_DATA.get_level_manager()
 
     def reset_state(self):
         """Resets attributes for a state when leaving."""
