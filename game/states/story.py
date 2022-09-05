@@ -16,7 +16,7 @@ class Story(GameState):
         self.aaron_display = Idle(get_all_sprites("aaron"), (0, 0), None, load_idle_animation("aaron"))
         self.dorita_display = Idle(get_all_sprites("dorita"), (0, 0), None, load_idle_animation("dorita"))
         self.dialogue_box = DialogueBox([get_image("text_box")], (100, 350), DIALOGUE_DEFAULT,
-                                        lambda: self.to("pre_tutorial"), self.load_story_dialogue())
+                                        lambda: self.to("tutorial"), self.load_story_dialogue())
 
     def setup_canvas(self):
         self.canvas.add_element(StaticBG([get_image("casino")], (0, 0)), "")

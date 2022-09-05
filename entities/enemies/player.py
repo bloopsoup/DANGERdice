@@ -46,7 +46,7 @@ class Player(Enemy):
         self.health = 100
         self.max_health = 100
         self.money = 0
-        self.preference = []
+        self.preference = ["basic1", "basic1"]
         self.inventory = []
         self.exp = 0
 

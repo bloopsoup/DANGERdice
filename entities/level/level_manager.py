@@ -28,8 +28,8 @@ class LevelManager:
                 stage.append({"name": f"Level {i}-{j}",
                               "tier": i,
                               "enemy": enemy_list.pop(random.randint(0, len(enemy_list) - 1)),
-                              "dest": random.choice(self.exits) if (i, j) == (len(self.structure)-1, num_levels-1)
-                              else self.ending})
+                              "dest": self.ending if (i, j) == (len(self.structure)-1, num_levels-1)
+                              else random.choice(self.exits)})
             levels.append(stage)
         return levels
 

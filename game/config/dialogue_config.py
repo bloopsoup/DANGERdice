@@ -1,8 +1,4 @@
-AARON_0 = [["Greetings! ``````I am the tutorial man.", "And it looks like you need a tutorial!",
-            "Uh... `````weren't you the one that got the last of my money?",
-            "Yes, ````but many others haven't gotten their money.",
-            "They want to fight you for it, so let's prepare you!",
-            "Sure..."], [(1, 0), (1, 1), (0, 0), (1, 0), (1, 1), (0, 0)]]
+AARON_0 = [["Oh.", "I feel like I'm going to lose."], [(1, 0), (1, 1)]]
 AARON_1 = [["Well well well.", "We meet again."], [(1, 0), (1, 3)]]
 AARON_2 = [["Got any good places for food?", "I know a good curry place.", "Ew."], [(1, 0), (0, 1), (1, 3)]]
 AARON_3 = [["It sure is hot over here.", "Then go home.", "No."], [(1, 5), (0, 3), (1, 4)]]

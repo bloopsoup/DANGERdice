@@ -29,7 +29,8 @@ class Battle(GameState):
     def setup_state(self):
         l_data = self.level_manager.get_level()
         self.player_set = create_dice_set(self.player.get_preference())
-        self.enemy, self.enemy_set = create_enemy(l_data["enemy"], l_data["tier"]), create_dice_set(self.enemy.get_preference())
+        self.enemy = create_enemy(l_data["enemy"], l_data["tier"])
+        self.enemy_set = create_dice_set(self.enemy.get_preference())
         self.damage_handler = DamageHandler([self.player, self.enemy])
         self.destination = l_data["dest"]
         self.enemy_display = Idle(get_all_sprites(l_data["enemy"]), (0, 0), None, load_idle_animation(l_data["enemy"]))
