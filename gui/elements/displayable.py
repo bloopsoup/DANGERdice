@@ -59,7 +59,7 @@ class Displayable:
     def draw_border(self):
         """Draws the border around the element."""
         if self.theme["border_size"] > 0:
-            pass
+            self.images[0].blit_border(self.get_position(), (0, 0, 0), self.theme["border_size"])
 
     def draw(self):
         """Displays itself."""

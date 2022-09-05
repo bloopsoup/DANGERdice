@@ -1,4 +1,5 @@
 from .game_state import GameState
+from ..persistent_data import PERSISTENT_DATA
 from ..config import BUTTON_DEFAULT, TEXT_MEDIUM
 from core import get_image, get_sprites, load_json, SOUND_PLAYER
 from gui.elements import StaticBG, PTexts, Button
@@ -23,8 +24,7 @@ class Load(GameState):
         """Loads player save data. If there is no data, does nothing."""
         data = load_json("game_data.json")
         if data:
-            self.player.import_data(data["player"])
-            self.shop_inventory.import_data(data["shop"])
+            PERSISTENT_DATA.import_data(data)
             self.to("player_menu")
         else:
             self.text_display.set_text(0, "No save data detected")

@@ -1,6 +1,6 @@
 from .game_state import GameState
-from ..config import load_idle_animation, create_dice_set, create_enemy, random_battle_song, \
-    BUTTON_DEFAULT, TEXT_DEFAULT, TEXT_LARGE
+from ..persistent_data import PERSISTENT_DATA
+from ..config import load_idle_animation, create_dice_set, create_enemy, BUTTON_DEFAULT, TEXT_DEFAULT, TEXT_LARGE
 from core import get_image, get_sprites, get_all_sprites, AbstractImage, SOUND_PLAYER
 from entities.dice import DiceSet
 from entities.enemies import DamageHandler
@@ -16,9 +16,9 @@ class Battle(GameState):
         self.destination = destination
         self.active, self.your_turn = False, True
 
-        self.enemy = create_enemy(enemy_name, tier)
-        self.player_set = None
-        self.enemy_set = create_dice_set(self.enemy.get_preference())
+        self.enemy, self.enemy_set = create_enemy(enemy_name, tier), create_dice_set(self.enemy.get_preference())
+        self.player, self.player_set = PERSISTENT_DATA.get_player(), None
+        self.shop_inventory = PERSISTENT_DATA.get_shop_inventory()
         self.damage_handler = DamageHandler([self.player, self.enemy])
 
         self.player_display = Idle(get_all_sprites("player"), (0, 0), None, load_idle_animation("player"))
@@ -61,7 +61,7 @@ class Battle(GameState):
         self.animation_handler.to_start(self.enable_hud)
 
     def setup_music(self):
-        SOUND_PLAYER.change_music(random_battle_song())
+        SOUND_PLAYER.change_random_music()
 
     def reset_state(self):
         self.active, self.your_turn = False, True

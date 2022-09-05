@@ -1,5 +1,6 @@
 from .game_state import GameState
-from ..config import load_idle_animation, random_die_name, TEXT_MEDIUM
+from ..persistent_data import PERSISTENT_DATA
+from ..config import load_idle_animation, create_random_die, TEXT_MEDIUM
 from core import get_image, get_all_sprites, SOUND_PLAYER
 from gui.elements import StaticBG, PTexts, Idle
 from gui.commands import TimerCommand, MoveCommand
@@ -10,6 +11,7 @@ class Loot(GameState):
 
     def __init__(self):
         super().__init__()
+        self.player = PERSISTENT_DATA.get_player()
         self.player_display = Idle(get_all_sprites("player"), (-300, 257), None, load_idle_animation("player"))
         self.loot_display = PTexts([get_image("black")], (0, 0), TEXT_MEDIUM, [(0, 100)], True)
 
@@ -31,7 +33,7 @@ class Loot(GameState):
 
     def give_loot(self):
         """Gives the player loot."""
-        die_name = random_die_name()
-        self.player.append_to_inventory(die_name)
-        self.loot_display.set_text(0, f"You got {die_name}!")
+        die = create_random_die()
+        self.player.append_to_inventory(die.get_name())
+        self.loot_display.set_text(0, f"You got {die.get_name()}!")
         SOUND_PLAYER.play_sfx("good")

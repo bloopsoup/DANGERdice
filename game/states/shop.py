@@ -1,4 +1,5 @@
 from .game_state import GameState
+from ..persistent_data import PERSISTENT_DATA
 from ..config import create_die, load_idle_animation, BUTTON_DEFAULT, TEXT_MEDIUM
 from core import get_image, get_sprites, get_all_sprites, SOUND_PLAYER
 from gui.elements import StaticBG, MovingBackgroundElement, PTexts, Idle, Button
@@ -10,6 +11,7 @@ class Shop(GameState):
 
     def __init__(self):
         super().__init__()
+        self.player, self.shop_inventory = PERSISTENT_DATA.get_player(), PERSISTENT_DATA.get_shop_inventory()
         self.selected_index, self.active = -1, True
         self.keeper_display = Idle(get_all_sprites("shopkeeper"), (650, 420), None, load_idle_animation("shopkeeper"))
         self.gold_display = PTexts([get_image("black")], (0, 0), TEXT_MEDIUM, [(100, 170)], False)
@@ -19,7 +21,7 @@ class Shop(GameState):
         self.canvas.add_element(MovingBackgroundElement([get_image("tall_rectangles")], (0, -1), (800, 600)), "")
         self.canvas.add_element(StaticBG([get_image("shop")], (0, 0)), "")
         self.canvas.add_element(self.gold_display, "")
-        self.gold_display.set_text(0, "Gold: {0}".format(self.player.get_money()))
+        self.gold_display.set_text(0, f"Gold: {self.player.get_money()}")
         self.canvas.add_element(self.info_display, "")
         self.info_display.set_texts(["", "Click on a Die you wish to purchase."])
         self.canvas.add_element(self.keeper_display, "")

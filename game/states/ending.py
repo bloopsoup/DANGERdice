@@ -1,5 +1,6 @@
 from .game_state import GameState
-from ..config import load_idle_animation, create_player, create_shop_inventory, TEXT_WHITE_LARGE
+from ..persistent_data import PERSISTENT_DATA
+from ..config import load_idle_animation, TEXT_WHITE_LARGE
 from core import get_image, get_all_sprites, SOUND_PLAYER
 from gui.elements import StaticBG, PTexts, Idle
 from gui.commands import TimerCommand, MoveCommand
@@ -38,6 +39,5 @@ class Ending(GameState):
 
     def return_to_menu(self):
         """Goes back to the main menu and resets the stats."""
-        GameState.player = create_player()
-        GameState.shop_inventory = create_shop_inventory()
+        PERSISTENT_DATA.reset_data()
         self.to("main_menu")

@@ -6,6 +6,8 @@ from ..components import AbstractSoundPlayer
 class SoundPlayer(AbstractSoundPlayer):
     def __init__(self):
         super().__init__()
+        self.playlist = ["calm", "doma", "huh", "jong", "menu", "ones", "somedrums", "Something", "stomp", "stomp2",
+                         "trittle", "zins"]
 
     def reset_player(self):
         pygame.mixer.music.stop()

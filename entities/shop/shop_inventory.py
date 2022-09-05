@@ -28,6 +28,12 @@ class ShopInventory:
         """Sets the ith item in the inventory to an empty string."""
         self.current_inventory[i] = ""
 
+    def reset_data(self):
+        """Resets shop inventory data."""
+        self.tier = 0
+        self.current_ticks = 0
+        self.current_inventory = self.inventory_list[self.tier][:]
+
     def import_data(self, data: dict):
         """Reads in a dictionary of shop inventory data and sets attributes."""
         self.tier = data["tier"]

@@ -24,6 +24,10 @@ class AbstractImage:
         """Gets the rectangle representation of the image."""
         return Rectangle((0, 0), self.width, self.height)
 
+    def blit_border(self, pos: tuple[int, int], color: tuple[int, int, int], size: int):
+        """Draws a border around the image on screen."""
+        raise NotImplementedError
+
     def blit(self, pos: tuple[int, int]):
         """Draws the image on screen."""
         raise NotImplementedError

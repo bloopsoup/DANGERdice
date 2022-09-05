@@ -52,6 +52,18 @@ class Player(Enemy):
         self.restore_health()
         return True
 
+    def reset_data(self):
+        """Resets player data."""
+        self.name = ""
+        self.level = 1
+        self.health = 100
+        self.max_health = 100
+        self.money = 0
+        self.preference = []
+        self.inventory = []
+        self.current_stage = self.starting_stage[:]
+        self.exp = 0
+
     def import_data(self, data: dict):
         """Reads in a dictionary of player data and sets the player's attributes."""
         self.name = data["name"]

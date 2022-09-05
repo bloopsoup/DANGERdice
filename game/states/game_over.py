@@ -1,5 +1,6 @@
 from .game_state import GameState
-from ..config import load_idle_animation, create_player, create_shop_inventory, BUTTON_DEFAULT
+from ..persistent_data import PERSISTENT_DATA
+from ..config import load_idle_animation, BUTTON_DEFAULT
 from core import get_image, get_sprites, get_all_sprites, SOUND_PLAYER
 from gui.elements import StaticBG, MovingBackgroundElement, Button, Idle
 
@@ -24,6 +25,5 @@ class GameOver(GameState):
 
     def return_menu(self):
         """Goes back to the main menu and resets the stats."""
-        GameState.player = create_player()
-        GameState.shop_inventory = create_shop_inventory()
+        PERSISTENT_DATA.reset_data()
         self.to("main_menu")
