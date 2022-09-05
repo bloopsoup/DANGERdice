@@ -1,27 +1,28 @@
-from pyglet import font
+import pyglet
 from pyglet.window import key, mouse
 from ..enums import Key, MouseButton
+from ..path import FONT_PATH, sound_config, static_config, spritesheet_config
 
 ###############
 #    SETUP    #
 ###############
 
-font.add_file('../../assets/VT323-Regular.ttf')
+pyglet.font.add_file(FONT_PATH)
 
 ###############
 #  CONSTANTS  #
 ###############
 
 loaded_fonts = {
-    "SS": ("VT323-Regular", 25),
-    "S": ("VT323-Regular", 30),
-    "M": ("VT323-Regular", 40),
-    "L": ("VT323-Regular", 50)
+    "SS": ("VT323", 15),
+    "S": ("VT323", 20),
+    "M": ("VT323", 30),
+    "L": ("VT323", 40)
 }
-
-loaded_sounds = {
-
-}
+loaded_static = {key: pyglet.image.load(static_config[key]) for key in static_config}
+loaded_sheets = {key: [pyglet.image.load(spritesheet_config[key][0])] + spritesheet_config[key][1:]
+                 for key in spritesheet_config}
+loaded_sounds = {key: pyglet.media.load(sound_config[key], streaming=False) for key in sound_config}
 
 translate_keys = {
     key.A: Key.A, key.B: Key.B, key.C: Key.C, key.D: Key.D, key.E: Key.E, key.F: Key.F, key.G: Key.G, key.H: Key.H,

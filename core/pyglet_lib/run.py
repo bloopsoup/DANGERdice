@@ -8,8 +8,8 @@ is instantiated which sets up the caption, icons, and clock.
 """
 
 
-def run():
+def run(start: str, states: dict[str, State]):
     """Starts running the game."""
-    app = App(StateManager("attributions", {"attributions": State()}))
+    app = App(StateManager(start, states))
     pyglet.app.run()
     return app

@@ -2,16 +2,7 @@ from .components import AbstractImage, AbstractSpritesheet, Rectangle
 from .control import Event, State
 from .enums import EventType, Key, MouseButton
 from .path import save_json, load_json, chunk_config
-
-###############
-#    SETUP    #
-###############
-
-ACTIVE_LIBRARY = "pygame"
-if ACTIVE_LIBRARY == "pygame":
-    from .pygame_lib import loaded_static, loaded_sheets, Image, Label, run, SoundPlayer, Spritesheet
-else:
-    raise ImportError
+from .pyglet_lib import loaded_static, loaded_sheets, Image, Label, run, SoundPlayer, Spritesheet
 
 ###############
 #  CONSTANTS  #
