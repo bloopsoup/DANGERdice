@@ -89,7 +89,6 @@ spritesheet_config = {
     "wally_icons": [path_sheet("wally_icon.png"), 100, 100, 2, 4],
     "wandre": [path_sheet("wandre100x160x3x5.png"), 100, 160, 3, 5],
     "wandre_icons": [path_sheet("wandre_icon.png"), 100, 100, 2, 4],
-    "portrait1": [path_sheet("chat100x3x6.png"), 100, 100, 2, 6],
     "dice1": [path_sheet("1dice85x6x6.png"), 85, 85, 6, 6],
     "dice2": [path_sheet("2dice85x6x6.png"), 85, 85, 6, 6],
     "dice3": [path_sheet("3dice85x6x6.png"), 85, 85, 6, 6],

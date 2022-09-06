@@ -12,5 +12,5 @@ class Label(AbstractLabel):
         self.width, self.height = self.rendered_text.content_width, self.rendered_text.content_height
 
     def blit(self, pos: tuple[int, int]):
-        self.rendered_text.position = tl_to_bl((pos[0], pos[1] + self.height), 600)
+        self.rendered_text.position = tl_to_bl((pos[0], pos[1] + self.height - 5), 600)
         self.rendered_text.draw()

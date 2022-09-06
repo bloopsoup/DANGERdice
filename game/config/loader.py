@@ -49,7 +49,9 @@ def create_shop_inventory() -> ShopInventory:
 
 def create_level_manager() -> LevelManager:
     """Creates a level manager."""
-    return LevelManager([1, 1, 1, 1, 1, 1], list(enemy_config.keys()), ["loot", "player_menu"], "ending")
+    enemy_list = list(enemy_config.keys())
+    enemy_list.remove("shopkeeper")
+    return LevelManager([4, 4, 4, 4, 4, 1], enemy_list, ["loot", "player_menu"], "ending")
 
 
 def create_enemy(enemy: str, tier: int) -> Enemy:
@@ -63,8 +65,6 @@ def create_enemy(enemy: str, tier: int) -> Enemy:
 def create_player() -> Player:
     """Creates a player."""
     player = Player()
-    for _ in range(4):
-        player.append_to_preference("basic5")
-    for _ in range(13):
-        player.append_to_inventory("basic1")
+    for _ in range(2):
+        player.append_to_preference("basic1")
     return player

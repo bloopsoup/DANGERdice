@@ -14,10 +14,10 @@ pyglet.font.add_file(FONT_PATH)
 ###############
 
 loaded_fonts = {
-    "SS": ("VT323", 15),
+    "SS": ("VT323", 18),
     "S": ("VT323", 20),
-    "M": ("VT323", 30),
-    "L": ("VT323", 40)
+    "M": ("VT323", 28),
+    "L": ("VT323", 38)
 }
 loaded_static = {key: pyglet.image.load(static_config[key]) for key in static_config}
 loaded_sheets = {key: [pyglet.image.load(spritesheet_config[key][0])] + spritesheet_config[key][1:]

@@ -2,6 +2,7 @@ import pyglet
 from .constants import translate_keys, translate_mouse
 from ..components import tl_to_bl
 from ..enums import EventType
+from ..path import ICON_PATH
 from ..control import Event, StateManager
 
 
@@ -10,8 +11,9 @@ class App(pyglet.window.Window):
 
     def __init__(self, state_manager: StateManager):
         super().__init__(800, 600, "DANGERdice")
+        self.set_icon(pyglet.image.load(ICON_PATH))
         self.state_manager = state_manager
-        pyglet.clock.schedule_interval(self.on_update, 1 / 120.0)
+        pyglet.clock.schedule_interval(self.on_update, 1 / 240.0)
 
     def on_key_press(self, symbol: int, modifiers: int):
         if symbol in translate_keys:
