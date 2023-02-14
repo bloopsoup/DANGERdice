@@ -2,6 +2,11 @@ Game inspired by Tiny Dice Dungeons. Built on a custom game engine written in Py
 runs the game as a state machine and is able to support a wide variety of GUI components such as typed out
 dialogue boxes.
 
+Since this was my first attempt at creating a game engine, there's plenty of questionable design decisions 
+that came about from lack of experience. I am planning to use the things I learned from creating this engine 
+to create a new Javascript engine called `BOGGERS.js`. Maybe I will come back and revamp this engine so it
+better utilizes the features of `pygame` and `pyglet`. 
+
 # Build Instructions
 
 ---
@@ -10,11 +15,11 @@ Read this section if you wish to run this game from the source code itself.
 If you just want to play the game itself, you can download the release.
 
 ## Required Dependencies
-This game requires only one dependency, and you have the choice of either using `pygame` or `pyglet`.
+This game requires only one dependency, and you have the choice of either using `pygame` or `pyglet` (1.5).
 This involves a simple installation using your package manager.
 
 ```
-pip install pygame | pip install pyglet
+pip install pygame | pip install pyglet==1.5.26
 ```
 
 _Note that because `pyglet` was recently adapted to work with the engine, you'll see worse performance 
@@ -75,9 +80,3 @@ However, in this case you are left with one health point, so it's probably a los
 When you make a weakening attack, your enemy will be weakened on their turn by the weakening factor. Note that this status only lasts for one turn, even if that turn was ended with a rolled _one_.
 - When weakened, the actual DMG a player will deal in their attack will be the current DMG they built up divided by the weakening factor.
 - The DMG display will show you the DMG before it becomes divided.
-
-# License
-
----
-
-See the `LICENSE` file.
