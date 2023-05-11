@@ -1,5 +1,5 @@
 from core import run
-from game.states import Attributions, Battle, Ending, GameOver, Intro, Inventory, Load, Loot, MainMenu, PlayerMenu, \
+from app.states import Attributions, Battle, Ending, GameOver, Intro, Inventory, Load, Loot, MainMenu, PlayerMenu, \
     Preamble, Save, Shop, Story, Tutorial
 
 states = {
