@@ -1,3 +1,6 @@
+
+# DANGERdice
+
 Game inspired by Tiny Dice Dungeons. Built on a custom game engine written in Python (3.9). The game engine
 runs the game as a state machine and is able to support a wide variety of GUI components such as typed out
 dialogue boxes.
@@ -8,8 +11,6 @@ to create a new Javascript engine called `BOGGERS.js`. Maybe I will come back an
 better utilizes the features of `pygame` and `pyglet`. 
 
 # Build Instructions
-
----
 
 Read this section if you wish to run this game from the source code itself. 
 If you just want to play the game itself, you can download the release.
@@ -37,8 +38,6 @@ from .pygame_lib import loaded_static, loaded_sheets, Image, Label, run, SoundPl
 Then you can run `DANGERdice.py` to begin your game!
 
 # Gameplay
-
----
 
 ## Rules
 
