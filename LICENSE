@@ -1,10 +1,10 @@
 The application and the art assets in this repository are provided under
-different licenses. The art assets, which are all located in the folder /assets,
-except /assets/VT323-Regular.ttf, are under the Creative Commons Attribution 4.0
-(CC BY 4.0) license. /assets/VT323-Regular.ttf is under the SIL Open Font License,
+different licenses. The art assets, which are all located in the folder /app/assets,
+except /app/assets/VT323-Regular.ttf, are under the Creative Commons Attribution 4.0
+(CC BY 4.0) license. /app/assets/VT323-Regular.ttf is under the SIL Open Font License,
 Version 1.1.
 
-The application code in /core, /entities, /game, /gui, DANGERdice.py, and associated
+The application code in /src, /app (except /app/assets), DANGERdice.py, and associated
 documentation are under the MIT license.
 
 The executable found in the release contains source code from the pyglet library that
