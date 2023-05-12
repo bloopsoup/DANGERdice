@@ -1,9 +1,9 @@
 from .game_state import GameState
 from ..config import load_idle_animation, DIALOGUE_DEFAULT, TEXT_WHITE_LARGE
-from core import get_image, get_all_sprites, SOUND_PLAYER
-from gui.elements import StaticBG, MovingBackgroundElement, PTexts, Idle, DialogueBox
-from gui.commands import TimerCommand, MoveCommand
-from gui.utils import DialogueData
+from src.core import get_image, get_all_sprites, SOUND_PLAYER
+from src.gui.elements import StaticBG, MovingBackgroundElement, PTexts, Idle, DialogueBox
+from src.gui.commands import TimerCommand, MoveCommand
+from src.gui.utils import DialogueData
 
 
 class Story(GameState):

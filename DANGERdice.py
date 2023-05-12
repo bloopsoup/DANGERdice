@@ -1,4 +1,4 @@
-from core import run
+from src.core import run
 from app.states import Attributions, Battle, Ending, GameOver, Intro, Inventory, Load, Loot, MainMenu, PlayerMenu, \
     Preamble, Save, Shop, Story, Tutorial
 

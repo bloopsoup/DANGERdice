@@ -1,7 +1,7 @@
 from .game_state import GameState
 from ..config import BUTTON_DEFAULT, TEXT_MEDIUM
-from core import get_image, get_sprites, load_json, SOUND_PLAYER
-from gui.elements import StaticBG, PTexts, Button
+from src.core import get_image, get_sprites, load_json, SOUND_PLAYER
+from src.gui.elements import StaticBG, PTexts, Button
 
 
 class Load(GameState):

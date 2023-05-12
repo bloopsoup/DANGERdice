@@ -1,7 +1,7 @@
 from .game_state import GameState
 from ..config import load_idle_animation, create_die, TEXT_SMALL, TEXT_MEDIUM, BUTTON_DEFAULT
-from core import get_image, get_sprites, SOUND_PLAYER
-from gui.elements import StaticBG, MovingBackgroundElement, PTexts, Idle, Button
+from src.core import get_image, get_sprites, SOUND_PLAYER
+from src.gui.elements import StaticBG, MovingBackgroundElement, PTexts, Idle, Button
 
 
 class Inventory(GameState):

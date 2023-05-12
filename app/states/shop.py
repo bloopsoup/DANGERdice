@@ -1,8 +1,8 @@
 from .game_state import GameState
 from ..config import create_die, load_idle_animation, BUTTON_DEFAULT, TEXT_MEDIUM
-from core import get_image, get_sprites, get_all_sprites, SOUND_PLAYER
-from gui.elements import StaticBG, MovingBackgroundElement, PTexts, Idle, Button
-from gui.commands import TimerCommand
+from src.core import get_image, get_sprites, get_all_sprites, SOUND_PLAYER
+from src.gui.elements import StaticBG, MovingBackgroundElement, PTexts, Idle, Button
+from src.gui.commands import TimerCommand
 
 
 class Shop(GameState):

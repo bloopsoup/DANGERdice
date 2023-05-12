@@ -1,5 +1,5 @@
 from .displayable import Displayable
-from core import AbstractImage
+from src.core import AbstractImage
 
 
 class StaticBG(Displayable):

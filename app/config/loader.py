@@ -1,11 +1,11 @@
 import random
 from . import dice_config, enemy_config, idle_animation_config, dialogue_config
-from core import get_all_sprites
-from gui.utils import IndexCycler, DialogueData
-from entities.enemies import Enemy, Player
-from entities.dice import Die, DiceSet
-from entities.level import LevelManager
-from entities.shop import ShopInventory
+from ..entities.enemies import Enemy, Player
+from ..entities.dice import Die, DiceSet
+from ..entities.level import LevelManager
+from ..entities.shop import ShopInventory
+from src.core import get_all_sprites
+from src.gui.utils import IndexCycler, DialogueData
 
 
 def load_idle_animation(animation: str) -> IndexCycler:

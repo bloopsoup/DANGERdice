@@ -1,5 +1,5 @@
 from .displayable import Displayable
-from core import AbstractImage, Event, EventType
+from src.core import AbstractImage, Event, EventType
 
 
 class Interactive(Displayable):

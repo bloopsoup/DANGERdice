@@ -1,5 +1,5 @@
 from .elements import Displayable
-from core import Event
+from src.core import Event
 
 
 class Canvas:

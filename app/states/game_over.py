@@ -1,7 +1,7 @@
 from .game_state import GameState
 from ..config import load_idle_animation, BUTTON_DEFAULT
-from core import get_image, get_sprites, get_all_sprites, SOUND_PLAYER
-from gui.elements import StaticBG, MovingBackgroundElement, Button, Idle
+from src.core import get_image, get_sprites, get_all_sprites, SOUND_PLAYER
+from src.gui.elements import StaticBG, MovingBackgroundElement, Button, Idle
 
 
 class GameOver(GameState):

@@ -1,10 +1,10 @@
 from .game_state import GameState
 from ..config import load_idle_animation, create_dice_set, create_enemy, BUTTON_DEFAULT, TEXT_DEFAULT, TEXT_LARGE
-from core import get_image, get_sprites, get_all_sprites, AbstractImage, SOUND_PLAYER
-from entities.dice import DiceSet
-from entities.enemies import DamageHandler
-from gui.elements import StaticBG, MovingBackgroundElement, PTexts, Idle, Button, Tooltip
-from gui.commands import TimerCommand, AnimationHandler
+from ..entities.dice import DiceSet
+from ..entities.enemies import DamageHandler
+from src.core import get_image, get_sprites, get_all_sprites, AbstractImage, SOUND_PLAYER
+from src.gui.elements import StaticBG, MovingBackgroundElement, PTexts, Idle, Button, Tooltip
+from src.gui.commands import TimerCommand, AnimationHandler
 
 
 class Battle(GameState):

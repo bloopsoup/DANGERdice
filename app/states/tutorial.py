@@ -1,9 +1,9 @@
 from .game_state import GameState
 from ..config import load_idle_animation, BUTTON_DEFAULT, DIALOGUE_SMALL, TEXT_LARGE
-from core import get_image, get_sprites, get_all_sprites, SOUND_PLAYER
-from gui.elements import StaticBG, MovingBackgroundElement, PTexts, Button, Idle, DialogueBox
-from gui.commands import MoveCommand
-from gui.utils import DialogueData
+from src.core import get_image, get_sprites, get_all_sprites, SOUND_PLAYER
+from src.gui.elements import StaticBG, MovingBackgroundElement, PTexts, Button, Idle, DialogueBox
+from src.gui.commands import MoveCommand
+from src.gui.utils import DialogueData
 
 
 class Tutorial(GameState):

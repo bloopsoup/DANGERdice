@@ -1,7 +1,7 @@
 from .game_state import GameState
 from ..config import BUTTON_DEFAULT
-from core import get_image, get_sprites, SOUND_PLAYER
-from gui.elements import MovingBackgroundElement, StaticBG, Button
+from src.core import get_image, get_sprites, SOUND_PLAYER
+from src.gui.elements import MovingBackgroundElement, StaticBG, Button
 
 
 class MainMenu(GameState):

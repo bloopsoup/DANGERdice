@@ -1,4 +1,4 @@
-from core import AbstractImage
+from src.core import AbstractImage
 
 
 class DialogueData:

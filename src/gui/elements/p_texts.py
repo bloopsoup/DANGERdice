@@ -1,5 +1,5 @@
 from .displayable import Displayable
-from core import AbstractImage, Label
+from src.core import AbstractImage, Label
 
 
 class PTexts(Displayable):

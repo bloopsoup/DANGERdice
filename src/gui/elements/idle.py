@@ -1,6 +1,6 @@
 from .interactive import Interactive
 from ..utils import IndexCycler
-from core import AbstractImage
+from src.core import AbstractImage
 
 
 class Idle(Interactive):

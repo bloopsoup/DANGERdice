@@ -1,5 +1,5 @@
 from ..utils import DeltaTimeRunner
-from core import AbstractImage, Rectangle, Event
+from src.core import AbstractImage, Rectangle, Event
 
 
 class Displayable:

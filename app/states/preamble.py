@@ -1,8 +1,8 @@
 from .game_state import GameState
 from ..config import load_idle_animation, load_dialogue, DIALOGUE_DEFAULT
-from core import get_image, get_all_sprites, SOUND_PLAYER
-from gui.elements import StaticBG, MovingBackgroundElement, Idle, DialogueBox
-from gui.commands import AnimationHandler
+from src.core import get_image, get_all_sprites, SOUND_PLAYER
+from src.gui.elements import StaticBG, MovingBackgroundElement, Idle, DialogueBox
+from src.gui.commands import AnimationHandler
 
 
 class Preamble(GameState):

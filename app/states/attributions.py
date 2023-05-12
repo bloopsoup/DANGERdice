@@ -1,8 +1,8 @@
 from .game_state import GameState
 from ..config import TEXT_WHITE_LARGE
-from core import get_image, SOUND_PLAYER
-from gui.elements import StaticBG, PTexts
-from gui.commands import TimerCommand
+from src.core import get_image, SOUND_PLAYER
+from src.gui.elements import StaticBG, PTexts
+from src.gui.commands import TimerCommand
 
 
 class Attributions(GameState):

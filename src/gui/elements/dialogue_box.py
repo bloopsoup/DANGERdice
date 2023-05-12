@@ -1,6 +1,6 @@
 from .interactive import Interactive
 from ..utils import DialogueData
-from core import AbstractImage, Label, Event, EventType, SOUND_PLAYER
+from src.core import AbstractImage, Label, Event, EventType, SOUND_PLAYER
 
 
 class DialogueBox(Interactive):

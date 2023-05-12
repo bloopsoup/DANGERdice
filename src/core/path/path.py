@@ -13,24 +13,24 @@ def path_relative(path: str) -> str:
 
 def path_asset(path: str) -> str:
     """Returns an asset path."""
-    return path_relative("assets/" + path)
+    return path_relative("app/assets/" + path)
 
 
 def path_sheet(path: str) -> str:
     """Returns a spritesheet picture path."""
-    return path_relative("assets/sheets/" + path)
+    return path_relative("app/assets/sheets/" + path)
 
 
 def path_static(path: str) -> str:
     """Returns a static picture path."""
-    return path_relative("assets/static/" + path)
+    return path_relative("app/assets/static/" + path)
 
 
 def path_song(path: str) -> str:
     """Returns a song path."""
-    return path_relative("assets/songs/" + path)
+    return path_relative("app/assets/songs/" + path)
 
 
 def path_sfx(path: str) -> str:
     """Returns a SFX path."""
-    return path_relative("assets/sfx/" + path)
+    return path_relative("app/assets/sfx/" + path)

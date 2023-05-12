@@ -1,7 +1,7 @@
 from .config import create_player, create_shop_inventory, create_level_manager
-from entities.enemies import Player
-from entities.shop import ShopInventory
-from entities.level import LevelManager
+from .entities.enemies import Player
+from .entities.shop import ShopInventory
+from .entities.level import LevelManager
 
 
 class PersistentData:

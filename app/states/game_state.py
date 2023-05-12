@@ -1,7 +1,7 @@
 from ..persistent_data import PERSISTENT_DATA
-from core import Event, State
-from gui import Canvas
-from gui.commands import CommandQueue
+from src.core import Event, State
+from src.gui import Canvas
+from src.gui.commands import CommandQueue
 
 
 class GameState(State):

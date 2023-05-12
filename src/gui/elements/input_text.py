@@ -1,5 +1,5 @@
 from .interactive import Interactive
-from core import AbstractImage, Label, Event, EventType, Key, SOUND_PLAYER
+from src.core import AbstractImage, Label, Event, EventType, Key, SOUND_PLAYER
 
 
 class InputText(Interactive):

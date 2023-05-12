@@ -1,6 +1,6 @@
 from .displayable import Displayable
 from ..utils import IndexCycler
-from core import AbstractImage
+from src.core import AbstractImage
 
 
 class Effect(Displayable):

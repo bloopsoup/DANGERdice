@@ -1,6 +1,6 @@
 from .displayable import Displayable
 from .interactive import Interactive
-from core import AbstractImage, Label, Event
+from src.core import AbstractImage, Label, Event
 
 
 class Tooltip(Interactive):

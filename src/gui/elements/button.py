@@ -1,5 +1,5 @@
 from .interactive import Interactive
-from core import AbstractImage, Event, EventType, SOUND_PLAYER
+from src.core import AbstractImage, Event, EventType, SOUND_PLAYER
 
 
 class Button(Interactive):
