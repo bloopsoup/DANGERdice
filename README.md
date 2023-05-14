@@ -1,4 +1,4 @@
-<img src="app/assets/icon.png" height="100" align="right" />
+<img src="docs/assets/icon.png" height="100" align="right" />
 
 # DANGERdice
 
@@ -13,6 +13,10 @@ This was my first attempt at creating a game engine, so there's plenty of questi
 that came about from lack of experience. I am planning to use the things I learned from creating this engine 
 to create a new Javascript engine called `BOGGERS.js`. Maybe I will come back and revamp this engine so it
 better utilizes the features of `pygame` and `pyglet`. 
+
+You can follow the below links for an overview of the source code!
+
+- [**`/core`**](docs/src/core.md) - Underlying code that runs the whole game.
 
 # Build Instructions
 
