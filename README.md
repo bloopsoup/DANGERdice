@@ -1,4 +1,4 @@
-<img src="docs/assets/icon.png" height="100" align="right" />
+<img src="docs/assets/icon.ico" height="100" align="right" />
 
 # DANGERdice
 

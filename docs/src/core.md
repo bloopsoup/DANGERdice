@@ -1,4 +1,4 @@
-<img src="../assets/icon.png" height="100" align="right" />
+<img src="../assets/icon.ico" height="100" align="right" />
 
 # Core
 
