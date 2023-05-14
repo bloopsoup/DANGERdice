@@ -17,6 +17,7 @@ better utilizes the features of `pygame` and `pyglet`.
 You can follow the below links for an overview of the source code!
 
 - [**`/core`**](docs/src/core.md) - Underlying code that runs the whole game.
+- [**`/gui`**](docs/src/gui.md) - The displayable elements.
 
 # Build Instructions
 
