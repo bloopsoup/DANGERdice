@@ -1,11 +1,13 @@
+<img src="app/assets/icon.png" height="100" align="right" />
 
 # DANGERdice
 
-Game inspired by Tiny Dice Dungeons. Built on a custom game engine written in Python (3.9). The game engine
-runs the game as a state machine and is able to support a wide variety of GUI components such as typed out
-dialogue boxes.
+> A Python Game Inspired by Tiny Dice Dungeons
 
-Since this was my first attempt at creating a game engine, there's plenty of questionable design decisions 
+Built on a custom game engine written in Python (3.9). The game engine runs the game as a state machine and 
+is able to support a wide variety of GUI components such as typed out dialogue boxes.
+
+This was my first attempt at creating a game engine, so there's plenty of questionable design decisions 
 that came about from lack of experience. I am planning to use the things I learned from creating this engine 
 to create a new Javascript engine called `BOGGERS.js`. Maybe I will come back and revamp this engine so it
 better utilizes the features of `pygame` and `pyglet`. 
@@ -20,7 +22,7 @@ This game requires only one dependency, and you have the choice of either using 
 This involves a simple installation using your package manager.
 
 ```
-pip install pygame | pip install pyglet==1.5.26
+pip install -r requirements.txt
 ```
 
 _Note that because `pyglet` was recently adapted to work with the engine, you'll see worse performance 
