@@ -49,6 +49,7 @@ class Player(Enemy):
         self.preference = ["basic1", "basic1"]
         self.inventory = []
         self.exp = 0
+        self.dead = False
 
     def import_data(self, data: dict):
         """Reads in a dictionary of player data and sets the player's attributes."""
@@ -60,6 +61,7 @@ class Player(Enemy):
         self.preference = data["preference"]
         self.inventory = data["inventory"]
         self.exp = data["exp"]
+        self.dead = False
 
     def export_data(self) -> dict:
         """Returns a dictionary aggregating player data."""

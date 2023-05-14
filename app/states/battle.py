@@ -52,6 +52,7 @@ class Battle(GameState):
         self.canvas.add_element(self.enemy_s_display, "")
         self.enemy_s_display.set_text(0, self.enemy.get_name())
         self.canvas.add_element(self.stat_display, "")
+        self.stat_display.set_position((38, 460))
         self.canvas.add_element(self.damage_display, "")
         self.damage_display.set_texts(["", str(self.damage_handler)])
         self.canvas.add_element(self.reward_display, "")
