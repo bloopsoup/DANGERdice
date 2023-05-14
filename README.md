@@ -4,6 +4,8 @@
 
 > A Python Game Inspired by Tiny Dice Dungeons
 
+<br>
+
 Built on a custom game engine written in Python (3.9). The game engine runs the game as a state machine and 
 is able to support a wide variety of GUI components such as typed out dialogue boxes.
 
