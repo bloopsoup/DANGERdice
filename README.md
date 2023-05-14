@@ -14,7 +14,7 @@ that came about from lack of experience. I am planning to use the things I learn
 to create a new Javascript engine called `BOGGERS.js`. Maybe I will come back and revamp this engine so it
 better utilizes the features of `pygame` and `pyglet`. 
 
-You can follow the below links for an overview of the source code!
+You can follow the links below for an overview of the source code!
 
 - [**`/core`**](docs/src/core.md) - Underlying code that runs the whole game.
 - [**`/gui`**](docs/src/gui.md) - The displayable elements.

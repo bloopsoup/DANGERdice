@@ -38,6 +38,7 @@ The base class for any element you can interact with. It is a child class of `Di
 needs is `on_event`, a callback function that is triggered by user input.
 
 Here's an example of a button element.
+
 ```python
 class Button(Interactive):
     def __init__(self, images: list[AbstractImage], pos: tuple[int, int], 
