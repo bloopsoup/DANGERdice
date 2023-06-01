@@ -15,6 +15,103 @@ The `core` folder has low-level features that are crucial to running a game. Not
 
 The other folders `/pygame_lib` and `/pyglet_lib` are library specific implementations of the core parts.
 
+# Components
+
+Interfaces for primitive game objects. We use libraries such as `pygame` or `pyglet` to implement them.
+All UI and game objects such as player characters are made of these things. For example, a dialogue box
+is made of a `AbstractImage` (for the box itself) and `AbstractLabel` (for the text).
+
+**The purpose of this is to keep the game engine library-agnostic.**
+**Any library can be used as long as it can implement the following components.**
+
+## `AbstractImage`
+
+An image that is displayed on the game screen. 
+
+It is made up of the image (type depends on library), height, and width. Implementation is straight-forward 
+as a library only needs to implement the `blit` and `blit_border` drawing methods.
+
+Here's a `pygame` implementation. Notice how `pygame` uses `Surface` to represent images and we use its
+corresponding `blit` method to draw it.
+
+```python
+import pygame
+from .constants import surface
+from ..components import AbstractImage
+
+class Image(AbstractImage):
+    def __init__(self, image: pygame.Surface):
+        super().__init__(image)
+        self.width, self.height = self.image.get_width(), self.image.get_height()
+
+    def blit_border(self, pos: tuple[int, int], color: tuple[int, int, int], size: int):
+        rect = self.image.get_rect()
+        rect.update(pos, (self.width, self.height))
+        pygame.draw.rect(surface, color, rect, size)
+
+    def blit(self, pos: tuple[int, int]):
+        surface.blit(self.image, pos)
+```
+
+## `AbstractLabel`
+
+Text that is displayed on the game screen.
+
+It is made up of the text (a string that will be displayed), font, and color. The library must implement
+the `blit` drawing method, which typically involves rendering the text through a font and displaying it.
+
+Here's a `pygame` implementation. Note that `loaded_fonts` is a mapping between `str` to a `pygame` font object.
+
+```python
+from .constants import loaded_fonts, surface
+from ..components import AbstractLabel
+
+class Label(AbstractLabel):
+    def __init__(self, text: str, font: str, color: tuple[int, int, int]):
+        assert font in loaded_fonts, f"{font} is not a valid font"
+        super().__init__(text, font, color)
+        self.rendered_text = loaded_fonts[font].render(text, True, color)
+        self.width, self.height = self.rendered_text.get_width(), self.rendered_text.get_height()
+
+    def blit(self, pos: tuple[int, int]):
+        surface.blit(self.rendered_text, pos)
+
+# EXAMPLE
+label = Label("Hello World", "calibri", [100, 100, 100])
+```
+
+## `AbstractSoundPlayer`
+
+A jukebox. It contains a collection of songs that can be played or muted when needed.
+Most methods need to be implemented as each library has their own implementation in deal with sounds.
+
+## `AbstractSpritesheet`
+
+A giant `AbstractImage` that is a grid of smaller `AbstractImages`. Commonly used for
+storing animations or related images for an element like a button.
+
+The library must implement the `load_image` method, which loads a specific subimage from a spritesheet.
+
+Here's a `pygame` implementation. Notice the `pygame` specific code in getting a region of the spritesheet
+to output.
+
+```python
+import pygame
+from .image import Image
+from ..components import AbstractImage, AbstractSpritesheet
+
+class Spritesheet(AbstractSpritesheet):
+    def __init__(self, spritesheet: pygame.Surface, height: int, width: int, rows: int, cols: int):
+        super().__init__(spritesheet, height, width, rows, cols)
+
+    def load_image(self, row: int, col: int) -> AbstractImage:
+        reference = pygame.Rect(col * self.width, row * self.height, self.width, self.height)
+        image = pygame.Surface(reference.size).convert_alpha()
+        image.fill((0, 0, 0, 0))
+        image.blit(self.spritesheet, (0, 0), reference)
+        return Image(image)
+```
+
 # `/control`
 
 From a higher level overview, the game is essentially a finite state machine. Each state represents
@@ -125,7 +222,8 @@ Using the manager itself is quite easy. There are only two things you need.
 
 Afterwards, use a `while` loop to repeatedly call `pass_event`, `update`, and `draw` to get the game running.
 
-Example usage of `StateManager`. In this case, the active state is `"start"`.
+Example usage of `StateManager`. In this case, the active state is `"start"`. You may wonder where we will get our `Event`s
+in order to use `pass_event`. You'll learn more when you read about `App`.
 
 ```python
 manager = StateManager("start", {"start": Start(), "end": End()})
@@ -135,25 +233,27 @@ while True:
     manager.draw()
 ```
 
-## `Event`
-
-A user input. Consumed by states to trigger some action such as clicking a button or inputting text.
-It only supports key presses and basic mouse clicks.
-
-Under the hood, it is just a bunch of enums. The `enums` folder contains definitions for event types, key presses, and mouse actions.
-
-
 ## `State`
 
-A state which manages a bunch of game objects. It's responsible for passing events, giving information, and drawing objects that it
-contains. Usually, a `State` keeps track of data (which are its attributes) that get passed into the objects themselves for display.
-Objects can then modify the data.
+### Background
 
-States also contain two hooks: `startup` and `cleanup`.
+A scene of the game. It's responsible for passing events, updating information, and drawing objects that it
+contains. As mentioned before, all of this is orchestrated by the `StateManager`.
+
+States contain two hooks: `startup` and `cleanup`.
 - `startup` is called before a state actually runs. This is where you can setup objects and load data.
 - `cleanup` is called before a state becomes inactive. This is where you can reset attributes and clean up elements.
 
-Normally you would inherit from this class.
+States are also responsible for managing their transitions via their `to` method. By calling `to(dest)`, the state
+will signal to the manager to transition to state `dest`.
+
+### Usage
+
+Since `State` is a base class with abstract `startup`, `cleanup`, `handle_event`, `update`, and `draw` methods,
+game states have to inherit from this class and then implement their specific logic.
+
+Example state `Test`. Notice how it will update its own attribute `state_info` on every game update if it is active.
+Given enough updates, the state will transition to `Test2`.
 
 ```python
 class Test(State):
@@ -172,11 +272,18 @@ class Test(State):
 
     def update(self, dt: float):
         self.state_info += 1
+        if self.state_info > 10: self.to("Test2")
 
     def draw(self):
         # Use a label to display text!
         pass
 ```
+
+## `Event`
+
+A user input. Consumed by states to trigger some action such as clicking a button or inputting text.
+It only supports key presses and basic mouse clicks. Under the hood, it is just a bunch of enums. 
+The `/enums` folder contains definitions for event types, key presses, and mouse actions.
 
 # `lib` Folders
 
@@ -184,103 +291,6 @@ These contain the actual implementations of the components and the driver code t
 When creating the game, you only need to import the `__init__.py` file of `/core`. 
 
 Besides the component implementations, there are a few other noteworthy aspects.
-
-# Components
-
-Interfaces for primitive game objects. We use libraries such as `pygame` or `pyglet` to implement them.
-All UI and game objects such as player characters are made of these things. For example, a dialogue box
-is made of a `AbstractImage` (for the box itself) and `AbstractLabel` (for the text).
-
-**The purpose of this is to keep the game engine library-agnostic.**
-**Any library can be used as long as it can implement the following components.**
-
-## `AbstractImage`
-
-An image that is displayed on the game screen. 
-
-It is made up of the image (type depends on library), height, and width. Implementation is straight-forward 
-as a library only needs to implement the `blit` and `blit_border` drawing methods.
-
-Here's a `pygame` implementation. Notice how `pygame` uses `Surface` to represent images and we use its
-corresponding `blit` method to draw it.
-
-```python
-import pygame
-from .constants import surface
-from ..components import AbstractImage
-
-class Image(AbstractImage):
-    def __init__(self, image: pygame.Surface):
-        super().__init__(image)
-        self.width, self.height = self.image.get_width(), self.image.get_height()
-
-    def blit_border(self, pos: tuple[int, int], color: tuple[int, int, int], size: int):
-        rect = self.image.get_rect()
-        rect.update(pos, (self.width, self.height))
-        pygame.draw.rect(surface, color, rect, size)
-
-    def blit(self, pos: tuple[int, int]):
-        surface.blit(self.image, pos)
-```
-
-## `AbstractLabel`
-
-Text that is displayed on the game screen.
-
-It is made up of the text (a string that will be displayed), font, and color. The library must implement
-the `blit` drawing method, which typically involves rendering the text through a font and displaying it.
-
-Here's a `pygame` implementation. Note that `loaded_fonts` is a mapping between `str` to a `pygame` font object.
-
-```python
-from .constants import loaded_fonts, surface
-from ..components import AbstractLabel
-
-class Label(AbstractLabel):
-    def __init__(self, text: str, font: str, color: tuple[int, int, int]):
-        assert font in loaded_fonts, f"{font} is not a valid font"
-        super().__init__(text, font, color)
-        self.rendered_text = loaded_fonts[font].render(text, True, color)
-        self.width, self.height = self.rendered_text.get_width(), self.rendered_text.get_height()
-
-    def blit(self, pos: tuple[int, int]):
-        surface.blit(self.rendered_text, pos)
-
-# EXAMPLE
-label = Label("Hello World", "calibri", [100, 100, 100])
-```
-
-## `AbstractSoundPlayer`
-
-A jukebox. It contains a collection of songs that can be played or muted when needed.
-Most methods need to be implemented as each library has their own implementation in deal with sounds.
-
-## `AbstractSpritesheet`
-
-A giant `AbstractImage` that is a grid of smaller `AbstractImages`. Commonly used for
-storing animations or related images for an element like a button.
-
-The library must implement the `load_image` method, which loads a specific subimage from a spritesheet.
-
-Here's a `pygame` implementation. Notice the `pygame` specific code in getting a region of the spritesheet
-to output.
-
-```python
-import pygame
-from .image import Image
-from ..components import AbstractImage, AbstractSpritesheet
-
-class Spritesheet(AbstractSpritesheet):
-    def __init__(self, spritesheet: pygame.Surface, height: int, width: int, rows: int, cols: int):
-        super().__init__(spritesheet, height, width, rows, cols)
-
-    def load_image(self, row: int, col: int) -> AbstractImage:
-        reference = pygame.Rect(col * self.width, row * self.height, self.width, self.height)
-        image = pygame.Surface(reference.size).convert_alpha()
-        image.fill((0, 0, 0, 0))
-        image.blit(self.spritesheet, (0, 0), reference)
-        return Image(image)
-```
 
 ## `App`
 
