@@ -1,18 +1,19 @@
-<img src="docs/assets/icon.ico" height="100" align="right" />
+<img src="docs/assets/icon.ico" height="100" align="right"/>
 
 # DANGERdice
 
-> A Python Game Inspired by Tiny Dice Dungeons
+> A Python Game Inspired by TinyDiceDungeons
 
 <br>
 
-Built on a custom game engine written in Python (3.9). The game engine runs the game as a state machine and 
-is able to support a wide variety of GUI components such as typed out dialogue boxes.
+A rogue-like game inspired by TinyDiceDungeons. Play as an unassuming gambler that uses the power of dice
+to defeat your enemies with luck and strategy. Level up, make money, and collect dice to turn the odds in
+your favor on this strange journey! This game was built on a custom game engine written in Python (3.9).
 
-This was my first attempt at creating a game engine, so there's plenty of questionable design decisions 
+This was my first attempt at creating a game engine for fun, so there's plenty of questionable design decisions 
 that came about from lack of experience. I am planning to use the things I learned from creating this engine 
-to create a new Javascript engine called `BOGGERS.js`. Maybe I will come back and revamp this engine so it
-better utilizes the features of `pygame` and `pyglet`. 
+to create a new Javascript engine called `BOGGERS.js`. It was a fantastic learning experience having to extend
+and refactor this engine to support the gameplay I wanted.
 
 You can follow the links below for an overview of the source code!
 
@@ -25,7 +26,7 @@ Read this section if you wish to run this game from the source code itself.
 If you just want to play the game itself, you can download the release.
 
 ## Required Dependencies
-This game requires only one dependency, and you have the choice of either using `pygame` or `pyglet` (1.5).
+This game requires only one dependency, and you have the choice of either using `pygame` or `pyglet`.
 This involves a simple installation using your package manager.
 
 ```
