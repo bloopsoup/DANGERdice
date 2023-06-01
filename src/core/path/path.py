@@ -31,16 +31,6 @@ def path_song(path: str) -> str:
     return path_relative("app/assets/songs/" + path)
 
 
-def path_song_ogg(path: str) -> str:
-    """Returns a song path."""
-    return path_relative("app/assets/songs_ogg/" + path)
-
-
 def path_sfx(path: str) -> str:
     """Returns a SFX path."""
     return path_relative("app/assets/sfx/" + path)
-
-
-def path_sfx_ogg(path: str) -> str:
-    """Returns a SFX path."""
-    return path_relative("app/assets/sfx_ogg/" + path)

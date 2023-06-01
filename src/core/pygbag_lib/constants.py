@@ -1,6 +1,6 @@
 import pygame
 from ..enums import Key, MouseButton
-from ..path import FONT_PATH, ICON_PATH, sound_ogg_config, static_config, spritesheet_config
+from ..path import FONT_PATH, ICON_PATH, sound_config, static_config, spritesheet_config
 
 ###############
 #    SETUP    #
@@ -25,7 +25,7 @@ loaded_fonts = {
 loaded_static = {key: pygame.image.load(static_config[key]).convert_alpha() for key in static_config}
 loaded_sheets = {key: [pygame.image.load(spritesheet_config[key][0]).convert_alpha()] + spritesheet_config[key][1:]
                  for key in spritesheet_config}
-loaded_sounds = sound_ogg_config
+loaded_sounds = sound_config
 
 translate_keys = {
     pygame.K_a: Key.A, pygame.K_b: Key.B, pygame.K_c: Key.C, pygame.K_d: Key.D, pygame.K_e: Key.E, pygame.K_f: Key.F,

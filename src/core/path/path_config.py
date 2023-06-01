@@ -1,4 +1,4 @@
-from .path import path_asset, path_static, path_sheet, path_song, path_song_ogg, path_sfx, path_sfx_ogg
+from .path import path_asset, path_static, path_sheet, path_song, path_sfx
 
 ICON_PATH = path_asset("icon.png")
 FONT_PATH = path_asset("VT323-Regular.ttf")
@@ -141,55 +141,28 @@ chunk_config = {
 }
 
 sound_config = {
-    "calm": path_song("calm.mp3"),
-    "doma": path_song("doma.mp3"),
-    "huh": path_song("huh.mp3"),
-    "jong": path_song("jong.mp3"),
-    "menu": path_song("menu.mp3"),
-    "note": path_song("note.mp3"),
-    "ones": path_song("ones.mp3"),
-    "somedrums": path_song("somedrums.mp3"),
-    "Something": path_song("Something.mp3"),
-    "stomp": path_song("stomp.mp3"),
-    "stomp2": path_song("stomp2.mp3"),
-    "trittle": path_song("trittle.mp3"),
-    "trooper": path_song("trooper.mp3"),
-    "zins": path_song("zins.mp3"),
+    "calm": path_song("calm.ogg"),
+    "doma": path_song("doma.ogg"),
+    "huh": path_song("huh.ogg"),
+    "jong": path_song("jong.ogg"),
+    "menu": path_song("menu.ogg"),
+    "note": path_song("note.ogg"),
+    "ones": path_song("ones.ogg"),
+    "somedrums": path_song("somedrums.ogg"),
+    "Something": path_song("Something.ogg"),
+    "stomp": path_song("stomp.ogg"),
+    "stomp2": path_song("stomp2.ogg"),
+    "trittle": path_song("trittle.ogg"),
+    "trooper": path_song("trooper.ogg"),
+    "zins": path_song("zins.ogg"),
 
-    "charge": path_sfx("charge.mp3"),
-    "click": path_sfx("click.mp3"),
-    "good": path_sfx("good.mp3"),
-    "heal": path_sfx("heal.mp3"),
-    "one": path_sfx("one.mp3"),
-    "poison": path_sfx("poison.mp3"),
-    "roll": path_sfx("roll.mp3"),
-    "shatter": path_sfx("shatter.mp3"),
-    "text": path_sfx("text.mp3")
-}
-
-sound_ogg_config = {
-    "calm": path_song_ogg("calm.ogg"),
-    "doma": path_song_ogg("doma.ogg"),
-    "huh": path_song_ogg("huh.ogg"),
-    "jong": path_song_ogg("jong.ogg"),
-    "menu": path_song_ogg("menu.ogg"),
-    "note": path_song_ogg("note.ogg"),
-    "ones": path_song_ogg("ones.ogg"),
-    "somedrums": path_song_ogg("somedrums.ogg"),
-    "Something": path_song_ogg("Something.ogg"),
-    "stomp": path_song_ogg("stomp.ogg"),
-    "stomp2": path_song_ogg("stomp2.ogg"),
-    "trittle": path_song_ogg("trittle.ogg"),
-    "trooper": path_song_ogg("trooper.ogg"),
-    "zins": path_song_ogg("zins.ogg"),
-
-    "charge": path_sfx_ogg("charge.ogg"),
-    "click": path_sfx_ogg("click.ogg"),
-    "good": path_sfx_ogg("good.ogg"),
-    "heal": path_sfx_ogg("heal.ogg"),
-    "one": path_sfx_ogg("one.ogg"),
-    "poison": path_sfx_ogg("poison.ogg"),
-    "roll": path_sfx_ogg("roll.ogg"),
-    "shatter": path_sfx_ogg("shatter.ogg"),
-    "text": path_sfx_ogg("text.ogg")
+    "charge": path_sfx("charge.ogg"),
+    "click": path_sfx("click.ogg"),
+    "good": path_sfx("good.ogg"),
+    "heal": path_sfx("heal.ogg"),
+    "one": path_sfx("one.ogg"),
+    "poison": path_sfx("poison.ogg"),
+    "roll": path_sfx("roll.ogg"),
+    "shatter": path_sfx("shatter.ogg"),
+    "text": path_sfx("text.ogg")
 }
