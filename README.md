@@ -22,8 +22,9 @@ You can follow the links below for an overview of the source code!
 
 # Build Instructions
 
-Read this section if you wish to run this game from the source code itself. 
-If you just want to play the game itself, you can download the release.
+If you want to play the game itself, you can play the web version. Note that the web version has
+substantially worse performance; it's quite tricky getting Python code to run on browsers!
+For better performance, you should run the game from the source code itself.
 
 ## Required Dependencies
 This game requires only one dependency, and you have the choice of either using `pygame` or `pyglet`.
@@ -36,16 +37,16 @@ pip install -r requirements.txt
 _Note that because `pyglet` was recently adapted to work with the engine, you'll see worse performance 
 when running the game with `pyglet`. The temporary workaround was to largely increase the game's clock rate._
 
-If you chose to use `pygame`, go to `core/__init__.py` and find the follow import statement.
+If you chose to use `pygame`, go to `core/__init__.py` and find the following import statement.
 ```
-from .pyglet_lib import loaded_static, loaded_sheets, Image, Label, run, SoundPlayer, Spritesheet
+from .pygbag_lib import loaded_static, loaded_sheets, Image, Label, run, SoundPlayer, Spritesheet
 ```
 Then change it to this import statement.
 ```
 from .pygame_lib import loaded_static, loaded_sheets, Image, Label, run, SoundPlayer, Spritesheet
 ```
 
-Then you can run `DANGERdice.py` to begin your game!
+Then you can run `main.py` to begin your game!
 
 # Gameplay
 
