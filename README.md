@@ -23,10 +23,12 @@ You can follow the links below for an overview of the source code!
 # Build Instructions
 
 If you want to play the game itself, you can play the web version. Note that the web version has
-substantially worse performance; it's quite tricky getting Python code to run on browsers!
+substantially worse performance; it's quite tricky getting Python code to run on browsers! **Treat it as a demo!**
+
 For better performance, you should run the game from the source code itself.
 
 ## Required Dependencies
+
 This game requires only one dependency, and you have the choice of either using `pygame` or `pyglet`.
 This involves a simple installation using your package manager.
 
