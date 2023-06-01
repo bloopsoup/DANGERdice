@@ -166,3 +166,30 @@ sound_config = {
     "shatter": path_sfx("shatter.mp3"),
     "text": path_sfx("text.mp3")
 }
+
+sound_ogg_config = {
+    "calm": path_song("calm.ogg"),
+    "doma": path_song("doma.ogg"),
+    "huh": path_song("huh.ogg"),
+    "jong": path_song("jong.ogg"),
+    "menu": path_song("menu.ogg"),
+    "note": path_song("note.ogg"),
+    "ones": path_song("ones.ogg"),
+    "somedrums": path_song("somedrums.ogg"),
+    "Something": path_song("Something.ogg"),
+    "stomp": path_song("stomp.ogg"),
+    "stomp2": path_song("stomp2.ogg"),
+    "trittle": path_song("trittle.ogg"),
+    "trooper": path_song("trooper.ogg"),
+    "zins": path_song("zins.ogg"),
+
+    "charge": path_sfx("charge.ogg"),
+    "click": path_sfx("click.ogg"),
+    "good": path_sfx("good.ogg"),
+    "heal": path_sfx("heal.ogg"),
+    "one": path_sfx("one.ogg"),
+    "poison": path_sfx("poison.ogg"),
+    "roll": path_sfx("roll.ogg"),
+    "shatter": path_sfx("shatter.ogg"),
+    "text": path_sfx("text.ogg")
+}
