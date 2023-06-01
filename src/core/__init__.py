@@ -2,7 +2,7 @@ from .components import AbstractImage, AbstractSpritesheet, Rectangle
 from .control import Event, State
 from .enums import EventType, Key, MouseButton
 from .path import save_json, load_json, chunk_config
-from .pygame_lib import loaded_static, loaded_sheets, Image, Label, run, SoundPlayer, Spritesheet
+from .pygbag_lib import loaded_static, loaded_sheets, Image, Label, run, SoundPlayer, Spritesheet
 
 ###############
 #  CONSTANTS  #
