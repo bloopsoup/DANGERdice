@@ -6,6 +6,9 @@
 
 <br>
 
+_What will I do with this information? I've written this documentation as a personal note to myself and for_
+_my future projects. You can read on if you're a curious on how an engine works in more detail!_
+
 The `core` folder has low-level features that are crucial to running a game. Notable folders include:
 
 - `/control`: Controlling the flow of the entire application.
@@ -15,13 +18,34 @@ The `core` folder has low-level features that are crucial to running a game. Not
 
 The other folders `/pygame_lib` and `/pyglet_lib` are library specific implementations of the core parts.
 
-# Components
+# `/components`
 
-Interfaces for primitive game objects. We use libraries such as `pygame` or `pyglet` to implement them.
-All UI and game objects such as player characters are made of these things. For example, a dialogue box
-is made of a `AbstractImage` (for the box itself) and `AbstractLabel` (for the text).
+Components are the building blocks for more complex game objects. Things like buttons, scrolling
+backgrounds, and dialogue boxes are made up of many components. 
 
-**The purpose of this is to keep the game engine library-agnostic.**
+```mermaid
+graph TD
+    id1(AbstractImage)
+    id2(AbstractImage)
+    id3(AbstractLabel)
+
+    subgraph button
+        id1
+    end
+    subgraph dialogue_box
+        id2
+        id3
+    end
+```
+
+Components are also primitive utility functions. For components like `AbstractSoundPlayer` and 
+`AbstractSpriteSheet`, they aren't used to compose any game object. Instead, they are used to run
+other core parts of the game, sound and a quick way to load many images.
+
+In this folder, they act as **interfaces** for primitive game objects. We use libraries such as `pygame` 
+or `pyglet` to actually **implement** them.
+
+**The purpose of this indirection is to keep the game engine library-agnostic.**
 **Any library can be used as long as it can implement the following components.**
 
 ## `AbstractImage`
@@ -83,7 +107,54 @@ label = Label("Hello World", "calibri", [100, 100, 100])
 ## `AbstractSoundPlayer`
 
 A jukebox. It contains a collection of songs that can be played or muted when needed.
-Most methods need to be implemented as each library has their own implementation in deal with sounds.
+Most methods need to be implemented as each library has their own implementation to deal with sounds.
+
+Here's a `pygame` implementation. Notice that we primarily use `pygame.mixer` to implement most of
+the functionality.
+
+```python
+import pygame
+from .constants import loaded_sounds
+from ..components import AbstractSoundPlayer
+
+
+class SoundPlayer(AbstractSoundPlayer):
+    def __init__(self):
+        super().__init__()
+        self.playlist = # example songs
+
+    def reset_player(self):
+        pygame.mixer.music.stop()
+        pygame.mixer.music.unload()
+        pygame.mixer.music.set_volume(0.4)
+
+    def toggle_mute(self):
+        self.mute = not self.mute
+        if self.mute:
+            pygame.mixer.music.pause()
+        else:
+            pygame.mixer.music.unpause()
+
+    def play_sfx(self, sound: str):
+        if not self.mute:
+            assert sound in loaded_sounds, f"{sound} is not a valid sound"
+            pygame.mixer.Sound(loaded_sounds[sound]).play()
+
+    def change_music(self, sound: str):
+        if sound == self.current_song:
+            return
+        assert sound in loaded_sounds, f"{sound} is not a valid sound"
+        self.current_song = sound
+        self.reset_player()
+        pygame.mixer.music.load(loaded_sounds[sound])
+        pygame.mixer.music.play(-1)
+        if self.mute:
+            pygame.mixer.music.pause()
+
+    def stop_music(self):
+        self.current_song = None
+        self.reset_player()
+```
 
 ## `AbstractSpritesheet`
 
@@ -240,6 +311,24 @@ while True:
 A scene of the game. It's responsible for passing events, updating information, and drawing objects that it
 contains. As mentioned before, all of this is orchestrated by the `StateManager`.
 
+If you can think of the `StateManager` as a container for states, think of the `State` as the container for 
+game objects.
+
+```mermaid
+graph LR
+    id1((manager))
+
+    subgraph state
+        background
+        player
+        enemy
+        dice
+    end
+
+    id1 -- info --> state
+    state -- flags --> id1
+```
+
 States contain two hooks: `startup` and `cleanup`.
 - `startup` is called before a state actually runs. This is where you can setup objects and load data.
 - `cleanup` is called before a state becomes inactive. This is where you can reset attributes and clean up elements.
@@ -285,7 +374,7 @@ A user input. Consumed by states to trigger some action such as clicking a butto
 It only supports key presses and basic mouse clicks. Under the hood, it is just a bunch of enums. 
 The `/enums` folder contains definitions for event types, key presses, and mouse actions.
 
-# `lib` Folders
+# `/lib` Folders
 
 These contain the actual implementations of the components and the driver code that starts the whole application.
 When creating the game, you only need to import the `__init__.py` file of `/core`. 
@@ -294,14 +383,35 @@ Besides the component implementations, there are a few other noteworthy aspects.
 
 ## `App`
 
-A higher-level wrapper over the `StateManager`. This is where you directly use the libraries like `pygame` to handle initialization,
-inputs, and the main game loop. 
+A higher-level wrapper over the `StateManager`. This is where you directly use the libraries like `pygame` to handle 
+initialization, inputs, and the main game loop. 
 
-`App`s are then ran by driver code contained in `run.py`. These scripts simply initialize the `App`, do some other library related
-setup, and then call the main loop.
+```mermaid
+graph LR
+    id1((events))
+    id2((calls))
+    id3((dt))
+    id4(StateManager)
 
-A `pygame` implementation of `App`. We see that the app keeps track of a state manager and runs it in `main_loop`. In the `event_loop`, we
-see the translation from `pygame` events to this engine's events.
+    subgraph App
+        direction LR
+
+        subgraph Info
+            direction TB
+            id1
+            id2
+            id3
+        end
+        Info --> id4
+        id4 -- flags --> Info
+    end
+```
+
+`App`s are then ran by driver code contained in `run.py`. These scripts simply initialize the `App`, do some other library 
+related setup, and then call the main loop.
+
+A `pygame` implementation of `App`. We see that the app keeps track of a state manager and runs it in `main_loop`. 
+In the `event_loop`, we see the translation from `pygame` events to this engine's events.
 
 ```python
 class App:
