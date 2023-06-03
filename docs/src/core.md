@@ -7,7 +7,7 @@
 <br>
 
 _What will I do with this information? I've written this documentation as a personal note to myself and for_
-_my future projects. You can read on if you're a curious on how an engine works in more detail!_
+_my future projects. You can read on if you're curious on how an engine works in more detail!_
 
 The `core` folder has low-level features that are crucial to running a game. Notable folders include:
 

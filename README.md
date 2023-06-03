@@ -16,9 +16,9 @@ to create a new Javascript engine called `BOGGERS.js`. It was a fantastic learni
 and refactor this engine to support the gameplay I wanted.
 
 You can follow the links below for an overview of the source code!
-
-- [**`/core`**](docs/src/core.md) - Underlying code that runs the whole game.
-- [**`/gui`**](docs/src/gui.md) - The displayable elements.
+- [**`/use`**](docs/use.md) - An overall guide on using the game engine and learning how everything ties together.
+- [**`/core`**](docs/src/core.md) - An overview of the lower level parts that control game flow and make use of external libraries.
+- [**`/gui`**](docs/src/gui.md) - An overview of the building blocks for the game's GUI and how it manipulates them.
 
 # Build Instructions
 
